@@ -9,10 +9,10 @@ public class Group {
   private String name;
   private int componentsNumber;
 
-  public Group(int id, String name, int components_number) {
+  public Group(int id, String name, int componentsNumber) {
     this.id = id;
     this.name = name;
-    this.componentsNumber = components_number;
+    this.componentsNumber = componentsNumber;
   }
 
   public int getId() {

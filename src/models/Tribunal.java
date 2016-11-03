@@ -6,13 +6,13 @@ package models;
  */
 public class Tribunal {
   private int id;
-  private String test_place;
+  private String testPlace;
   private int componentsNumber;
 
-  public Tribunal(int id, String test_place, int components_number) {
+  public Tribunal(int id, String testPlace, int componentsNumber) {
     this.id = id;
-    this.test_place = test_place;
-    this.componentsNumber = components_number;
+    this.testPlace = testPlace;
+    this.componentsNumber = componentsNumber;
   }
 
   public int getId() {
@@ -23,12 +23,12 @@ public class Tribunal {
     this.id = id;
   }
 
-  public String getTest_place() {
-    return test_place;
+  public String getTestPlace() {
+    return testPlace;
   }
 
-  public void setTest_place(String test_place) {
-    this.test_place = test_place;
+  public void setTestPlace(String testPlace) {
+    this.testPlace = testPlace;
   }
 
   public int getComponentsNumber() {
