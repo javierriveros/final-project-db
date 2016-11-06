@@ -1,8 +1,13 @@
 package models;
 
-import java.util.Calendar;
+import com.sun.media.jfxmedia.logging.Logger;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.LinkedList;
+import resources.Connection;
 
 /**
  * Student Model
@@ -11,10 +16,12 @@ import java.util.LinkedList;
 public class Student {
   private int registrationNumber;
   private String name;
-  private Date incorporationDate;
+  private Timestamp incorporationDate;
+  private int ci;
 
-  public Student(int registrationNumber, String name, Date incorporationDate) {
+  public Student(int registrationNumber, int ci, String name, Timestamp incorporationDate) {
     this.setRegistrationNumber(registrationNumber);
+    this.setCi(ci);
     this.setName(name);
     this.setIncorporationDate(incorporationDate);
     System.out.println(incorporationDate);
@@ -24,6 +31,14 @@ public class Student {
 
   public int getRegistrationNumber() {
     return registrationNumber;
+  }
+
+  public int getCi() {
+    return ci;
+  }
+
+  public void setCi(int ci) {
+    this.ci = ci;
   }
 
   public void setRegistrationNumber(int registrationNumber) {
@@ -42,11 +57,11 @@ public class Student {
     this.name = name;
   }
 
-  public Date getIncorporationDate() {
+  public Timestamp getIncorporationDate() {
     return incorporationDate;
   }
 
-  public void setIncorporationDate(Date incorporationDate) {
+  public void setIncorporationDate(Timestamp incorporationDate) {
     if(incorporationDate == null) 
       throw new NullPointerException("Incorporation Date can't be emtpy");
     this.incorporationDate = incorporationDate;
@@ -54,7 +69,7 @@ public class Student {
   
   @Override
   public String toString() {
-    return String.format("<%d - %s> %s", this.registrationNumber, this.incorporationDate, this.name);
+    return String.format("<%d - %d - %s> %s", this.registrationNumber, this.ci, this.incorporationDate, this.name);
   }
   
   /**
@@ -67,14 +82,14 @@ public class Student {
     return students;
   }
   
-  
   /**
    * Find a student by the Registrastion Number
    * @param registrationNumber
    * @return 
+   * @throws java.sql.SQLException 
    */
-  public static Student find(int registrationNumber) {
-    return new Student();
+  public static Student find(int registrationNumber) throws SQLException {
+    return findBy("registration_number", registrationNumber);
   }
   
   /**
@@ -82,9 +97,18 @@ public class Student {
    * @param field
    * @param value
    * @return 
+   * @throws java.sql.SQLException 
    */
-  public static Student findBy(String field, int value) {
-    return new Student();
+  public static Student findBy(String field, int value) throws SQLException {
+    Student student = null;
+    Connection con = Connection.getInstance();
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery("SELECT * FROM students WHERE "+field+"='"+value+"'");
+      while (rs.next())
+        student = new Student(rs.getInt("registration_number"), rs.getInt("ci"), rs.getString("name"), rs.getTimestamp("incorporation_date"));
+    }
+    con.getCon().close();
+    return student;
   }
   
   /**
@@ -101,9 +125,5 @@ public class Student {
    */
   public boolean destroy() {
     return false;
-  }
-  
-  public static void main(String[] args) {
-    
   }
 }
