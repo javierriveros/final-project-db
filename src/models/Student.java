@@ -1,7 +1,8 @@
 package models;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.sql.Date;
+import java.util.LinkedList;
 
 /**
  * Student Model
@@ -10,13 +11,16 @@ import java.util.GregorianCalendar;
 public class Student {
   private int registrationNumber;
   private String name;
-  private GregorianCalendar incorporationDate;
+  private Date incorporationDate;
 
-  public Student(int registrationNumber, String name, GregorianCalendar incorporationDate) {
+  public Student(int registrationNumber, String name, Date incorporationDate) {
     this.setRegistrationNumber(registrationNumber);
     this.setName(name);
     this.setIncorporationDate(incorporationDate);
+    System.out.println(incorporationDate);
   }
+
+  private Student() {}
 
   public int getRegistrationNumber() {
     return registrationNumber;
@@ -38,40 +42,68 @@ public class Student {
     this.name = name;
   }
 
-  public GregorianCalendar getIncorporationDate() {
+  public Date getIncorporationDate() {
     return incorporationDate;
   }
 
-  public void setIncorporationDate(GregorianCalendar incorporationDate) {
+  public void setIncorporationDate(Date incorporationDate) {
     if(incorporationDate == null) 
       throw new NullPointerException("Incorporation Date can't be emtpy");
     this.incorporationDate = incorporationDate;
   }
   
-  private String getTime() {
-    if (incorporationDate == null) return "";
-    String am_pm[] = {"AM", "PM"};
-    
-    return String.format(
-      "%d/%d/%d %d:%d:%d %s",
-      incorporationDate.get(Calendar.YEAR),
-      incorporationDate.get(Calendar.MONTH),
-      incorporationDate.get(Calendar.DAY_OF_MONTH),
-      incorporationDate.get(Calendar.HOUR_OF_DAY),
-      incorporationDate.get(Calendar.MINUTE),
-      incorporationDate.get(Calendar.SECOND),
-      am_pm[incorporationDate.get(Calendar.AM_PM)]
-    );
-  }
-
   @Override
   public String toString() {
-    return String.format("<%d - %s> %s", this.registrationNumber, this.getTime(), this.name);
+    return String.format("<%d - %s> %s", this.registrationNumber, this.incorporationDate, this.name);
+  }
+  
+  /**
+   * Return all students at DB
+   * @return students
+   */
+  public static LinkedList<Student> all() {
+    LinkedList<Student> students = new LinkedList<>();
+    students.add(new Student());
+    return students;
+  }
+  
+  
+  /**
+   * Find a student by the Registrastion Number
+   * @param registrationNumber
+   * @return 
+   */
+  public static Student find(int registrationNumber) {
+    return new Student();
+  }
+  
+  /**
+   * Find a student by the specified field
+   * @param field
+   * @param value
+   * @return 
+   */
+  public static Student findBy(String field, int value) {
+    return new Student();
+  }
+  
+  /**
+   * Save the current student
+   * @return <code>true</code> if could be saved or <code>false</code> if else
+   */
+  public boolean save() {
+    return false;
+  }
+  
+  /**
+   * Destroy the current student
+   * @return <code>true</code> if could be destroyed or <code>false</code> if else
+   */
+  public boolean destroy() {
+    return false;
   }
   
   public static void main(String[] args) {
-    GregorianCalendar date = new GregorianCalendar(2016, 11, 2, 13, 44, 00);
-    Student student =new Student(2, "Javier", date);
-    System.out.println(student);
+    
   }
 }
