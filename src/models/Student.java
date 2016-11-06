@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.LinkedList;
+import java.util.logging.Level;
 import resources.Connection;
+import views.Index;
 
 /**
  * Student Model
@@ -86,9 +88,8 @@ public class Student {
    * Find a student by the Registrastion Number
    * @param registrationNumber
    * @return 
-   * @throws java.sql.SQLException 
    */
-  public static Student find(int registrationNumber) throws SQLException {
+  public static Student find(int registrationNumber) {
     return findBy("registration_number", registrationNumber);
   }
   
@@ -97,17 +98,20 @@ public class Student {
    * @param field
    * @param value
    * @return 
-   * @throws java.sql.SQLException 
    */
-  public static Student findBy(String field, int value) throws SQLException {
+  public static Student findBy(String field, int value) {
     Student student = null;
-    Connection con = Connection.getInstance();
-    try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM students WHERE "+field+"='"+value+"'");
-      while (rs.next())
-        student = new Student(rs.getInt("registration_number"), rs.getInt("ci"), rs.getString("name"), rs.getTimestamp("incorporation_date"));
+    try {
+      Connection con = Connection.getInstance();
+      try (Statement sm = con.getCon().createStatement()) {
+        ResultSet rs = sm.executeQuery("SELECT * FROM students WHERE "+field+"='"+value+"'");
+        while (rs.next())
+          student = new Student(rs.getInt("registration_number"), rs.getInt("ci"), rs.getString("name"), rs.getTimestamp("incorporation_date"));
+      }
+      con.getCon().close();
+    } catch(SQLException  sql){
+      java.util.logging.Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, sql);
     }
-    con.getCon().close();
     return student;
   }
   

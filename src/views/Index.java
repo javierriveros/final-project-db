@@ -19,11 +19,7 @@ public class Index {
     LinkedList<Student> students = studentsController.index();
     System.out.println(students);
     
-    try {
-      Student student = Student.find(160003532);
-      System.out.println(student);
-    } catch (SQLException ex) {
-      Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    Student student = Student.find(160003532);
+    System.out.println(student);
   }
 }
