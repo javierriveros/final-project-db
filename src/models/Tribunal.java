@@ -38,6 +38,4 @@ public class Tribunal {
   public void setComponentsNumber(int componentsNumber) {
     this.componentsNumber = componentsNumber;
   }
-  
-  
 }

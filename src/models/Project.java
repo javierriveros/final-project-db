@@ -35,5 +35,8 @@ public class Project {
     this.startDate = startDate;
   }
   
-  
+  @Override
+  public String toString() {
+    return String.format("%d %s", this.orderNumber, this.startDate);
+  }
 }

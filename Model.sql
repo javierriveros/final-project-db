@@ -16,8 +16,9 @@ CREATE TABLE tribunals (
 );
 
 CREATE TABLE teachers (
-  ci integer,
-  name varchar(50),
+  ci serial,
+  name varchar(25),
+  last_name varchar(25),
   address varchar(50)
 );
 
@@ -28,8 +29,9 @@ CREATE TABLE themes (
 
 CREATE TABLE students (
   registration_number integer,
-  ci integer,
+  ci serial,
   name varchar(25),
+  last_name varchar(25),
   incorporation_date timestamp
 );
 
