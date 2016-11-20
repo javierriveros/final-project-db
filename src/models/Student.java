@@ -121,7 +121,7 @@ public class Student {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM students");
+      ResultSet rs = sm.executeQuery("SELECT * FROM students ORDER BY ci");
       while (rs.next())
         students.add(getStudentFromResultSet(rs));
     }
