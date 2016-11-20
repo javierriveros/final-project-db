@@ -130,7 +130,7 @@ public class Student {
   }
   
   /**
-   * Find a student by the Registrastion Number
+   * Find a student by the Registration Number
    * @param registrationNumber
    * @return 
    */

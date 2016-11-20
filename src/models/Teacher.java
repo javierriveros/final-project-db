@@ -17,7 +17,6 @@ public class Teacher {
   private String name;
   private String lastName;
   private String address;
-
   
   public Teacher() {}
   

@@ -23,13 +23,21 @@ public class Connection {
   private java.sql.Connection con;
   private static Connection instance;
 
+  /**
+   * Singleton Method for get the Connection instance
+   * @return 
+   */
   public static synchronized Connection getInstance() {
     if (instance == null) {
       instance = new Connection();
     }
     return instance;
   }
-
+  
+  /**
+   * Connect to the DB
+   * @return {@code true} if could connect, else {@code false}
+   */
   private boolean connect() {
     try{
       Class.forName(driver);

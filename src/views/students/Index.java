@@ -6,11 +6,14 @@
 package views.students;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import models.Student;
+import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 
 /**
  *
@@ -32,9 +35,6 @@ public class Index extends javax.swing.JFrame {
   
   private void addStudents() throws SQLException {
     DefaultTableModel model =  (DefaultTableModel) studentsTable.getModel();
-    model.addColumn("Code");
-    model.addColumn("Name");
-    model.addColumn("Last Name");
     LinkedList<Student> students = Student.all();
     students.forEach(student -> {
       model.addRow(new Object[] {
@@ -59,7 +59,29 @@ public class Index extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-    studentsTable.setModel(new DefaultTableModel());
+    studentsTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+
+      },
+      new String [] {
+        "Code", "Name", "Last Name"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class
+      };
+      boolean[] canEdit = new boolean [] {
+        false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
     jScrollPane1.setViewportView(studentsTable);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -79,31 +101,7 @@ public class Index extends javax.swing.JFrame {
   /**
    * @param args the command line arguments
    */
-  public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        if ("Nimbus".equals(info.getName())) {
-          javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          break;
-        }
-      }
-    } catch (ClassNotFoundException ex) {
-      java.util.logging.Logger.getLogger(Index.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-      java.util.logging.Logger.getLogger(Index.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-      java.util.logging.Logger.getLogger(Index.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(Index.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
-
-    /* Create and display the form */
+  public static void main(String args[]) throws ParseException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     java.awt.EventQueue.invokeLater(() -> new Index().setVisible(true));
   }
 

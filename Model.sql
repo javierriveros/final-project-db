@@ -37,8 +37,13 @@ CREATE TABLE students (
 
 # Relations
 CREATE TABLE integrates (
-    teacher_ci integer,
-    tribunal_id integer
+  teacher_ci integer,
+  tribunal_id integer
+);
+
+CREATE TABLE helps (
+  teacher_ci integer,
+  student_registration_number integer    
 );
 
 # Primary Keys
@@ -49,6 +54,7 @@ ALTER TABLE teachers ADD CONSTRAINT pk_teachers PRIMARY KEY(ci);
 ALTER TABLE themes ADD CONSTRAINT pk_themes PRIMARY KEY(order_number);
 ALTER TABLE tribunals ADD CONSTRAINT pk_tribunals PRIMARY KEY(id);
 ALTER TABLE integrates ADD CONSTRAINT pk_integrates PRIMARY KEY(teacher_ci, tribunal_id);
+ALTER TABLE helps ADD CONSTRAINT pk_helps PRIMARY KEY(teacher_ci, student_registration_number);
 
 # Aditional Fields
 ALTER TABLE projects ADD COLUMN tribunal_id integer;
@@ -84,4 +90,12 @@ ALTER TABLE integrates ADD CONSTRAINT pk_integrates_teacher
 
 ALTER TABLE integrates ADD CONSTRAINT pk_integrates_tribunal 
   FOREIGN KEY(tribunal_id) REFERENCES tribunals(id)
+  ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE helps ADD CONSTRAINT pk_helps_teacher
+  FOREIGN KEY(teacher_ci) REFERENCES teachers(ci)
+  ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE helps ADD CONSTRAINT pk_helps_students 
+  FOREIGN KEY(student_registration_number) REFERENCES students(registration_number)
   ON DELETE RESTRICT ON UPDATE RESTRICT;
