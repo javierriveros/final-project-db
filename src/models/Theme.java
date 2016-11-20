@@ -43,7 +43,7 @@ public class Theme {
   
   @Override
   public String toString() {
-    return String.format("%d %s", this.orderNumber, this.title);
+    return String.format("order_number: %d, title: %s", this.orderNumber, this.title);
   }
   
   /**

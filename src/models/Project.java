@@ -60,7 +60,7 @@ public class Project {
   
   @Override
   public String toString() {
-    return String.format("%d %s", this.orderNumber, this.startDate);
+    return String.format("{order_numer: %d, start_date: %s}", this.orderNumber, this.startDate);
   }
   
   /**

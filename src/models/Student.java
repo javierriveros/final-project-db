@@ -108,7 +108,7 @@ public class Student {
   
   @Override
   public String toString() {
-    return String.format("\n<%d - %d - %s> %s", this.registrationNumber, this.ci, this.incorporationDate, this.name);
+    return String.format("{registration_number: %d, ci: %d, incorporation_date: %s, name: %s, last_name: %s}", this.registrationNumber, this.ci, this.incorporationDate, this.name, this.lastName);
   }
   
   /**

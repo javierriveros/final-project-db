@@ -49,12 +49,12 @@ public class Group {
   
   @Override
   public String toString() {
-    return String.format("<%d: %d> %s", this.id, this.componentsNumber, this.name);
+    return String.format("{id: %d, components_number: %d, name: %s}", this.id, this.componentsNumber, this.name);
   }
   
   /**
-   * Return all themes at DB
-   * @return themes
+   * Return all groups at DB
+   * @return groups
    * @throws java.sql.SQLException
    */
   public static LinkedList<Group> all() throws SQLException {
@@ -71,7 +71,7 @@ public class Group {
   }
   
   /**
-   * Find a theme by the order Number
+   * Find a group by the order Number
    * @param id
    * @return 
    */
@@ -80,7 +80,7 @@ public class Group {
   }
   
   /**
-   * Find a theme by the specified field
+   * Find a group by the specified field
    * @param field
    * @param value
    * @return 

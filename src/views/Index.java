@@ -1,11 +1,10 @@
 package views;
 
 import java.sql.SQLException;
-import models.Group;
+import models.Tribunal;
 
 public class Index {
-  static int cont = 0;
   public static void main(String ...app) throws SQLException {
-    System.out.println(Group.all());
+    System.out.println(Tribunal.all());
   }
 }

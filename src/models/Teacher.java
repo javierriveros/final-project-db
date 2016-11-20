@@ -65,7 +65,7 @@ public class Teacher {
   
   @Override
   public String toString() {
-    return String.format("<%d> %s %s", this.ci, this.name, this.address);
+    return String.format("{ci: %d, name: %s, last_name: %s, address: %s}", this.ci, this.name, this.lastName, this.address);
   }
   
   /**
