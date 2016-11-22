@@ -1,3 +1,11 @@
+CREATE TABLE students (
+  ci serial,
+  registration_number integer,
+  name varchar(25),
+  last_name varchar(25),
+  incorporation_date timestamp
+);
+
 CREATE TABLE groups (
   id serial,
   name varchar(25),
@@ -12,11 +20,12 @@ CREATE TABLE projects (
 CREATE TABLE tribunals (
   id serial,
   test_place varchar(50),
-  components_number integer
+  components_number integer,
+  teacher_id integer
 );
 
 CREATE TABLE teachers (
-  ci serial,
+  id integer,
   name varchar(25),
   last_name varchar(25),
   address varchar(50)
@@ -27,40 +36,56 @@ CREATE TABLE themes (
   title varchar(25)
 );
 
-CREATE TABLE students (
-  registration_number integer,
-  ci serial,
-  name varchar(25),
-  last_name varchar(25),
-  incorporation_date timestamp
+CREATE TABLE users (
+  id serial,
+  username varchar(50) NOT NULL,
+  password varchar(50) NOT NULL,
+  CONSTRAINT pk_users PRIMARY KEY(id)
 );
 
 # Relations
 CREATE TABLE integrates (
-  teacher_ci integer,
+  teacher_id integer,
   tribunal_id integer
 );
 
 CREATE TABLE helps (
-  teacher_ci integer,
+  teacher_id integer,
   student_registration_number integer    
+);
+
+CREATE TABLE conforms (
+  teacher_id integer,
+  group_id integer
 );
 
 # Primary Keys
 ALTER TABLE groups ADD CONSTRAINT pk_groups PRIMARY KEY(id);
+
 ALTER TABLE projects ADD CONSTRAINT pk_projects PRIMARY KEY(order_number);
+
 ALTER TABLE students ADD CONSTRAINT pk_students PRIMARY KEY(registration_number);
-ALTER TABLE teachers ADD CONSTRAINT pk_teachers PRIMARY KEY(ci);
+
+ALTER TABLE teachers ADD CONSTRAINT pk_teachers PRIMARY KEY(id);
+
 ALTER TABLE themes ADD CONSTRAINT pk_themes PRIMARY KEY(order_number);
+
 ALTER TABLE tribunals ADD CONSTRAINT pk_tribunals PRIMARY KEY(id);
-ALTER TABLE integrates ADD CONSTRAINT pk_integrates PRIMARY KEY(teacher_ci, tribunal_id);
-ALTER TABLE helps ADD CONSTRAINT pk_helps PRIMARY KEY(teacher_ci, student_registration_number);
+
+ALTER TABLE integrates ADD CONSTRAINT pk_integrates PRIMARY KEY(teacher_id, tribunal_id);
+
+ALTER TABLE helps ADD CONSTRAINT pk_helps PRIMARY KEY(teacher_id, student_registration_number);
+
+ALTER TABLE conforms ADD CONSTRAINT pk_conforms PRIMARY KEY(teacher_id, group_id);
 
 # Aditional Fields
 ALTER TABLE projects ADD COLUMN tribunal_id integer;
+
 ALTER TABLE students ADD COLUMN group_id integer;
+
 ALTER TABLE students ADD COLUMN order_number integer;
-ALTER TABLE students ADD COLUMN teacher_ci integer;
+
+ALTER TABLE students ADD COLUMN teacher_id integer;
 
 # Constraints & foreign keys
 
@@ -74,10 +99,10 @@ ALTER TABLE students ADD CONSTRAINT fk_students_groups
 
 ALTER TABLE students ADD CONSTRAINT fk_students_projects
   FOREIGN KEY(order_number) REFERENCES projects(order_number) 
-  ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ON DELETE CASCADE ON UPDATE RESTRICT;
 
 ALTER TABLE students ADD CONSTRAINT fk_students_teachers
-  FOREIGN KEY(teacher_ci) REFERENCES teachers(ci) 
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id) 
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE projects ADD CONSTRAINT fk_projects_tribunals
@@ -85,7 +110,7 @@ ALTER TABLE projects ADD CONSTRAINT fk_projects_tribunals
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE integrates ADD CONSTRAINT pk_integrates_teacher 
-  FOREIGN KEY(teacher_ci) REFERENCES teachers(ci)
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id)
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE integrates ADD CONSTRAINT pk_integrates_tribunal 
@@ -93,9 +118,26 @@ ALTER TABLE integrates ADD CONSTRAINT pk_integrates_tribunal
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE helps ADD CONSTRAINT pk_helps_teacher
-  FOREIGN KEY(teacher_ci) REFERENCES teachers(ci)
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id)
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE helps ADD CONSTRAINT pk_helps_students 
   FOREIGN KEY(student_registration_number) REFERENCES students(registration_number)
   ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE conforms ADD CONSTRAINT pk_conforms_teachers
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id)
+  ON DELETE CASCADE ON UPDATE RESTRICT;
+
+ALTER TABLE conforms ADD CONSTRAINT pk_conforms_groups
+  FOREIGN KEY(group_id) REFERENCES groups(id)
+  ON DELETE CASCADE ON UPDATE RESTRICT;
+
+
+#Triggers
+CREATE TABLE 
+
+CREATE TRIGGER update_references
+  BEFORE UPDATE ON accounts
+  FOR EACH ROW
+  EXECUTE PROCEDURE check_account_update();
