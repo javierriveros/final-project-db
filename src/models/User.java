@@ -17,6 +17,9 @@ public class User {
   private String username;
   private String password;
   private String role;
+  public static final String STUDENT = "student";
+  public static final String TEACHER = "teacher";
+  public static final String ADMIN = "admin";
   
   public User(String username, String password, String role) {
     this.username = username;
@@ -55,8 +58,6 @@ public class User {
   public void setRole(String role) {
     this.role = role;
   }
-  
-  
   
   @Override
   public String toString() {

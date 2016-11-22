@@ -31,6 +31,7 @@ public class Login extends javax.swing.JFrame {
       setTitle("SKYNET Login App");     
       getContentPane().setBackground(Color.white);
       setLocationRelativeTo(null);
+      setResizable(false);
       Personalization.addPlaceholder(CajaUsuario, "name.code");
     }
 
@@ -64,6 +65,7 @@ public class Login extends javax.swing.JFrame {
     jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
     Login.setBackground(new java.awt.Color(0, 102, 255));
+    Login.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
     Login.setForeground(new java.awt.Color(255, 255, 255));
     Login.setText("Login");
     Login.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -75,15 +77,17 @@ public class Login extends javax.swing.JFrame {
     });
     jPanel1.add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 260, 70, 30));
 
-    jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+    jLabel2.setFont(new java.awt.Font("Roboto Light", 0, 24)); // NOI18N
     jLabel2.setForeground(new java.awt.Color(255, 255, 255));
     jLabel2.setText("SKYNET Login App");
     jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, -1, -1));
 
+    jLabel5.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 255, 255));
     jLabel5.setText("Copyright By Mejia-Riveros Corporation");
-    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, 30));
+    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, 30));
 
+    CajaContraseña.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
     CajaContraseña.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
         CajaContraseñaKeyPressed(evt);
@@ -91,30 +95,32 @@ public class Login extends javax.swing.JFrame {
     });
     jPanel1.add(CajaContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 320, 30));
 
-    jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+    jLabel3.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
     jLabel3.setForeground(new java.awt.Color(255, 255, 255));
     jLabel3.setText("Username");
-    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
+    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
 
-    jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+    jLabel4.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
     jLabel4.setForeground(new java.awt.Color(255, 255, 255));
     jLabel4.setText("Password");
-    jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
+    jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
 
-    jLabel1.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+    jLabel1.setFont(new java.awt.Font("Roboto", 0, 48)); // NOI18N
     jLabel1.setForeground(new java.awt.Color(255, 255, 255));
     jLabel1.setText("Welcome");
     jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
+    CajaUsuario.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
     CajaUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
     CajaUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
         CajaUsuarioKeyPressed(evt);
       }
     });
-    jPanel1.add(CajaUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 320, 30));
+    jPanel1.add(CajaUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 320, 30));
 
     Limpiar.setBackground(new java.awt.Color(255, 255, 255));
+    Limpiar.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
     Limpiar.setForeground(new java.awt.Color(255, 255, 255));
     Limpiar.setText("Limpiar");
     Limpiar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -127,8 +133,8 @@ public class Login extends javax.swing.JFrame {
     jPanel1.add(Limpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 260, 70, 30));
 
     jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-    jLabel6.setText("________________________________________");
-    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
+    jLabel6.setText("_________________________________________");
+    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, -1, -1));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -138,7 +144,7 @@ public class Login extends javax.swing.JFrame {
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+      .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
     );
 
     pack();
@@ -174,7 +180,29 @@ public class Login extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, "El usuario no se ha encontrado en la Base de datos", "Revisa los campos", JOptionPane.ERROR_MESSAGE);
       return;
     }
-    new views.students.Index().setVisible(true);
+    switch (user.getRole()) {
+      case User.STUDENT:
+        views.students.Index student = new views.students.Index();
+        student.setVisible(true);
+        student.setTitle("Student: " + user.getUsername());
+        dispose();
+        break;
+      case User.TEACHER:
+        views.students.Index index = new views.students.Index();
+        index.setVisible(true);
+        index.setTitle("Teacher: " + user.getUsername());
+        dispose();
+        break;
+      case User.ADMIN:
+        views.students.Index admin = new views.students.Index();
+        admin.setVisible(true);
+        admin.setTitle("Admin: " + user.getUsername());
+        dispose();
+        break;
+      default:
+        JOptionPane.showMessageDialog(this, "Este rol no es válido", "Error", JOptionPane.WARNING_MESSAGE);
+        break;
+    }
   }
   
   private boolean hasText(String text) {
