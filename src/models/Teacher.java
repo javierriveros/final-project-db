@@ -92,7 +92,18 @@ public class Teacher {
    * @return 
    */
   public static Teacher find(long ci) {
-    return findBy("ci", String.valueOf(ci));
+    Teacher teacher = null;
+    try {
+      Connection con = Connection.getInstance();
+      try (Statement sm = con.getCon().createStatement()) {
+        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM teachers WHERE ci=%d", ci));
+        while (rs.next())
+          teacher = getTeacherFromResultSet(rs);
+      }
+    } catch(SQLException sql){
+      java.util.logging.Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, sql);
+    }
+    return teacher;
   }
   
   /**

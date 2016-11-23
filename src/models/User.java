@@ -17,16 +17,26 @@ public class User {
   private String username;
   private String password;
   private String role;
+  private long roleReference;
   public static final String STUDENT = "student";
   public static final String TEACHER = "teacher";
   public static final String ADMIN = "admin";
   
-  public User(String username, String password, String role) {
+  public User(String username, String password, String role, long roleReference) {
     this.username = username;
     this.password = password;
     this.role = role;
+    this.roleReference = roleReference;
   }
 
+  public long getRoleReference() {
+    return roleReference;
+  }
+
+  public void setRoleReference(long roleReference) {
+    this.roleReference = roleReference;
+  }
+  
   public int getId() {
     return id;
   }
@@ -61,7 +71,7 @@ public class User {
   
   @Override
   public String toString() {
-    return String.format("{id: %d, username: %s, password: %s, role: %s}", this.id, this.username, this.password, this.role);
+    return String.format("{id: %d, username: %s, password: %s, role: %s, role_reference: %d}", this.id, this.username, this.password, this.role, this.roleReference);
   }
   
   /**
@@ -141,7 +151,7 @@ public class User {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO users (username, password, role) VALUES ('%s', '%s', '%s')", this.username,this.password, this.role))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO users (username, password, role, role_reference) VALUES ('%s', '%s', '%s', '%d')", this.username,this.password, this.role, this.roleReference))) {
       try {
         ps.execute();
         return true;
@@ -173,7 +183,7 @@ public class User {
   
   private static User getUserFromResultSet(ResultSet rs) {
     try {
-      User user = new User(rs.getString("username"), rs.getString("password"), rs.getString("role"));
+      User user = new User(rs.getString("username"), rs.getString("password"), rs.getString("role"), rs.getLong("role_reference"));
       user.setId(rs.getInt("id"));
       return user;
     } catch(SQLException ex) {

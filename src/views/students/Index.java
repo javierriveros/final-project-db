@@ -16,7 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import models.*;
-import resources.Personalization;
+import resources.Util;
 import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 
 /**
@@ -37,7 +37,7 @@ public class Index extends javax.swing.JFrame {
   public Index() {
     initComponents();
     try {
-      addStudents();
+      showData();
     } catch (SQLException ex) {
       Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -47,13 +47,13 @@ public class Index extends javax.swing.JFrame {
   
   private void addPlaceholders() {
     String text = "Escriba aquí para buscar";
-    Personalization.addPlaceholder(this.searchStudentsField, text);
-    Personalization.addPlaceholder(this.searchGroupsField, text);
-    Personalization.addPlaceholder(this.searchProjectsField, text);
-    Personalization.addPlaceholder(this.searchTeachersField, text);
-    Personalization.addPlaceholder(this.searchTribunalsField, text);
-    Personalization.addPlaceholder(this.searchThemesField, text);
-    Personalization.addPlaceholder(this.searchGroupsField, text);
+    Util.addPlaceholder(this.searchStudentsField, text);
+    Util.addPlaceholder(this.searchGroupsField, text);
+    Util.addPlaceholder(this.searchProjectsField, text);
+    Util.addPlaceholder(this.searchTeachersField, text);
+    Util.addPlaceholder(this.searchTribunalsField, text);
+    Util.addPlaceholder(this.searchThemesField, text);
+    Util.addPlaceholder(this.searchGroupsField, text);
   }
   
   private void addRowSorters() {
@@ -76,7 +76,7 @@ public class Index extends javax.swing.JFrame {
     themesTable.setRowSorter(rSorterThemes);
   }
   
-  private void addStudents() throws SQLException {
+  private void showData() throws SQLException {
     setLocationRelativeTo(null);
     loadStudents();
     loadTeachers();
@@ -268,8 +268,8 @@ public class Index extends javax.swing.JFrame {
     searchStudentsField.setForeground(new java.awt.Color(204, 204, 204));
     searchStudentsField.setText("Escriba aquí para buscar");
     searchStudentsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyTyped(java.awt.event.KeyEvent evt) {
-        searchStudentsFieldKeyTyped(evt);
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        searchStudentsFieldKeyPressed(evt);
       }
     });
 
@@ -734,11 +734,6 @@ public class Index extends javax.swing.JFrame {
       System.out.printf("Error por: %s", ex.getMessage());
     }
   }//GEN-LAST:event_refreshProjectsActionPerformed
-
-  private void searchStudentsFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchStudentsFieldKeyTyped
-    if(searchStudentsBy.getSelectedIndex() == 0) return;
-    rSorterStudents.setRowFilter(RowFilter.regexFilter(searchStudentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_searchStudentsFieldKeyTyped
   
   private void refreshStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshStudentsActionPerformed
     try {
@@ -772,6 +767,11 @@ public class Index extends javax.swing.JFrame {
     if(searchProjectsBy.getSelectedIndex() == 0) return;
     rSorterProjects.setRowFilter(RowFilter.regexFilter(searchProjectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_searchProjectsFieldKeyTyped
+
+  private void searchStudentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchStudentsFieldKeyPressed
+    if(searchStudentsBy.getSelectedIndex() == 0) return;
+    rSorterStudents.setRowFilter(RowFilter.regexFilter(searchStudentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_searchStudentsFieldKeyPressed
   
   /**
    * @param args the command line arguments

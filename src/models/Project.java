@@ -16,8 +16,12 @@ import resources.Connection;
 public class Project {
   private int orderNumber;
   private Timestamp startDate;
+  private Timestamp endDate;
   private int tribunalId;
-
+  private Student student;
+  private Theme theme;
+  private String duration;
+  
   /**
    * Project constructor
    * @param orderNumber
@@ -28,6 +32,8 @@ public class Project {
     this.orderNumber = orderNumber;
     this.startDate = startDate;
     this.tribunalId = tribunalId;
+    this.theme = null;
+    this.student = null;
   }
   
   public int getOrderNumber() {
@@ -58,9 +64,41 @@ public class Project {
     this.tribunalId = tribunalId;
   }
   
+  public Theme getTheme() {
+    return this.theme;
+  }
+  
+  public Student getStudent() {
+    return this.student;
+  }
+
+  public void setStudent(Student student) {
+    this.student = student;
+  }
+
+  public void setTheme(Theme theme) {
+    this.theme = theme;
+  }
+
+  public Timestamp getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Timestamp endDate) {
+    this.endDate = endDate;
+  }
+
+  public void setDuration(String duration) {
+    this.duration = duration;
+  }
+
+  public String getDuration() {
+    return duration;
+  }
+  
   @Override
   public String toString() {
-    return String.format("{order_numer: %d, start_date: %s}", this.orderNumber, this.startDate);
+    return String.format("{order_numer: %d, start_date: %s, end_date: %s, duration: %s}", this.orderNumber, this.startDate, this.endDate, this.duration);
   }
   
   /**
@@ -76,6 +114,24 @@ public class Project {
       ResultSet rs = sm.executeQuery("SELECT * FROM projects");
       while (rs.next())
         projects.add(getProjectFromResultSet(rs));
+    }
+
+    return projects;
+  }
+  
+  /**
+   * Return all projects at DB with attributes
+   * @return projects
+   * @throws java.sql.SQLException
+   */
+  public static LinkedList<Project> allWithAttributes() throws SQLException {
+    LinkedList<Project> projects = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery("select *,  age(p.end_date, p.start_date) from projects p join themes t on t.order_number=p.order_number join students s on p.order_number=s.order_number;");
+      while (rs.next())
+        projects.add(getProjectFromResultSetWithAttributes(rs));
     }
 
     return projects;
@@ -157,6 +213,23 @@ public class Project {
   private static Project getProjectFromResultSet(ResultSet rs) {
     try {
       return new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
+    } catch(SQLException ex) {
+      return null;
+    }
+  }
+  
+  /**
+   * Return a new project with the DB values and attributes
+   * @param rs
+   * @return 
+   */
+  private static Project getProjectFromResultSetWithAttributes(ResultSet rs) {
+    try {
+      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
+      p.setTheme(new Theme(rs.getInt("order_number"), rs.getString("title")));
+      p.setStudent(new Student(rs.getInt("registration_number"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date")));
+      p.setDuration(rs.getString("age"));
+      return p;
     } catch(SQLException ex) {
       return null;
     }

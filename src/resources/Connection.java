@@ -25,7 +25,7 @@ public class Connection {
 
   /**
    * Singleton Method for get the Connection instance
-   * @return 
+   * @return instance
    */
   public static synchronized Connection getInstance() {
     if (instance == null) {
