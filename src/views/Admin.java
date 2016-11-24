@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import models.User;
@@ -14,7 +10,7 @@ import resources.Util;
 
 /**
  *
- * @author Jhonathan Mejia Leon
+ * @author Mejia & Riveros Corp.
  */
 public class Admin extends javax.swing.JFrame {
   private User user;
@@ -41,7 +37,7 @@ public class Admin extends javax.swing.JFrame {
 
   private void addAttributes() {
     setLocationRelativeTo(null);
-    setTitle(String.format("Usted se ha identificado como: %s", this.user.getUsername()));
+    setTitle(String.format("Usted se ha identificado como: %s - Admin", this.user.getUsername()));
     String text = "Escriba aquí para buscar";
     Util.addPlaceholder(teachersField, text);
     Util.addPlaceholder(studentsField, text);
@@ -88,51 +84,51 @@ public class Admin extends javax.swing.JFrame {
     jPanel1 = new javax.swing.JPanel();
     jScrollPane1 = new javax.swing.JScrollPane();
     teachersTable = new javax.swing.JTable();
-    Añadir = new javax.swing.JButton();
-    jButton2 = new javax.swing.JButton();
-    jButton3 = new javax.swing.JButton();
+    addTeacher = new javax.swing.JButton();
+    modifyTeacher = new javax.swing.JButton();
+    deleteTeacher = new javax.swing.JButton();
     searchTeachersBy = new javax.swing.JComboBox();
     teachersField = new javax.swing.JTextField();
     jButton1 = new javax.swing.JButton();
-    jButton4 = new javax.swing.JButton();
+    viewTeacher = new javax.swing.JButton();
     jPanel2 = new javax.swing.JPanel();
     jScrollPane2 = new javax.swing.JScrollPane();
     studentsTable = new javax.swing.JTable();
     searchStudentsBy = new javax.swing.JComboBox();
     studentsField = new javax.swing.JTextField();
     jButton5 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
-    jButton7 = new javax.swing.JButton();
-    Añadir1 = new javax.swing.JButton();
-    jButton8 = new javax.swing.JButton();
+    viewStudent = new javax.swing.JButton();
+    deleteStudent = new javax.swing.JButton();
+    addStudent = new javax.swing.JButton();
+    modifyStudent = new javax.swing.JButton();
     jPanel4 = new javax.swing.JPanel();
     searchProjectsBy = new javax.swing.JComboBox();
-    jButton13 = new javax.swing.JButton();
+    deleteProject = new javax.swing.JButton();
     projectsField = new javax.swing.JTextField();
-    jButton14 = new javax.swing.JButton();
+    modifyProject = new javax.swing.JButton();
     jButton15 = new javax.swing.JButton();
-    Añadir3 = new javax.swing.JButton();
-    jButton16 = new javax.swing.JButton();
+    addProject = new javax.swing.JButton();
+    viewProject = new javax.swing.JButton();
     jScrollPane4 = new javax.swing.JScrollPane();
     projectsTable = new javax.swing.JTable();
     jPanel5 = new javax.swing.JPanel();
-    jButton17 = new javax.swing.JButton();
+    deleteTribunal = new javax.swing.JButton();
     tribunalsField = new javax.swing.JTextField();
-    jButton18 = new javax.swing.JButton();
-    Añadir4 = new javax.swing.JButton();
+    modifyTribunal = new javax.swing.JButton();
+    addTribunal = new javax.swing.JButton();
     searchTribunalsBy = new javax.swing.JComboBox();
     jButton19 = new javax.swing.JButton();
-    jButton20 = new javax.swing.JButton();
+    viewTribunal = new javax.swing.JButton();
     jScrollPane5 = new javax.swing.JScrollPane();
     tribunalsTable = new javax.swing.JTable();
     jPanel3 = new javax.swing.JPanel();
     searchGroupsBy = new javax.swing.JComboBox();
-    jButton9 = new javax.swing.JButton();
+    deleteGroup = new javax.swing.JButton();
     groupsField = new javax.swing.JTextField();
-    jButton10 = new javax.swing.JButton();
+    modifyGroup = new javax.swing.JButton();
     jButton11 = new javax.swing.JButton();
-    Añadir2 = new javax.swing.JButton();
-    jButton12 = new javax.swing.JButton();
+    addGroup = new javax.swing.JButton();
+    viewGroup = new javax.swing.JButton();
     jScrollPane3 = new javax.swing.JScrollPane();
     groupsTable = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -168,21 +164,11 @@ public class Admin extends javax.swing.JFrame {
     });
     jScrollPane1.setViewportView(teachersTable);
 
-    Añadir.setText("Añadir");
-    Añadir.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        AñadirActionPerformed(evt);
-      }
-    });
+    addTeacher.setText("Añadir");
 
-    jButton2.setText("Modificar");
+    modifyTeacher.setText("Modificar");
 
-    jButton3.setText("Eliminar");
-    jButton3.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton3ActionPerformed(evt);
-      }
-    });
+    deleteTeacher.setText("Eliminar");
 
     searchTeachersBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombres", "Apellidos", "Direccion" }));
 
@@ -199,12 +185,7 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton4.setText("Ver");
-    jButton4.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton4ActionPerformed(evt);
-      }
-    });
+    viewTeacher.setText("Ver");
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
@@ -219,13 +200,13 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(teachersField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Añadir)
+            .addComponent(addTeacher)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton2)
+            .addComponent(modifyTeacher)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton3)
+            .addComponent(deleteTeacher)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton4)
+            .addComponent(viewTeacher)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton1)))
         .addContainerGap())
@@ -235,13 +216,13 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(Añadir)
-          .addComponent(jButton2)
-          .addComponent(jButton3)
+          .addComponent(addTeacher)
+          .addComponent(modifyTeacher)
+          .addComponent(deleteTeacher)
           .addComponent(searchTeachersBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(teachersField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton1)
-          .addComponent(jButton4))
+          .addComponent(viewTeacher))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
     );
@@ -284,28 +265,13 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton6.setText("Ver");
-    jButton6.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton6ActionPerformed(evt);
-      }
-    });
+    viewStudent.setText("Ver");
 
-    jButton7.setText("Eliminar");
-    jButton7.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton7ActionPerformed(evt);
-      }
-    });
+    deleteStudent.setText("Eliminar");
 
-    Añadir1.setText("Añadir");
-    Añadir1.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        Añadir1ActionPerformed(evt);
-      }
-    });
+    addStudent.setText("Añadir");
 
-    jButton8.setText("Modificar");
+    modifyStudent.setText("Modificar");
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
@@ -319,13 +285,13 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Añadir1)
+            .addComponent(addStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton8)
+            .addComponent(modifyStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton7)
+            .addComponent(deleteStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton6)
+            .addComponent(viewStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton5))
           .addComponent(jScrollPane2))
@@ -336,12 +302,12 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(Añadir1)
-          .addComponent(jButton8)
-          .addComponent(jButton7)
+          .addComponent(addStudent)
+          .addComponent(modifyStudent)
+          .addComponent(deleteStudent)
           .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton5)
-          .addComponent(jButton6)
+          .addComponent(viewStudent)
           .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
@@ -351,12 +317,7 @@ public class Admin extends javax.swing.JFrame {
 
     searchProjectsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Numero de Orden", "Tema" }));
 
-    jButton13.setText("Eliminar");
-    jButton13.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton13ActionPerformed(evt);
-      }
-    });
+    deleteProject.setText("Eliminar");
 
     projectsField.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -364,7 +325,7 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton14.setText("Modificar");
+    modifyProject.setText("Modificar");
 
     jButton15.setText("Refresh");
     jButton15.addActionListener(new java.awt.event.ActionListener() {
@@ -373,19 +334,9 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    Añadir3.setText("Añadir");
-    Añadir3.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        Añadir3ActionPerformed(evt);
-      }
-    });
+    addProject.setText("Añadir");
 
-    jButton16.setText("Ver");
-    jButton16.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton16ActionPerformed(evt);
-      }
-    });
+    viewProject.setText("Ver");
 
     projectsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -418,13 +369,13 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Añadir3)
+            .addComponent(addProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton14)
+            .addComponent(modifyProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton13)
+            .addComponent(deleteProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton16)
+            .addComponent(viewProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton15)))
         .addContainerGap())
@@ -434,12 +385,12 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel4Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(Añadir3)
-          .addComponent(jButton14)
-          .addComponent(jButton13)
+          .addComponent(addProject)
+          .addComponent(modifyProject)
+          .addComponent(deleteProject)
           .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton15)
-          .addComponent(jButton16)
+          .addComponent(viewProject)
           .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
@@ -447,12 +398,7 @@ public class Admin extends javax.swing.JFrame {
 
     jTabbedPane2.addTab("Proyectos", jPanel4);
 
-    jButton17.setText("Eliminar");
-    jButton17.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton17ActionPerformed(evt);
-      }
-    });
+    deleteTribunal.setText("Eliminar");
 
     tribunalsField.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -460,14 +406,9 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton18.setText("Modificar");
+    modifyTribunal.setText("Modificar");
 
-    Añadir4.setText("Añadir");
-    Añadir4.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        Añadir4ActionPerformed(evt);
-      }
-    });
+    addTribunal.setText("Añadir");
 
     searchTribunalsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Lugar de Presentación" }));
 
@@ -478,12 +419,7 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton20.setText("Ver");
-    jButton20.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton20ActionPerformed(evt);
-      }
-    });
+    viewTribunal.setText("Ver");
 
     tribunalsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -515,13 +451,13 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Añadir4)
+            .addComponent(addTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton18)
+            .addComponent(modifyTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton17)
+            .addComponent(deleteTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton20)
+            .addComponent(viewTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton19))
           .addComponent(jScrollPane5))
@@ -532,13 +468,13 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel5Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(Añadir4)
-          .addComponent(jButton18)
-          .addComponent(jButton17)
+          .addComponent(addTribunal)
+          .addComponent(modifyTribunal)
+          .addComponent(deleteTribunal)
           .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton19)
-          .addComponent(jButton20))
+          .addComponent(viewTribunal))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
     );
@@ -547,12 +483,7 @@ public class Admin extends javax.swing.JFrame {
 
     searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombre" }));
 
-    jButton9.setText("Eliminar");
-    jButton9.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton9ActionPerformed(evt);
-      }
-    });
+    deleteGroup.setText("Eliminar");
 
     groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -560,7 +491,7 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    jButton10.setText("Modificar");
+    modifyGroup.setText("Modificar");
 
     jButton11.setText("Refresh");
     jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -569,19 +500,9 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    Añadir2.setText("Añadir");
-    Añadir2.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        Añadir2ActionPerformed(evt);
-      }
-    });
+    addGroup.setText("Añadir");
 
-    jButton12.setText("Ver");
-    jButton12.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton12ActionPerformed(evt);
-      }
-    });
+    viewGroup.setText("Ver");
 
     groupsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -614,13 +535,13 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Añadir2)
+            .addComponent(addGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton10)
+            .addComponent(modifyGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton9)
+            .addComponent(deleteGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton12)
+            .addComponent(viewGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton11)))
         .addContainerGap())
@@ -630,13 +551,13 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(Añadir2)
-          .addComponent(jButton10)
-          .addComponent(jButton9)
+          .addComponent(addGroup)
+          .addComponent(modifyGroup)
+          .addComponent(deleteGroup)
           .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton11)
-          .addComponent(jButton12))
+          .addComponent(viewGroup))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
     );
@@ -741,46 +662,6 @@ public class Admin extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void Añadir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Añadir2ActionPerformed
-      
-    }//GEN-LAST:event_Añadir2ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-      
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void Añadir4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Añadir4ActionPerformed
-      
-    }//GEN-LAST:event_Añadir4ActionPerformed
-
-    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
-      
-    }//GEN-LAST:event_jButton17ActionPerformed
-
-    private void Añadir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Añadir3ActionPerformed
-      
-    }//GEN-LAST:event_Añadir3ActionPerformed
-
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-      
-    }//GEN-LAST:event_jButton13ActionPerformed
-
-    private void Añadir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Añadir1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Añadir1ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_AñadirActionPerformed
-
   private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
     dispose();
     new views.users.Login().setVisible(true);
@@ -826,58 +707,32 @@ public class Admin extends javax.swing.JFrame {
     try {TableData.loadGroups(groupsTable);}catch(SQLException e){}
   }//GEN-LAST:event_jButton11ActionPerformed
 
-  private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-    try {
-      System.out.println(getPK(groupsTable));
-    } catch(ArrayIndexOutOfBoundsException e) {}
-  }//GEN-LAST:event_jButton12ActionPerformed
-
-  private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    try {
-      System.out.println(getPK(teachersTable));
-    } catch(ArrayIndexOutOfBoundsException e) {}
-  }//GEN-LAST:event_jButton4ActionPerformed
-
-  private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-    try {
-      System.out.println(getPK(studentsTable));
-    } catch(ArrayIndexOutOfBoundsException e) {}
-  }//GEN-LAST:event_jButton6ActionPerformed
-
-  private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-    try {
-      System.out.println(getPK(projectsTable));
-    } catch(ArrayIndexOutOfBoundsException e) {}
-  }//GEN-LAST:event_jButton16ActionPerformed
-
-  private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
-    try {
-      System.out.println(getPK(tribunalsTable));
-    } catch(ArrayIndexOutOfBoundsException e) {}
-  }//GEN-LAST:event_jButton20ActionPerformed
-
+  private void showWarning() {
+    JOptionPane.showMessageDialog(this, "Debes seleccionar una fila", "Selecciona una fila", JOptionPane.WARNING_MESSAGE);
+  }
+  
   private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
-    if(searchTeachersBy.getSelectedIndex() == 0) return;
+    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
     teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
   }//GEN-LAST:event_teachersFieldKeyPressed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-    if(searchStudentsBy.getSelectedIndex() == 0) return;
+    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
     studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(searchProjectsBy.getSelectedIndex() == 0) return;
+    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
     projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
 
   private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-    if(searchTribunalsBy.getSelectedIndex() == 0) return;
+    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
     tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_tribunalsFieldKeyPressed
 
   private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-    if(searchGroupsBy.getSelectedIndex() == 0) return;
+    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
     groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_groupsFieldKeyPressed
 
@@ -886,33 +741,23 @@ public class Admin extends javax.swing.JFrame {
   }
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton Añadir;
-  private javax.swing.JButton Añadir1;
-  private javax.swing.JButton Añadir2;
-  private javax.swing.JButton Añadir3;
-  private javax.swing.JButton Añadir4;
+  private javax.swing.JButton addGroup;
+  private javax.swing.JButton addProject;
+  private javax.swing.JButton addStudent;
+  private javax.swing.JButton addTeacher;
+  private javax.swing.JButton addTribunal;
+  private javax.swing.JButton deleteGroup;
+  private javax.swing.JButton deleteProject;
+  private javax.swing.JButton deleteStudent;
+  private javax.swing.JButton deleteTeacher;
+  private javax.swing.JButton deleteTribunal;
   private javax.swing.JTextField groupsField;
   private javax.swing.JTable groupsTable;
   private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton11;
-  private javax.swing.JButton jButton12;
-  private javax.swing.JButton jButton13;
-  private javax.swing.JButton jButton14;
   private javax.swing.JButton jButton15;
-  private javax.swing.JButton jButton16;
-  private javax.swing.JButton jButton17;
-  private javax.swing.JButton jButton18;
   private javax.swing.JButton jButton19;
-  private javax.swing.JButton jButton2;
-  private javax.swing.JButton jButton20;
-  private javax.swing.JButton jButton3;
-  private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
-  private javax.swing.JButton jButton7;
-  private javax.swing.JButton jButton8;
-  private javax.swing.JButton jButton9;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
@@ -936,6 +781,11 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane4;
   private javax.swing.JScrollPane jScrollPane5;
   private javax.swing.JTabbedPane jTabbedPane2;
+  private javax.swing.JButton modifyGroup;
+  private javax.swing.JButton modifyProject;
+  private javax.swing.JButton modifyStudent;
+  private javax.swing.JButton modifyTeacher;
+  private javax.swing.JButton modifyTribunal;
   private javax.swing.JTextField projectsField;
   private javax.swing.JTable projectsTable;
   private javax.swing.JComboBox searchGroupsBy;
@@ -949,5 +799,10 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JTable teachersTable;
   private javax.swing.JTextField tribunalsField;
   private javax.swing.JTable tribunalsTable;
+  private javax.swing.JButton viewGroup;
+  private javax.swing.JButton viewProject;
+  private javax.swing.JButton viewStudent;
+  private javax.swing.JButton viewTeacher;
+  private javax.swing.JButton viewTribunal;
   // End of variables declaration//GEN-END:variables
 }

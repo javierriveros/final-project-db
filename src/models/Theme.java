@@ -21,8 +21,6 @@ public class Theme {
   }
 
   public void setOrderNumber(int orderNumber) {
-    if (orderNumber > 0) 
-      throw new NumberFormatException("Order Number must be greater than zero");
     this.orderNumber = orderNumber;
   }
 
@@ -31,8 +29,6 @@ public class Theme {
   }
 
   public void setTitle(String title) {
-    if(title == null || title.length() <= 0)
-      throw new NullPointerException("Name can't be empty or null");
     this.title = title;
   }
 

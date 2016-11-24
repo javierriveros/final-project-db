@@ -65,7 +65,7 @@ public class TableData {
   public static void loadProjects(JTable projectsTable) throws SQLException {
     DefaultTableModel projectsModel = (DefaultTableModel) projectsTable.getModel();
     Util.clearTable(projectsModel);
-    LinkedList<Project> projects = Project.allWithAttributes();
+    LinkedList<Project> projects = Project.all();
     projects.forEach(project -> {
       projectsModel.addRow(new Object[] {
         project.getOrderNumber(),

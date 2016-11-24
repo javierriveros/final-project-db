@@ -40,8 +40,6 @@ public class Teacher {
   }
 
   public void setName(String name) {
-    if(name == null || name.length() <= 0)
-      throw new NullPointerException("Name can't be empty or null");
     this.name = name;
   }
 
@@ -50,8 +48,6 @@ public class Teacher {
   }
 
   public void setLastName(String lastName) {
-    if(lastName == null || lastName.length() <= 0)
-      throw new NullPointerException("Last Name can't be empty or null");
     this.lastName = lastName;
   }
 

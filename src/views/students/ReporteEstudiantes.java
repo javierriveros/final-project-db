@@ -1,11 +1,10 @@
 package views.students;
 
-import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 import javax.swing.JFrame;
 
 /**
  *
- * @author Jhonathan Mejia Leon
+ * @author Mejia & Riveros Corp.
  */
 public class ReporteEstudiantes extends javax.swing.JFrame {
 

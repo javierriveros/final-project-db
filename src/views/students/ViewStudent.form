@@ -129,7 +129,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="teachersField" min="-2" pref="280" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                              <Component id="viewTeacher" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -146,7 +146,7 @@
                           <Component id="searchTeachersBy" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="teachersField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="viewTeacher" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="352" max="32767" attributes="0"/>
@@ -229,7 +229,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton4">
+            <Component class="javax.swing.JButton" name="viewTeacher">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ver"/>
               </Properties>
@@ -256,7 +256,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="projectsField" min="-2" pref="280" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton16" min="-2" max="-2" attributes="0"/>
+                              <Component id="viewProject" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jButton15" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -274,7 +274,7 @@
                           <Component id="searchProjectsBy" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="projectsField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton15" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton16" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="viewProject" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane4" pref="352" max="32767" attributes="0"/>
@@ -307,7 +307,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton15ActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton16">
+            <Component class="javax.swing.JButton" name="viewProject">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ver"/>
               </Properties>
@@ -383,7 +383,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="tribunalsField" min="-2" pref="280" max="-2" attributes="0"/>
                               <EmptySpace pref="312" max="32767" attributes="0"/>
-                              <Component id="jButton20" min="-2" max="-2" attributes="0"/>
+                              <Component id="viewTribunal" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jButton19" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -400,7 +400,7 @@
                           <Component id="searchTribunalsBy" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tribunalsField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton19" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton20" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="viewTribunal" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane5" pref="352" max="32767" attributes="0"/>
@@ -433,7 +433,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton19ActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton20">
+            <Component class="javax.swing.JButton" name="viewTribunal">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ver"/>
               </Properties>

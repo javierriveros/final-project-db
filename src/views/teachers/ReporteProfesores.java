@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author Jhonathan Mejia Leon
+ * @author Mejia & Riveros Corp.
  */
 public class ReporteProfesores extends javax.swing.JFrame {
 

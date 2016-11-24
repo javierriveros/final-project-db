@@ -9,17 +9,19 @@ import java.util.logging.Level;
 import resources.Connection;
 
 /**
- * Inverstigation Group Model
+ * Investigation Group Model
  * @author Javier Riveros <walter.riveros@unillanos.edu.co>
  */
 public class Group {
   private int id;
   private String name;
+  private String description;
   private int componentsNumber;
 
-  public Group(int id, String name, int componentsNumber) {
+  public Group(int id, String name, String description, int componentsNumber) {
     this.id = id;
     this.name = name;
+    this.description = description;
     this.componentsNumber = componentsNumber;
   }
 
@@ -39,6 +41,14 @@ public class Group {
     this.name = name;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public int getComponentsNumber() {
     return componentsNumber;
   }
@@ -49,7 +59,7 @@ public class Group {
   
   @Override
   public String toString() {
-    return String.format("{id: %d, components_number: %d, name: %s}", this.id, this.componentsNumber, this.name);
+    return String.format("{id: %d, components_number: %d, name: %s, description: %s}", this.id, this.componentsNumber, this.name, this.description);
   }
   
   /**
@@ -108,7 +118,7 @@ public class Group {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, components_number) VALUES ('%s', '%d')", this.name, this.componentsNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, description, components_number) VALUES ('%s', '%s', '%d')", this.name, this.description, this.componentsNumber))) {
       try {
         ps.execute();
         return true;
@@ -127,7 +137,7 @@ public class Group {
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE groups SET name='%s', components_number=%d WHERE id=%d;", this.name, this.componentsNumber, this.id))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE groups SET name='%s', components_number=%d, description='%s' WHERE id=%d;", this.name, this.description, this.componentsNumber, this.id))) {
       try {
         ps.execute();
         return true;
@@ -164,7 +174,7 @@ public class Group {
    */
   private static Group getGroupFromResultSet(ResultSet rs) {
     try {
-      return new Group(rs.getInt("id"), rs.getString("name"), rs.getInt("components_number"));
+      return new Group(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("components_number"));
     } catch(SQLException ex) {
       return null;
     }

@@ -111,27 +111,9 @@ public class Project {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM projects");
+      ResultSet rs = sm.executeQuery("select *, age(p.end_date, p.start_date) from projects p left join themes t on t.order_number=p.order_number left join students s on p.order_number=s.order_number;");
       while (rs.next())
         projects.add(getProjectFromResultSet(rs));
-    }
-
-    return projects;
-  }
-  
-  /**
-   * Return all projects at DB with attributes
-   * @return projects
-   * @throws java.sql.SQLException
-   */
-  public static LinkedList<Project> allWithAttributes() throws SQLException {
-    LinkedList<Project> projects = new LinkedList<>();
-    Connection con = Connection.getInstance();
-    
-    try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("select *,  age(p.end_date, p.start_date) from projects p join themes t on t.order_number=p.order_number join students s on p.order_number=s.order_number;");
-      while (rs.next())
-        projects.add(getProjectFromResultSetWithAttributes(rs));
     }
 
     return projects;
@@ -231,7 +213,11 @@ public class Project {
    */
   private static Project getProjectFromResultSet(ResultSet rs) {
     try {
-      return new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
+      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
+      p.setTheme(new Theme(rs.getInt("order_number"), rs.getString("title")));
+      p.setStudent(new Student(rs.getInt("registration_number"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date")));
+      p.setDuration(rs.getString("age"));
+      return p;
     } catch(SQLException ex) {
       return null;
     }

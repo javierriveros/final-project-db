@@ -2,18 +2,14 @@ package views.projects;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import models.Project;
-import models.Student;
-import models.Theme;
 
 
 /**
  *
- * @author Jhonathan Mejia Leon
+ * @author Mejia & Riveros Corp.
  */
 public class ReporteProyectos extends javax.swing.JFrame {
 
@@ -34,7 +30,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
   }
   
   private void addData() throws SQLException {
-    LinkedList<Project> projects = Project.allWithAttributes();
+    LinkedList<Project> projects = Project.all();
     DefaultTableModel model = (DefaultTableModel) projectsTable.getModel();
     projects.forEach(project -> {
       model.addRow(new Object[] {
@@ -43,7 +39,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
         project.getStudent().getRegistrationNumber(),
         project.getStudent().getName(),
         project.getStartDate(),
-        project.getDuration()
+        project.getDuration() == null ? "En curso" : project.getDuration()
       });
     });
   }
@@ -75,7 +71,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Cod_Proyecto", "Tema", "Cod_Integrante", "Nombres Integrantes", "Fecha de Inicio", "Tiempo de Duracion"
+        "Cod Proyecto", "Tema", "Cod Estudiante", "Nombre Estudiante", "Fecha de Inicio", "Tiempo de Duracion"
       }
     ) {
       boolean[] canEdit = new boolean [] {

@@ -43,8 +43,6 @@ public class Student {
   }
 
   public void setRegistrationNumber(int registrationNumber) {
-    if(registrationNumber < 0) 
-      throw new NumberFormatException("Registration Number must be greater than zero");
     this.registrationNumber = registrationNumber;
   }
 
@@ -53,8 +51,6 @@ public class Student {
   }
 
   public void setName(String name) {
-    if(name == null || name.length() <= 0)
-      throw new NullPointerException("Name can't be empty or null");
     this.name = name;
   }
   
@@ -63,8 +59,6 @@ public class Student {
   }
 
   public void setLastName(String lastName) {
-    if(lastName == null || lastName.length() <= 0)
-      throw new NullPointerException("Last Name can't be empty or null");
     this.lastName = lastName;
   }
 
@@ -73,8 +67,6 @@ public class Student {
   }
 
   public void setIncorporationDate(Timestamp incorporationDate) {
-    if(incorporationDate == null) 
-      throw new NullPointerException("Incorporation Date can't be emtpy");
     this.incorporationDate = incorporationDate;
   }
 
