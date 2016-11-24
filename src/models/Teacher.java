@@ -20,8 +20,8 @@ public class Teacher {
   
   public Teacher() {}
   
-  public Teacher(long ci, String name, String lastName, String address) {
-    this.id = ci;
+  public Teacher(long id, String name, String lastName, String address) {
+    this.id = id;
     this.name = name;
     this.address = address;
     this.lastName = lastName;
@@ -65,7 +65,7 @@ public class Teacher {
   
   @Override
   public String toString() {
-    return String.format("{ci: %d, name: %s, last_name: %s, address: %s}", this.id, this.name, this.lastName, this.address);
+    return String.format("{id: %d, name: %s, last_name: %s, address: %s}", this.id, this.name, this.lastName, this.address);
   }
   
   /**
@@ -96,7 +96,7 @@ public class Teacher {
     try {
       Connection con = Connection.getInstance();
       try (Statement sm = con.getCon().createStatement()) {
-        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM teachers WHERE ci=%d", ci));
+        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM teachers WHERE id=%d", ci));
         while (rs.next())
           teacher = getTeacherFromResultSet(rs);
       }
@@ -135,12 +135,12 @@ public class Teacher {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO teachers (ci, name, address) VALUES ('%d','%s','%s')", this.id, this.name, this.address))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO teachers (id, name, last_name, address) VALUES ('%d','%s', '%s','%s')", this.id, this.name, this.lastName, this.address))) {
       try {
         ps.execute();
         return true;
       } catch(SQLException e) {
-        System.out.println("Hubo un error por " + e.getMessage());
+        System.out.printf("Hubo un error por: %s", e.getMessage());
         return false;
       }
     }
@@ -173,7 +173,7 @@ public class Teacher {
   public boolean destroy() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM teachers WHERE ci='%d'", this.id))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM teachers WHERE id=%d", this.id))) {
       try {
         ps.execute();
         return true;
@@ -188,7 +188,7 @@ public class Teacher {
   
   private static Teacher getTeacherFromResultSet(ResultSet rs) {
     try {
-      return new Teacher(rs.getInt("ci"), rs.getString("name"), rs.getString("last_name"), rs.getString("address"));
+      return new Teacher(rs.getInt("id"), rs.getString("name"), rs.getString("last_name"), rs.getString("address"));
     } catch(SQLException ex) {
       //To change
       System.out.println(ex.getMessage());

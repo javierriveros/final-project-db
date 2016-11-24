@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import models.User;
+import resources.Util;
 
 /**
  *
@@ -168,7 +169,7 @@ public class Login extends javax.swing.JFrame {
   }//GEN-LAST:event_LoginActionPerformed
 
   private void doLogin() {
-    if(!hasText(this.CajaUsuario.getText()) || !hasText(String.valueOf(this.CajaContraseña.getPassword()))) {
+    if(!Util.hasText(this.CajaUsuario.getText()) || !Util.hasText(String.valueOf(this.CajaContraseña.getPassword()))) {
       JOptionPane.showMessageDialog(this, "Debes llenar todos los campos", "Rellena los campos", JOptionPane.ERROR_MESSAGE);
       return;
     }
@@ -195,10 +196,6 @@ public class Login extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Este rol no es válido", "Error", JOptionPane.WARNING_MESSAGE);
         break;
     }
-  }
-
-  private boolean hasText(String text) {
-    return text.replaceAll(" ", "").length() > 0;
   }
   
   private void limpiar(){

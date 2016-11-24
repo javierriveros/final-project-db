@@ -35,4 +35,17 @@ public class Util {
       i-=1;
     }
   }
+  
+  public static boolean hasText(String text) {
+    return text.replaceAll(" ", "").length() > 0;
+  }
+  
+  public static boolean isNumeric(String text) {
+    try {
+      Integer.parseInt(text);
+      return true;
+    } catch(NumberFormatException e) {
+      return false;
+    }
+  }
 }

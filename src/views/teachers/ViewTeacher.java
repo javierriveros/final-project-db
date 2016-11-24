@@ -1,6 +1,9 @@
 package views.teachers;
 
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 import models.Teacher;
 import models.User;
 import resources.TableData;
@@ -14,6 +17,12 @@ public class ViewTeacher extends javax.swing.JFrame {
   private User user;
   private Teacher teacher;
   
+  //Sorters
+  private TableRowSorter studentsSorter;
+  private TableRowSorter projectsSorter;
+  private TableRowSorter tribunalsSorter;
+  private TableRowSorter groupsSorter;
+  
   /**
    * Creates new form Ventana
    * @param user
@@ -24,6 +33,7 @@ public class ViewTeacher extends javax.swing.JFrame {
     initComponents();
     configWindow();
     addMyData();
+    addSorters();
     try {
       loadData();
     } catch(SQLException e) {}
@@ -51,6 +61,20 @@ public class ViewTeacher extends javax.swing.JFrame {
     TableData.loadProjects(projectsTable);
     TableData.loadTribunals(tribunalsTable);
     TableData.loadGroups(groupsTable);
+  }
+  
+  private void addSorters() {
+    studentsSorter = new TableRowSorter(studentsTable.getModel());
+    studentsTable.setRowSorter(studentsSorter);
+    
+    projectsSorter = new TableRowSorter(projectsTable.getModel());
+    projectsTable.setRowSorter(projectsSorter);
+    
+    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
+    tribunalsTable.setRowSorter(tribunalsSorter);
+    
+    groupsSorter = new TableRowSorter(groupsTable.getModel());
+    groupsTable.setRowSorter(tribunalsSorter);
   }
 
   /**
@@ -276,6 +300,12 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     jTabbedPane2.addTab("Proyectos", jPanel4);
 
+    tribunalsField.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        tribunalsFieldKeyPressed(evt);
+      }
+    });
+
     jButton18.setText("Modificar");
 
     searchTribunalsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Lugar de Presentación" }));
@@ -344,6 +374,12 @@ public class ViewTeacher extends javax.swing.JFrame {
     jTabbedPane2.addTab("Tribunal", jPanel5);
 
     searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombre" }));
+
+    groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        groupsFieldKeyPressed(evt);
+      }
+    });
 
     jButton10.setText("Modificar");
 
@@ -428,6 +464,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     jLabel5.setText("Dirección:");
 
     jButton1.setText("Modificar");
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1ActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
     jPanel6.setLayout(jPanel6Layout);
@@ -656,12 +697,44 @@ public class ViewTeacher extends javax.swing.JFrame {
   }//GEN-LAST:event_jButton11ActionPerformed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-    // TODO add your handling code here:
+    if(searchStudentsBy.getSelectedIndex() == 0) return;
+    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    // TODO add your handling code here:
+    if(searchProjectsBy.getSelectedIndex() == 0) return;
+    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
+
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    String name = this.namesField.getText();
+    String lastName = this.lastNamesField.getText();
+    String address = this.addressField.getText();
+    
+    if (!Util.hasText(address) || !Util.hasText(name) || !Util.hasText(lastName)) {
+      JOptionPane.showMessageDialog(this, "Debes llenar todos los campos", "Rellena los campos", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    if (!address.equals(this.teacher.getAddress())) this.teacher.setAddress(address);
+    if (!name.equals(this.teacher.getName())) this.teacher.setName(name);
+    if (!lastName.equals(this.teacher.getLastName())) this.teacher.setLastName(lastName);
+    try {
+      this.teacher.update();
+      JOptionPane.showMessageDialog(this, "Datos guardados", "OK", JOptionPane.INFORMATION_MESSAGE);
+    } catch(SQLException e) {
+      JOptionPane.showMessageDialog(this, String.format("No se ha podido actualizar por: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+  }//GEN-LAST:event_jButton1ActionPerformed
+
+  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
+    if(searchTribunalsBy.getSelectedIndex() == 0) return;
+    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_tribunalsFieldKeyPressed
+
+  private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
+    if(searchGroupsBy.getSelectedIndex() == 0) return;
+    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_groupsFieldKeyPressed
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton Añadir3;
