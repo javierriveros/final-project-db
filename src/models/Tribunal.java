@@ -120,6 +120,25 @@ public class Tribunal {
   }
   
   /**
+   * Update the current tribunal
+   * @return <code>true</code> if could be updated or <code>false</code> if else
+     * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE tribunals SET test_place='%s', components_number=%d WHERE id=%d", this.testPlace, this.componentsNumber, this.id))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.printf("Hubo un error por %s", e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
    * Destroy the current tribunal
    * @return <code>true</code> if could be destroyed or <code>false</code> if else
    * @throws java.sql.SQLException

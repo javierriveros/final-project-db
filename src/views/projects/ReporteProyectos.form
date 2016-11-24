@@ -125,7 +125,7 @@
                     <Column editable="false" title="Tema" type="java.lang.Object"/>
                     <Column editable="true" title="Cod_Integrante" type="java.lang.Object"/>
                     <Column editable="true" title="Nombres Integrantes" type="java.lang.Object"/>
-                    <Column editable="true" title="Fecha de Presentacion" type="java.lang.Object"/>
+                    <Column editable="true" title="Fecha de Inicio" type="java.lang.Object"/>
                     <Column editable="true" title="Tiempo de Duracion" type="java.lang.Object"/>
                   </Table>
                 </Property>

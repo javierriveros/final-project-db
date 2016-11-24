@@ -187,6 +187,25 @@ public class Project {
   }
   
   /**
+   * Save the update project
+   * @return <code>true</code> if could be updated or <code>false</code> if else
+     * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE projects SET start_date='%s', tribunal_id=%d WHERE order_number=%d;", this.startDate, this.tribunalId, this.orderNumber))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.printf("Hubo un error por %s", e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
    * Destroy the current project
    * @return <code>true</code> if could be destroyed or <code>false</code> if else
    * @throws java.sql.SQLException

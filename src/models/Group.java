@@ -120,6 +120,25 @@ public class Group {
   }
   
   /**
+   * Save the update group
+   * @return <code>true</code> if could be saved or <code>false</code> if else
+     * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE groups SET name='%s', components_number=%d WHERE id=%d;", this.name, this.componentsNumber, this.id))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.printf("Hubo un error por %s", e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
    * Destroy the current group
    * @return <code>true</code> if could be destroyed or <code>false</code> if else
    * @throws java.sql.SQLException

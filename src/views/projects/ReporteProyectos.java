@@ -75,7 +75,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Cod_Proyecto", "Tema", "Cod_Integrante", "Nombres Integrantes", "Fecha de Presentacion", "Tiempo de Duracion"
+        "Cod_Proyecto", "Tema", "Cod_Integrante", "Nombres Integrantes", "Fecha de Inicio", "Tiempo de Duracion"
       }
     ) {
       boolean[] canEdit = new boolean [] {

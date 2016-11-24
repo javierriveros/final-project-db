@@ -8,10 +8,8 @@ package views.users;
 import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import models.User;
-import resources.Util;
 
 /**
  *
@@ -200,8 +198,7 @@ public class Login extends javax.swing.JFrame {
   }
 
   private boolean hasText(String text) {
-    Pattern pattern = Pattern.compile("[a-zA-Z.\\s,]+");
-    return pattern.matcher(text).matches();
+    return text.replaceAll(" ", "").length() > 0;
   }
   
   private void limpiar(){

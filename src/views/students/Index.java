@@ -106,7 +106,7 @@ public class Index extends javax.swing.JFrame {
     LinkedList<Teacher> teachers = Teacher.all();
     teachers.forEach(teacher -> {
       teachersModel.addRow(new Object[] {
-        teacher.getCi(),
+        teacher.getId(),
         teacher.getName(),
         teacher.getLastName()
       });

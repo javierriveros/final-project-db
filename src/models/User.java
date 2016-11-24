@@ -163,6 +163,25 @@ public class User {
   }
   
   /**
+   * Update the current user
+   * @return <code>true</code> if could be updated or <code>false</code> if else
+     * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE users SET username='%s', password='%s' WHERE id=%d", this.username,this.password, this.id))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.println("Hubo un error por " + e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
    * Destroy the current users
    * @return <code>true</code> if could be destroyed or <code>false</code> if else
    * @throws java.sql.SQLException

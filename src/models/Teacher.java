@@ -13,7 +13,7 @@ import resources.Connection;
  * @author Javier Riveros <walter.riveros@unillanos.edu.co>
  */
 public class Teacher {
-  private long ci;
+  private long id;
   private String name;
   private String lastName;
   private String address;
@@ -21,18 +21,18 @@ public class Teacher {
   public Teacher() {}
   
   public Teacher(long ci, String name, String lastName, String address) {
-    this.ci = ci;
+    this.id = ci;
     this.name = name;
     this.address = address;
     this.lastName = lastName;
   }
 
-  public long getCi() {
-    return ci;
+  public long getId() {
+    return id;
   }
 
-  public void setCi(long ci) {
-    this.ci = ci;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -65,7 +65,7 @@ public class Teacher {
   
   @Override
   public String toString() {
-    return String.format("{ci: %d, name: %s, last_name: %s, address: %s}", this.ci, this.name, this.lastName, this.address);
+    return String.format("{ci: %d, name: %s, last_name: %s, address: %s}", this.id, this.name, this.lastName, this.address);
   }
   
   /**
@@ -135,7 +135,26 @@ public class Teacher {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO teachers (ci, name, address) VALUES ('%d','%s','%s')", this.ci, this.name, this.address))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO teachers (ci, name, address) VALUES ('%d','%s','%s')", this.id, this.name, this.address))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.println("Hubo un error por " + e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
+   * Save the update teacher
+   * @return <code>true</code> if could be updated or <code>false</code> if else
+   * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE teachers SET name='%s', last_name='%s', address='%s' WHERE id=%d;", this.name, this.lastName, this.address, this.id))) {
       try {
         ps.execute();
         return true;
@@ -154,7 +173,7 @@ public class Teacher {
   public boolean destroy() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM teachers WHERE ci='%d'", this.ci))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM teachers WHERE ci='%d'", this.id))) {
       try {
         ps.execute();
         return true;

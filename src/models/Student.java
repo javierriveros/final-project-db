@@ -179,6 +179,25 @@ public class Student {
   }
   
   /**
+   * Update the current student
+   * @return <code>true</code> if could be saved or <code>false</code> if else
+     * @throws java.sql.SQLException
+   */
+  public boolean update() throws SQLException {
+    Connection con = Connection.getInstance();
+    try (
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE students SET registration_number='%d', name='%s', last_name='%s', incorporation_date='%s' WHERE ci=%d", this.registrationNumber, this.name, this.lastName, this.incorporationDate, this.ci))) {
+      try {
+        ps.execute();
+        return true;
+      } catch(SQLException e) {
+        System.out.println("Hubo un error por " + e.getMessage());
+        return false;
+      }
+    }
+  }
+  
+  /**
    * Destroy the current student
    * @return <code>true</code> if could be destroyed or <code>false</code> if else
    * @throws java.sql.SQLException

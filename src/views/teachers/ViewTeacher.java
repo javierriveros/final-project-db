@@ -40,7 +40,7 @@ public class ViewTeacher extends javax.swing.JFrame {
   }
   
   private void addMyData() {
-    this.idField.setText(String.valueOf(this.teacher.getCi()));
+    this.idField.setText(String.valueOf(this.teacher.getId()));
     this.namesField.setText(this.teacher.getName());
     this.lastNamesField.setText(this.teacher.getLastName());
     this.addressField.setText(this.teacher.getAddress());

@@ -48,7 +48,7 @@ public class ReporteGrupo extends javax.swing.JFrame {
 
       },
       new String [] {
-        "ID", "Nombre del Grupo", "Cod_Integrante", "Nombre Integrante", "Apellido Integrante"
+        "ID", "Nombre del Grupo", "Cod Profesor", "Nombre Profesor", "Apellido profesor"
       }
     ) {
       boolean[] canEdit = new boolean [] {

@@ -1,6 +1,6 @@
 CREATE TABLE students (
-  ci serial,
-  registration_number integer,
+	registration_number serial,
+  ci integer,
   name varchar(25),
   last_name varchar(25),
   incorporation_date timestamp
@@ -9,12 +9,15 @@ CREATE TABLE students (
 CREATE TABLE groups (
   id serial,
   name varchar(25),
-  components_number integer
+  components_number integer,
+  description text
 );
 
 CREATE TABLE projects (
   order_number serial,
-  start_date timestamp
+  start_date timestamp,
+  end_date timestamp,
+  status varchar(25) NOT NULL DEFAULT 'No evaluado'
 );
 
 CREATE TABLE tribunals (
@@ -40,7 +43,8 @@ CREATE TABLE users (
   id serial,
   username varchar(50) NOT NULL,
   password varchar(50) NOT NULL,
-  CONSTRAINT pk_users PRIMARY KEY(id)
+  role varchar(50) NOT NULL DEFAULT 'student',
+  role_reference integer
 );
 
 # Relations
@@ -77,6 +81,8 @@ ALTER TABLE integrates ADD CONSTRAINT pk_integrates PRIMARY KEY(teacher_id, trib
 ALTER TABLE helps ADD CONSTRAINT pk_helps PRIMARY KEY(teacher_id, student_registration_number);
 
 ALTER TABLE conforms ADD CONSTRAINT pk_conforms PRIMARY KEY(teacher_id, group_id);
+
+ALTER TABLE users ADD CONSTRAINT pk_users PRIMARY KEY(id);
 
 # Aditional Fields
 ALTER TABLE projects ADD COLUMN tribunal_id integer;
@@ -133,11 +139,37 @@ ALTER TABLE conforms ADD CONSTRAINT pk_conforms_groups
   FOREIGN KEY(group_id) REFERENCES groups(id)
   ON DELETE CASCADE ON UPDATE RESTRICT;
 
+ALTER TABLE tribunals ADD CONSTRAINT pk_tribunals_teachers
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id)
+  ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 #Triggers
-CREATE TABLE 
+##Crear un usuario al insertar un estudiante
 
-CREATE TRIGGER update_references
-  BEFORE UPDATE ON accounts
-  FOR EACH ROW
-  EXECUTE PROCEDURE check_account_update();
+CREATE OR REPLACE FUNCTION create_user_from_student() RETURNS TRIGGER AS
+$create_user_from_student$
+DECLARE
+BEGIN
+	INSERT INTO users(username, password, role_reference) VALUES(lower(NEW.name), NEW.ci, NEW.registration_number);
+	RETURN NEW;
+END;
+$create_user_from_student$ LANGUAGE plpgsql;
+
+CREATE TRIGGER create_user_from_student AFTER INSERT ON students
+FOR EACH ROW EXECUTE PROCEDURE create_user_from_student();
+
+
+##Crear un usuario al insertar un profesor
+
+CREATE OR REPLACE FUNCTION create_user_from_teacher() RETURNS TRIGGER AS
+$create_user_from_teacher$
+DECLARE
+BEGIN
+	INSERT INTO users(username, password, role, role_reference) VALUES(lower(NEW.name), lower(NEW.name), 'teacher', NEW.id);
+	RETURN NEW;
+END;
+$create_user_from_teacher$ LANGUAGE plpgsql;
+
+CREATE TRIGGER create_user_from_teacher AFTER INSERT ON teachers
+FOR EACH ROW EXECUTE PROCEDURE create_user_from_teacher();
+
