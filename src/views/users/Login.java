@@ -154,18 +154,24 @@ public class Login extends javax.swing.JFrame {
 
   private void CajaUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CajaUsuarioKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-      doLogin();
+      new Thread(() -> {
+        doLogin();
+      }).start();
     }
   }//GEN-LAST:event_CajaUsuarioKeyPressed
 
   private void CajaContraseñaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CajaContraseñaKeyPressed
     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-      doLogin();
+      new Thread(() -> {
+        doLogin();
+      }).start();
     }
   }//GEN-LAST:event_CajaContraseñaKeyPressed
 
   private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
-    doLogin();
+    new Thread(() -> {
+      doLogin();
+    }).start();
   }//GEN-LAST:event_LoginActionPerformed
 
   private void doLogin() {
@@ -176,6 +182,7 @@ public class Login extends javax.swing.JFrame {
     User user = User.find(CajaUsuario.getText(), String.valueOf(CajaContraseña.getPassword()));
     if (user == null) {
       JOptionPane.showMessageDialog(this, "El usuario no se ha encontrado en la Base de datos", "Revisa los campos", JOptionPane.ERROR_MESSAGE);
+      limpiar();
       return;
     }
     
@@ -201,6 +208,7 @@ public class Login extends javax.swing.JFrame {
   private void limpiar(){
     CajaUsuario.setText("");
     CajaContraseña.setText("");
+    CajaUsuario.grabFocus();
   }
   
   /**
