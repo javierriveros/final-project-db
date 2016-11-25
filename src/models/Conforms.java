@@ -20,6 +20,8 @@ import resources.Connection;
 public class Conforms {
   private int teacherId;
   private int groupId;
+  private Teacher teacher;
+  private Group group;
 
   public Conforms(int teacherId, int groupId) {
     this.teacherId = teacherId;
@@ -41,6 +43,22 @@ public class Conforms {
   public void setGroupId(int groupId) {
     this.groupId = groupId;
   }
+
+  public Teacher getTeacher() {
+    return teacher;
+  }
+
+  public void setTeacher(Teacher teacher) {
+    this.teacher = teacher;
+  }
+
+  public Group getGroup() {
+    return group;
+  }
+
+  public void setGroup(Group group) {
+    this.group = group;
+  }
   
   @Override
   public String toString() {
@@ -52,7 +70,7 @@ public class Conforms {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM conforms");
+      ResultSet rs = sm.executeQuery("select g.id as group_id, g.name as group_name, g.description as group_description, g.components_number as group_components_number, t.id as teacher_id, t.name as teacher_name, t.last_name as teacher_last_name, t.address as teacher_address from conforms c join teachers t on c.teacher_id=t.id join groups g on g.id=c.group_id;");
       while (rs.next())
         conforms.add(getConformsFromResultSet(rs));
     }
@@ -65,7 +83,7 @@ public class Conforms {
     try {
       Connection con = Connection.getInstance();
       try (Statement sm = con.getCon().createStatement()) {
-        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM conforms WHERE teacher_id='%s' AND group_id", teacherId, groupId));
+        ResultSet rs = sm.executeQuery(String.format("SELECT g.id AS group_id, g.name AS group_name, g.description AS group_description, g.components_number AS group_components_number, t.id AS teacher_id, t.name AS teacher_name, t.last_name AS teacher_last_name, t.address AS teacher_address FROM conforms c JOIN teachers t ON c.teacher_id=t.id JOIN groups g ON g.id=c.group_id WHERE teacher_id='%s' AND group_id", teacherId, groupId));
         while (rs.next())
           conforms = getConformsFromResultSet(rs);
       }
@@ -105,7 +123,10 @@ public class Conforms {
   
   private static Conforms getConformsFromResultSet(ResultSet rs) {
     try {
-      return new Conforms(rs.getInt("teacher_id"), rs.getInt("group_id"));
+      Conforms conforms = new Conforms(rs.getInt("teacher_id"), rs.getInt("group_id"));
+      conforms.setGroup(new Group(rs.getInt("group_id"), rs.getString("group_name"), rs.getString("group_description"), rs.getInt("group_components_number")));
+      conforms.setTeacher(new Teacher(rs.getLong("teacher_id"), rs.getString("teacher_name"), rs.getString("teacher_last_name"), rs.getString("teacher_address")));
+      return conforms;
     } catch(SQLException ex) {
       return null;
     }

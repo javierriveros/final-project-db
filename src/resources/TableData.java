@@ -26,8 +26,8 @@ public class TableData {
     LinkedList<Student> students = Student.all();
     students.forEach(student -> {
       studentsModel.addRow(new Object[] {
-        student.getCi(),
         student.getRegistrationNumber(),
+        student.getCi(),
         student.getName(),
         student.getLastName(),
         student.getIncorporationDate()

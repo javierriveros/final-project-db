@@ -2,7 +2,6 @@ package views.students;
 
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import models.Student;
 import models.User;
@@ -18,10 +17,10 @@ public class ViewStudent extends javax.swing.JFrame {
   private Student student;
   
   //Sorters
-  private TableRowSorter teachersSorter;
-  private TableRowSorter projectsSorter;
-  private TableRowSorter tribunalsSorter;
-  private TableRowSorter groupsSorter;
+//  private TableRowSorter teachersSorter;
+//  private TableRowSorter projectsSorter;
+//  private TableRowSorter tribunalsSorter;
+//  private TableRowSorter groupsSorter;
   
   /**
    * Creates new form Ventana
@@ -33,11 +32,10 @@ public class ViewStudent extends javax.swing.JFrame {
     initComponents();
     addAttributes();
     addMyData();
-    addSorters();
-    System.out.println(this.student);
+    //addSorters();
     try {
       loadData();
-    } catch(SQLException e) {
+    } catch(Exception e) {
       System.out.printf("Error por: %s", e.getMessage());
     }
   }
@@ -66,17 +64,17 @@ public class ViewStudent extends javax.swing.JFrame {
   }
   
   private void addSorters() {
-    teachersSorter = new TableRowSorter(teachersTable.getModel());
-    teachersTable.setRowSorter(teachersSorter);
-    
-    projectsSorter = new TableRowSorter(projectsTable.getModel());
-    projectsTable.setRowSorter(projectsSorter);
-    
-    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
-    tribunalsTable.setRowSorter(tribunalsSorter);
-    
-    groupsSorter = new TableRowSorter(groupsTable.getModel());
-    groupsTable.setRowSorter(tribunalsSorter);
+//    teachersSorter = new TableRowSorter(teachersTable.getModel());
+//    teachersTable.setRowSorter(teachersSorter);
+//
+//    projectsSorter = new TableRowSorter(projectsTable.getModel());
+//    projectsTable.setRowSorter(projectsSorter);
+//
+//    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
+//    tribunalsTable.setRowSorter(tribunalsSorter);
+//    
+//    groupsSorter = new TableRowSorter(groupsTable.getModel());
+//    groupsTable.setRowSorter(tribunalsSorter);
   }
   
   /**
@@ -618,23 +616,23 @@ public class ViewStudent extends javax.swing.JFrame {
   }//GEN-LAST:event_jButton2ActionPerformed
 
   private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
-    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
-    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
+//    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() == 0) return;
+//    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
   }//GEN-LAST:event_teachersFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
-    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
+//    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() == 0) return;
+//    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
 
   private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
-    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+//    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() == 0) return;
+//    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_tribunalsFieldKeyPressed
 
   private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
-    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+//    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
+//    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_groupsFieldKeyPressed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

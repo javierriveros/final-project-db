@@ -179,30 +179,32 @@ public class Login extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, "Debes llenar todos los campos", "Rellena los campos", JOptionPane.ERROR_MESSAGE);
       return;
     }
-    User user = User.find(CajaUsuario.getText(), String.valueOf(CajaContraseña.getPassword()));
-    if (user == null) {
-      JOptionPane.showMessageDialog(this, "El usuario no se ha encontrado en la Base de datos", "Revisa los campos", JOptionPane.ERROR_MESSAGE);
-      limpiar();
-      return;
-    }
-    
-    switch (user.getRole()) {
-      case User.STUDENT:
-        new views.students.ViewStudent(user).setVisible(true);
-        dispose();
-        break;
-      case User.TEACHER:
-        new views.teachers.ViewTeacher(user).setVisible(true);
-        dispose();
-        break;
-      case User.ADMIN:
-        new views.Admin(user).setVisible(true);
-        dispose();
-        break;
-      default:
-        JOptionPane.showMessageDialog(this, "Este rol no es válido", "Error", JOptionPane.WARNING_MESSAGE);
-        break;
-    }
+    new Thread(() -> {
+      User user = User.find(CajaUsuario.getText(), String.valueOf(CajaContraseña.getPassword()));
+      if (user == null) {
+        JOptionPane.showMessageDialog(this, "El usuario no se ha encontrado en la Base de datos", "Revisa los campos", JOptionPane.ERROR_MESSAGE);
+        limpiar();
+        return;
+      }
+
+      switch (user.getRole()) {
+        case User.STUDENT:
+          new views.students.ViewStudent(user).setVisible(true);
+          dispose();
+          break;
+        case User.TEACHER:
+          new views.teachers.ViewTeacher(user).setVisible(true);
+          dispose();
+          break;
+        case User.ADMIN:
+          new views.Admin(user).setVisible(true);
+          dispose();
+          break;
+        default:
+          JOptionPane.showMessageDialog(this, "Este rol no es válido", "Error", JOptionPane.WARNING_MESSAGE);
+          break;
+      }
+    }).start();
   }
   
   private void limpiar(){

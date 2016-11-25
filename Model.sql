@@ -10,7 +10,8 @@ CREATE TABLE groups (
   id serial,
   name varchar(25),
   components_number integer,
-  description text
+  description text,
+  teacher_id integer
 );
 
 CREATE TABLE projects (
@@ -142,6 +143,11 @@ ALTER TABLE conforms ADD CONSTRAINT pk_conforms_groups
 ALTER TABLE tribunals ADD CONSTRAINT pk_tribunals_teachers
   FOREIGN KEY(teacher_id) REFERENCES teachers(id)
   ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE groups ADD CONSTRAINT pk_groups_teachers
+  FOREIGN KEY(teacher_id) REFERENCES teachers(id)
+  ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 #Triggers
 ##Crear un usuario al insertar un estudiante

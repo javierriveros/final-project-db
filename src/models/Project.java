@@ -125,7 +125,7 @@ public class Project {
    * @return 
    */
   public static Project find(int orderNumber) {
-    return findBy("order_number", String.valueOf(orderNumber));
+    return findBy("p.order_number", String.valueOf(orderNumber));
   }
   
   /**
@@ -139,7 +139,7 @@ public class Project {
     try {
       Connection con = Connection.getInstance();
       try (Statement sm = con.getCon().createStatement()) {
-        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM projects WHERE %s='%s'", field, value));
+        ResultSet rs = sm.executeQuery(String.format("select *, age(p.end_date, p.start_date) from projects p left join themes t on t.order_number=p.order_number left join students s on p.order_number=s.order_number WHERE %s='%s'", field, value));
         while (rs.next())
           project = getProjectFromResultSet(rs);
       }

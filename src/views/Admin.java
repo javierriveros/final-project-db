@@ -1,9 +1,12 @@
 package views;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import models.Group;
 import models.User;
 import resources.TableData;
 import resources.Util;
@@ -16,11 +19,11 @@ public class Admin extends javax.swing.JFrame {
   private User user;
   
   //Sorters
-  private TableRowSorter teachersSorter;
-  private TableRowSorter projectsSorter;
-  private TableRowSorter tribunalsSorter;
-  private TableRowSorter groupsSorter;
-  private TableRowSorter studentsSorter;
+//  private TableRowSorter teachersSorter;
+//  private TableRowSorter projectsSorter;
+//  private TableRowSorter tribunalsSorter;
+//  private TableRowSorter groupsSorter;
+//  private TableRowSorter studentsSorter;
   /**
    * Creates new form Ventana
    * @param user
@@ -29,10 +32,12 @@ public class Admin extends javax.swing.JFrame {
     this.user = user;
     initComponents();
     addAttributes();
-    addSorters();
     try {
       loadData();
-    } catch (SQLException e) {}
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+//    addSorters();
   }
 
   private void addAttributes() {
@@ -55,20 +60,20 @@ public class Admin extends javax.swing.JFrame {
   }
   
   private void addSorters() {
-    studentsSorter = new TableRowSorter(studentsTable.getModel());
-    studentsTable.setRowSorter(studentsSorter);
-    
-    teachersSorter = new TableRowSorter(teachersTable.getModel());
-    teachersTable.setRowSorter(teachersSorter);
-    
-    projectsSorter = new TableRowSorter(projectsTable.getModel());
-    projectsTable.setRowSorter(projectsSorter);
-    
-    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
-    tribunalsTable.setRowSorter(tribunalsSorter);
-    
-    groupsSorter = new TableRowSorter(groupsTable.getModel());
-    groupsTable.setRowSorter(tribunalsSorter);
+//    studentsSorter = new TableRowSorter(studentsTable.getModel());
+//    studentsTable.setRowSorter(studentsSorter);
+//
+//    teachersSorter = new TableRowSorter(teachersTable.getModel());
+//    teachersTable.setRowSorter(teachersSorter);
+//
+//    projectsSorter = new TableRowSorter(projectsTable.getModel());
+//    projectsTable.setRowSorter(projectsSorter);    
+//
+//    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
+//    tribunalsTable.setRowSorter(tribunalsSorter);
+//
+//    groupsSorter = new TableRowSorter(groupsTable.getModel());
+//    groupsTable.setRowSorter(tribunalsSorter);
   }
 
   /**
@@ -129,7 +134,7 @@ public class Admin extends javax.swing.JFrame {
     jButton11 = new javax.swing.JButton();
     addGroup = new javax.swing.JButton();
     viewGroup = new javax.swing.JButton();
-    jScrollPane3 = new javax.swing.JScrollPane();
+    jScrollPane6 = new javax.swing.JScrollPane();
     groupsTable = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
@@ -224,7 +229,7 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(jButton1)
           .addComponent(viewTeacher))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Profesores", jPanel1);
@@ -310,7 +315,7 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(viewStudent)
           .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Estudiantes", jPanel2);
@@ -393,7 +398,7 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(viewProject)
           .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Proyectos", jPanel4);
@@ -476,7 +481,7 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(jButton19)
           .addComponent(viewTribunal))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Tribunal", jPanel5);
@@ -509,18 +514,18 @@ public class Admin extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Id", "Nombre", "Numero de Integrantes"
+        "ID", "Nombre", "Número de components"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, true
+        false, false, false
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane3.setViewportView(groupsTable);
+    jScrollPane6.setViewportView(groupsTable);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -529,7 +534,7 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane3)
+          .addComponent(jScrollPane6)
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -559,7 +564,7 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(jButton11)
           .addComponent(viewGroup))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
+        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     jTabbedPane2.addTab("Grupos", jPanel3);
@@ -712,28 +717,28 @@ public class Admin extends javax.swing.JFrame {
   }
   
   private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
-    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
-    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
+//    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
+//    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
   }//GEN-LAST:event_teachersFieldKeyPressed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
-    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
+//    if(studentsTable.getRowCount() <= 0 || searchStudentsBy.getSelectedIndex() == 0) return;
+//    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
-    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
+//    if(projectsTable.getRowCount() <= 0 || searchProjectsBy.getSelectedIndex() == 0) return;
+//    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
 
   private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
-    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+//    if(tribunalsTable.getRowCount() <= 0 || searchTribunalsBy.getSelectedIndex() == 0) return;
+//    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_tribunalsFieldKeyPressed
 
   private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
-    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+//    if(groupsTable.getRowCount() <= 0 || searchGroupsBy.getSelectedIndex() == 0) return;
+//    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_groupsFieldKeyPressed
 
   private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException {
@@ -777,9 +782,9 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel5;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JScrollPane jScrollPane3;
   private javax.swing.JScrollPane jScrollPane4;
   private javax.swing.JScrollPane jScrollPane5;
+  private javax.swing.JScrollPane jScrollPane6;
   private javax.swing.JTabbedPane jTabbedPane2;
   private javax.swing.JButton modifyGroup;
   private javax.swing.JButton modifyProject;

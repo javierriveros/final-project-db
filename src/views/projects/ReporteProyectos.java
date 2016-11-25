@@ -1,5 +1,7 @@
 package views.projects;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import javax.swing.JFrame;
@@ -20,7 +22,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
     initComponents();
     addAttributes();
     try {
-    addData();
+      addData();
     } catch(SQLException e) {}
   }
   

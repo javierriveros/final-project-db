@@ -18,10 +18,10 @@ public class ViewTeacher extends javax.swing.JFrame {
   private Teacher teacher;
   
   //Sorters
-  private TableRowSorter studentsSorter;
-  private TableRowSorter projectsSorter;
-  private TableRowSorter tribunalsSorter;
-  private TableRowSorter groupsSorter;
+//  private TableRowSorter studentsSorter;
+//  private TableRowSorter projectsSorter;
+//  private TableRowSorter tribunalsSorter;
+//  private TableRowSorter groupsSorter;
   
   /**
    * Creates new form Ventana
@@ -33,7 +33,7 @@ public class ViewTeacher extends javax.swing.JFrame {
     initComponents();
     configWindow();
     addMyData();
-    addSorters();
+//    addSorters();
     try {
       loadData();
     } catch(SQLException e) {}
@@ -64,17 +64,17 @@ public class ViewTeacher extends javax.swing.JFrame {
   }
   
   private void addSorters() {
-    studentsSorter = new TableRowSorter(studentsTable.getModel());
-    studentsTable.setRowSorter(studentsSorter);
-    
-    projectsSorter = new TableRowSorter(projectsTable.getModel());
-    projectsTable.setRowSorter(projectsSorter);
-    
-    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
-    tribunalsTable.setRowSorter(tribunalsSorter);
-    
-    groupsSorter = new TableRowSorter(groupsTable.getModel());
-    groupsTable.setRowSorter(tribunalsSorter);
+//    studentsSorter = new TableRowSorter(studentsTable.getModel());
+//    studentsTable.setRowSorter(studentsSorter);
+//    
+//    projectsSorter = new TableRowSorter(projectsTable.getModel());
+//    projectsTable.setRowSorter(projectsSorter);
+//    
+//    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
+//    tribunalsTable.setRowSorter(tribunalsSorter);
+//    
+//    groupsSorter = new TableRowSorter(groupsTable.getModel());
+//    groupsTable.setRowSorter(tribunalsSorter);
   }
 
   /**
@@ -688,13 +688,13 @@ public class ViewTeacher extends javax.swing.JFrame {
   }//GEN-LAST:event_jButton11ActionPerformed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
-    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
+//    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
+//    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
-    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
+//    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
+//    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
 
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -711,20 +711,20 @@ public class ViewTeacher extends javax.swing.JFrame {
     if (!lastName.equals(this.teacher.getLastName())) this.teacher.setLastName(lastName);
     try {
       this.teacher.update();
-      JOptionPane.showMessageDialog(this, "Datos guardados", "OK", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(this.jPanel6, "Datos guardados", "OK", JOptionPane.INFORMATION_MESSAGE);
     } catch(SQLException e) {
       JOptionPane.showMessageDialog(this, String.format("No se ha podido actualizar por: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_jButton1ActionPerformed
 
   private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
-    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+//    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
+//    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_tribunalsFieldKeyPressed
 
   private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
-    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+//    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
+//    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_groupsFieldKeyPressed
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
