@@ -20,6 +20,8 @@ import resources.Connection;
 public class Helps {
   private int studentRegistrationNumber;
   private int teacherId;
+  private Teacher teacher;
+  private Student student;
 
   public Helps(int studentRegistrationNumber, int teacherId) {
     this.studentRegistrationNumber = studentRegistrationNumber;
@@ -40,6 +42,22 @@ public class Helps {
 
   public void setTeacherId(int teacherId) {
     this.teacherId = teacherId;
+  }
+
+  public Teacher getTeacher() {
+    return teacher;
+  }
+
+  public void setTeacher(Teacher teacher) {
+    this.teacher = teacher;
+  }
+
+  public Student getStudent() {
+    return student;
+  }
+
+  public void setStudent(Student student) {
+    this.student = student;
   }
   
   @Override
@@ -105,7 +123,10 @@ public class Helps {
   
   private static Helps getHelpsFromResultSet(ResultSet rs) {
     try {
-      return new Helps(rs.getInt("student_registration_number"), rs.getInt("teacher_id"));
+      Helps helps = new Helps(rs.getInt("student_registration_number"), rs.getInt("teacher_id"));
+      helps.setStudent(Student.find(helps.getStudentRegistrationNumber()));
+      helps.setTeacher(Teacher.find(helps.getTeacherId()));
+      return helps;
     } catch(SQLException ex) {
       return null;
     }

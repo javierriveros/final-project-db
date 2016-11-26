@@ -17,12 +17,15 @@ public class Group {
   private String name;
   private String description;
   private int componentsNumber;
+  private int titularTeacherId;
+  private Teacher titularTeacher;
 
-  public Group(int id, String name, String description, int componentsNumber) {
+  public Group(int id, String name, String description, int componentsNumber, int teacherId) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.componentsNumber = componentsNumber;
+    this.titularTeacherId = teacherId;
   }
 
   public int getId() {
@@ -56,10 +59,26 @@ public class Group {
   public void setComponentsNumber(int componentsNumber) {
     this.componentsNumber = componentsNumber;
   }
+
+  public int getTitularTeacherId() {
+    return titularTeacherId;
+  }
+
+  public void setTitularTeacherId(int titularTeacherId) {
+    this.titularTeacherId = titularTeacherId;
+  }
+
+  public Teacher getTitularTeacher() {
+    return titularTeacher;
+  }
+
+  public void setTitularTeacher(Teacher titularTeacher) {
+    this.titularTeacher = titularTeacher;
+  }
   
   @Override
   public String toString() {
-    return String.format("{id: %d, components_number: %d, name: %s, description: %s}", this.id, this.componentsNumber, this.name, this.description);
+    return String.format("{id: %d, components_number: %d, name: %s, description: %s, teacher_id: %d}", this.id, this.componentsNumber, this.name, this.description, this.titularTeacherId);
   }
   
   /**
@@ -72,7 +91,7 @@ public class Group {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM groups");
+      ResultSet rs = sm.executeQuery("SELECT * FROM groups;");
       while (rs.next())
         groups.add(getGroupFromResultSet(rs));
     }
@@ -118,7 +137,7 @@ public class Group {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, description, components_number) VALUES ('%s', '%s', '%d')", this.name, this.description, this.componentsNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, description, components_number, teacher_id) VALUES ('%s', '%s', '%d', '%d,)", this.name, this.description, this.componentsNumber, this.titularTeacherId))) {
       try {
         ps.execute();
         return true;
@@ -137,7 +156,7 @@ public class Group {
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE groups SET name='%s', components_number=%d, description='%s' WHERE id=%d;", this.name, this.description, this.componentsNumber, this.id))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE groups SET name='%s', description='%s', components_number=%d, teacher_id=%d WHERE id=%d;", this.name, this.description, this.componentsNumber, this.titularTeacherId, this.id))) {
       try {
         ps.execute();
         return true;
@@ -174,7 +193,9 @@ public class Group {
    */
   private static Group getGroupFromResultSet(ResultSet rs) {
     try {
-      return new Group(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("components_number"));
+      Group group = new Group(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("components_number"), rs.getInt("teacher_id"));
+      group.setTitularTeacher(Teacher.find(rs.getInt("teacher_id")));
+      return group;
     } catch(SQLException ex) {
       return null;
     }

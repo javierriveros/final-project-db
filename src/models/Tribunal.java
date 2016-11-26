@@ -16,11 +16,14 @@ public class Tribunal {
   private int id;
   private String testPlace;
   private int componentsNumber;
+  private int titularTeacherId;
+  private Teacher titularTeacher;
 
-  public Tribunal(int id, String testPlace, int componentsNumber) {
+  public Tribunal(int id, String testPlace, int componentsNumber, int titularTeacherId) {
     this.id = id;
     this.testPlace = testPlace;
     this.componentsNumber = componentsNumber;
+    this.titularTeacherId = titularTeacherId;
   }
 
   public int getId() {
@@ -46,10 +49,26 @@ public class Tribunal {
   public void setComponentsNumber(int componentsNumber) {
     this.componentsNumber = componentsNumber;
   }
+
+  public int getTitularTeacherId() {
+    return titularTeacherId;
+  }
+
+  public void setTitularTeacherId(int titularTeacherId) {
+    this.titularTeacherId = titularTeacherId;
+  }
+
+  public Teacher getTitularTeacher() {
+    return titularTeacher;
+  }
+
+  public void setTitularTeacher(Teacher titularTeacher) {
+    this.titularTeacher = titularTeacher;
+  }
   
   @Override
   public String toString() {
-    return String.format("{id: %d, components_number: %d, test_place: %s}", this.id, this.componentsNumber, this.testPlace);
+    return String.format("{id: %d, components_number: %d, test_place: %s, titular_teacher_id: %d}", this.id, this.componentsNumber, this.testPlace, this.titularTeacherId);
   }
   
   /**
@@ -108,7 +127,7 @@ public class Tribunal {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO tribunals (test_place, components_number) VALUES ('%s', '%d')", this.testPlace, this.componentsNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO tribunals (test_place, components_number, teacher_id) VALUES ('%s', '%d', '%d')", this.testPlace, this.componentsNumber, this.titularTeacherId))) {
       try {
         ps.execute();
         return true;
@@ -127,7 +146,7 @@ public class Tribunal {
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE tribunals SET test_place='%s', components_number=%d WHERE id=%d", this.testPlace, this.componentsNumber, this.id))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE tribunals SET test_place='%s', components_number=%d, teacher_id=%d WHERE id=%d", this.testPlace, this.componentsNumber, this.titularTeacherId, this.id))) {
       try {
         ps.execute();
         return true;
@@ -164,7 +183,9 @@ public class Tribunal {
    */
   private static Tribunal getTribunalFromResultSet(ResultSet rs) {
     try {
-      return new Tribunal(rs.getInt("id"), rs.getString("test_place"), rs.getInt("components_number"));
+      Tribunal tribunal = new Tribunal(rs.getInt("id"), rs.getString("test_place"), rs.getInt("components_number"), rs.getInt("teacher_id"));
+      tribunal.setTitularTeacher(Teacher.find(rs.getInt("teacher_id")));
+      return tribunal;
     } catch(SQLException ex) {
       return null;
     }

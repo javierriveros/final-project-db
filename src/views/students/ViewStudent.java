@@ -128,7 +128,6 @@ public class ViewStudent extends javax.swing.JFrame {
     jButton6 = new javax.swing.JButton();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
-    jMenuItem8 = new javax.swing.JMenuItem();
     jMenuItem7 = new javax.swing.JMenuItem();
     jMenu3 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
@@ -518,16 +517,6 @@ public class ViewStudent extends javax.swing.JFrame {
 
     jMenu1.setText("Archivo");
 
-    jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-    jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
-    jMenuItem8.setText("Historial de Inicio de Sesion");
-    jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem8ActionPerformed(evt);
-      }
-    });
-    jMenu1.add(jMenuItem8);
-
     jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cerrar_16px.png"))); // NOI18N
     jMenuItem7.setText("Cerrar Sesión");
@@ -574,10 +563,6 @@ public class ViewStudent extends javax.swing.JFrame {
     dispose();
     new views.users.Login().setVisible(true);
   }//GEN-LAST:event_jMenuItem7ActionPerformed
-
-  private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-    new views.Historial().setVisible(true);
-  }//GEN-LAST:event_jMenuItem8ActionPerformed
 
   private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
     try {TableData.loadGroups(groupsTable);}catch(SQLException e){}
@@ -651,7 +636,6 @@ public class ViewStudent extends javax.swing.JFrame {
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
   private javax.swing.JMenuItem jMenuItem7;
-  private javax.swing.JMenuItem jMenuItem8;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JPanel jPanel4;

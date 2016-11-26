@@ -18,8 +18,10 @@ public class Project {
   private Timestamp startDate;
   private Timestamp endDate;
   private int tribunalId;
+  private int studentRegistrationNumber;
   private Student student;
   private Theme theme;
+  private Tribunal tribunal;
   private String duration;
   
   /**
@@ -28,12 +30,11 @@ public class Project {
    * @param startDate
    * @param tribunalId 
    */
-  public Project(int orderNumber, Timestamp startDate, int tribunalId) {
+  public Project(int orderNumber, Timestamp startDate, int tribunalId, int studentRegistrationNumber) {
     this.orderNumber = orderNumber;
     this.startDate = startDate;
     this.tribunalId = tribunalId;
-    this.theme = null;
-    this.student = null;
+    this.studentRegistrationNumber = studentRegistrationNumber;
   }
   
   public int getOrderNumber() {
@@ -95,10 +96,26 @@ public class Project {
   public String getDuration() {
     return duration;
   }
+
+  public int getStudentRegistrationNumber() {
+    return studentRegistrationNumber;
+  }
+
+  public void setStudentRegistrationNumber(int studentRegistrationNumber) {
+    this.studentRegistrationNumber = studentRegistrationNumber;
+  }
+
+  public Tribunal getTribunal() {
+    return tribunal;
+  }
+
+  public void setTribunal(Tribunal tribunal) {
+    this.tribunal = tribunal;
+  }
   
   @Override
   public String toString() {
-    return String.format("{order_numer: %d, start_date: %s, end_date: %s, duration: %s}", this.orderNumber, this.startDate, this.endDate, this.duration);
+    return String.format("{order_numer: %d, start_date: %s, end_date: %s, duration: %s, tribunal_id: %d, student_rn: %d}", this.orderNumber, this.startDate, this.endDate, this.duration, this.tribunalId, this.studentRegistrationNumber);
   }
   
   /**
@@ -111,7 +128,7 @@ public class Project {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("select *, age(p.end_date, p.start_date) from projects p left join themes t on t.order_number=p.order_number left join students s on p.order_number=s.order_number;");
+      ResultSet rs = sm.executeQuery("select *, age(end_date, start_date) from projects;");
       while (rs.next())
         projects.add(getProjectFromResultSet(rs));
     }
@@ -125,7 +142,7 @@ public class Project {
    * @return 
    */
   public static Project find(int orderNumber) {
-    return findBy("p.order_number", String.valueOf(orderNumber));
+    return findBy("order_number", String.valueOf(orderNumber));
   }
   
   /**
@@ -139,7 +156,7 @@ public class Project {
     try {
       Connection con = Connection.getInstance();
       try (Statement sm = con.getCon().createStatement()) {
-        ResultSet rs = sm.executeQuery(String.format("select *, age(p.end_date, p.start_date) from projects p left join themes t on t.order_number=p.order_number left join students s on p.order_number=s.order_number WHERE %s='%s'", field, value));
+        ResultSet rs = sm.executeQuery(String.format("select *, age(end_date, start_date) from projects WHERE %s='%s'", field, value));
         while (rs.next())
           project = getProjectFromResultSet(rs);
       }
@@ -157,7 +174,7 @@ public class Project {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (order_number, start_date, tribunal_id) VALUES ('%d', '%s', '%d)", this.orderNumber, this.startDate, this.tribunalId))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (order_number, start_date, tribunal_id, student_registration_number) VALUES ('%d', '%s', '%d', '%d')", this.orderNumber, this.startDate, this.tribunalId, this.studentRegistrationNumber))) {
       try {
         ps.execute();
         return true;
@@ -213,27 +230,11 @@ public class Project {
    */
   private static Project getProjectFromResultSet(ResultSet rs) {
     try {
-      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
-      p.setTheme(new Theme(rs.getInt("order_number"), rs.getString("title")));
-      p.setStudent(new Student(rs.getInt("registration_number"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date")));
+      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"), rs.getInt("student_registration_number"));
+      p.setTheme(Theme.find(rs.getInt("order_number")));
+      p.setStudent(Student.find(rs.getInt("student_registration_number")));
       p.setDuration(rs.getString("age"));
-      return p;
-    } catch(SQLException ex) {
-      return null;
-    }
-  }
-  
-  /**
-   * Return a new project with the DB values and attributes
-   * @param rs
-   * @return 
-   */
-  private static Project getProjectFromResultSetWithAttributes(ResultSet rs) {
-    try {
-      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"));
-      p.setTheme(new Theme(rs.getInt("order_number"), rs.getString("title")));
-      p.setStudent(new Student(rs.getInt("registration_number"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date")));
-      p.setDuration(rs.getString("age"));
+      p.setTribunal(Tribunal.find(rs.getInt("tribunal_id")));
       return p;
     } catch(SQLException ex) {
       return null;

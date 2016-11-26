@@ -95,7 +95,8 @@ public class Index extends javax.swing.JFrame {
         student.getCi(),
         student.getRegistrationNumber(),
         student.getName(),
-        student.getLastName()
+        student.getLastName(),
+        student.getIncorporationDate()
       });
     });
   }

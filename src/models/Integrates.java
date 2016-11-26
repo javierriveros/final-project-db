@@ -20,6 +20,8 @@ import resources.Connection;
 public class Integrates {
   private int teacherId;
   private int tribunalId;
+  private Teacher teacher;
+  private Tribunal tribunal;
   
   public Integrates(int teacherId, int tribunalId) {
     this.teacherId = teacherId;
@@ -40,6 +42,22 @@ public class Integrates {
 
   public void setTribunalId(int tribunalId) {
     this.tribunalId = tribunalId;
+  }
+
+  public Teacher getTeacher() {
+    return teacher;
+  }
+
+  public void setTeacher(Teacher teacher) {
+    this.teacher = teacher;
+  }
+
+  public Tribunal getTribunal() {
+    return tribunal;
+  }
+
+  public void setTribunal(Tribunal tribunal) {
+    this.tribunal = tribunal;
   }
   
   @Override
@@ -105,7 +123,10 @@ public class Integrates {
   
   private static Integrates getIntegratesFromResultSet(ResultSet rs) {
     try {
-      return new Integrates(rs.getInt("teacher_id"), rs.getInt("tribunal_id"));
+      Integrates integrates = new Integrates(rs.getInt("teacher_id"), rs.getInt("tribunal_id"));
+      integrates.setTeacher(Teacher.find(integrates.getTeacherId()));
+      integrates.setTribunal(Tribunal.find(integrates.getTribunalId()));
+      return integrates;
     } catch(SQLException ex) {
       System.out.printf("Error por: %s", ex.getMessage());
       return null;

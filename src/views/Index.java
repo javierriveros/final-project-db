@@ -5,6 +5,9 @@ import models.*;
 
 public class Index {
   public static void main(String ...app) throws SQLException {
-    System.out.println(Group.all());
+    Helps.all().forEach(help -> {
+      System.out.println(Teacher.find(help.getTeacherId()));
+      System.out.println(Student.find(help.getStudentRegistrationNumber()));
+    });
   }
 }

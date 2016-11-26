@@ -11,21 +11,22 @@ CREATE TABLE groups (
   name varchar(25),
   components_number integer,
   description text,
-  teacher_id integer
+  teacher_id integer NOT NULL
 );
 
 CREATE TABLE projects (
   order_number serial,
   start_date timestamp,
   end_date timestamp,
-  status varchar(25) NOT NULL DEFAULT 'No evaluado'
+  status varchar(25) NOT NULL DEFAULT 'No evaluado',
+  student_registration_number integer NOT NULL
 );
 
 CREATE TABLE tribunals (
   id serial,
   test_place varchar(50),
   components_number integer,
-  teacher_id integer
+  teacher_id integer NOT NULL
 );
 
 CREATE TABLE teachers (
@@ -56,7 +57,7 @@ CREATE TABLE integrates (
 
 CREATE TABLE helps (
   teacher_id integer,
-  student_registration_number integer    
+  student_registration_number integer  
 );
 
 CREATE TABLE conforms (
@@ -102,11 +103,11 @@ ALTER TABLE themes ADD CONSTRAINT fk_themes_projects
 
 ALTER TABLE students ADD CONSTRAINT fk_students_groups
   FOREIGN KEY(group_id) REFERENCES groups(id) 
-  ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE students ADD CONSTRAINT fk_students_projects
   FOREIGN KEY(order_number) REFERENCES projects(order_number) 
-  ON DELETE CASCADE ON UPDATE RESTRICT;
+  ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE students ADD CONSTRAINT fk_students_teachers
   FOREIGN KEY(teacher_id) REFERENCES teachers(id) 
@@ -114,6 +115,10 @@ ALTER TABLE students ADD CONSTRAINT fk_students_teachers
 
 ALTER TABLE projects ADD CONSTRAINT fk_projects_tribunals
   FOREIGN KEY(tribunal_id) REFERENCES tribunals(id) 
+  ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE projects ADD CONSTRAINT fk_projects_students
+  FOREIGN KEY(student_registration_number) REFERENCES students(registration_number) 
   ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE integrates ADD CONSTRAINT pk_integrates_teacher 

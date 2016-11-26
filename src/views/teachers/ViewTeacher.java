@@ -133,7 +133,6 @@ public class ViewTeacher extends javax.swing.JFrame {
     jLabel6 = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
-    jMenuItem8 = new javax.swing.JMenuItem();
     jMenuItem7 = new javax.swing.JMenuItem();
     jMenu2 = new javax.swing.JMenu();
     jMenuItem3 = new javax.swing.JMenuItem();
@@ -151,11 +150,11 @@ public class ViewTeacher extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Numero de Registro", "Codigo", "Nombre", "Apellido", "Fecha de Incorporacion"
+        "Numero de Registro", "Codigo", "Nombre", "Apellido"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, true, true, true
+        false, false, true, true
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -543,16 +542,6 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     jMenu1.setText("Archivo");
 
-    jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-    jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
-    jMenuItem8.setText("Historial de Inicio de Sesion");
-    jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jMenuItem8ActionPerformed(evt);
-      }
-    });
-    jMenu1.add(jMenuItem8);
-
     jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.CTRL_MASK));
     jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cerrar_16px.png"))); // NOI18N
     jMenuItem7.setText("Cerrar Sesión");
@@ -667,10 +656,6 @@ public class ViewTeacher extends javax.swing.JFrame {
     new views.teachers.ReporteProfesores().setVisible(true);
   }//GEN-LAST:event_jMenuItem6ActionPerformed
 
-  private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-    new views.Historial().setVisible(true);
-  }//GEN-LAST:event_jMenuItem8ActionPerformed
-
   private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
     try {TableData.loadStudents(studentsTable);}catch(SQLException e){}
   }//GEN-LAST:event_jButton5ActionPerformed
@@ -754,7 +739,6 @@ public class ViewTeacher extends javax.swing.JFrame {
   private javax.swing.JMenuItem jMenuItem5;
   private javax.swing.JMenuItem jMenuItem6;
   private javax.swing.JMenuItem jMenuItem7;
-  private javax.swing.JMenuItem jMenuItem8;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;

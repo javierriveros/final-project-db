@@ -239,11 +239,11 @@ public class Admin extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Numero de Registro", "Codigo", "Nombre", "Apellido", "Fecha de Incorporacion"
+        "Numero de Registro", "Codigo", "Nombre", "Apellido"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, true, true, true
+        false, false, true, true
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
