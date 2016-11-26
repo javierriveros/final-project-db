@@ -1,5 +1,7 @@
 package views.teachers;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 /**
@@ -7,19 +9,45 @@ import javax.swing.JFrame;
  * @author Mejia & Riveros Corp.
  */
 public class ReporteProfesores extends javax.swing.JFrame {
-
+  private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteProfesores
    */
-  public ReporteProfesores() {
+  public ReporteProfesores(javax.swing.JFrame parent) {
+    this.parent = parent;
     initComponents();
     addAttributes();
   }
   
-  
   private void addAttributes() {
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
   }
 
   /**

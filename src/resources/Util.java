@@ -3,6 +3,7 @@ package resources;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -47,5 +48,14 @@ public class Util {
     } catch(NumberFormatException e) {
       return false;
     }
+  }
+  
+  public static int getPKFromCombo(javax.swing.JComboBox combo) {
+    return Integer.parseInt(combo.getSelectedItem().toString().split("-")[0]);
+  }
+  
+  public static void showWarning(javax.swing.JFrame frame, String message) {
+    JOptionPane.showMessageDialog(frame, message, "Warning", JOptionPane.WARNING_MESSAGE);
+    
   }
 }

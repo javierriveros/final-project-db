@@ -4,7 +4,11 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
+import models.Group;
+import models.Project;
+import models.Student;
 import models.Teacher;
+import models.Tribunal;
 import models.User;
 import resources.TableData;
 import resources.Util;
@@ -18,10 +22,10 @@ public class ViewTeacher extends javax.swing.JFrame {
   private Teacher teacher;
   
   //Sorters
-//  private TableRowSorter studentsSorter;
-//  private TableRowSorter projectsSorter;
-//  private TableRowSorter tribunalsSorter;
-//  private TableRowSorter groupsSorter;
+  private TableRowSorter studentsSorter;
+  private TableRowSorter projectsSorter;
+  private TableRowSorter tribunalsSorter;
+  private TableRowSorter groupsSorter;
   
   /**
    * Creates new form Ventana
@@ -33,7 +37,7 @@ public class ViewTeacher extends javax.swing.JFrame {
     initComponents();
     configWindow();
     addMyData();
-//    addSorters();
+    addSorters();
     try {
       loadData();
     } catch(SQLException e) {}
@@ -57,24 +61,24 @@ public class ViewTeacher extends javax.swing.JFrame {
   }
   
   private void loadData() throws SQLException {
-    TableData.loadStudents(studentsTable);
-    TableData.loadProjects(projectsTable);
-    TableData.loadTribunals(tribunalsTable);
-    TableData.loadGroups(groupsTable);
+    TableData.loadStudents(studentsTable, Student.all());
+    TableData.loadProjects(projectsTable, Project.all());
+    TableData.loadTribunals(tribunalsTable, Tribunal.all());
+    TableData.loadGroups(groupsTable, Group.all());
   }
   
   private void addSorters() {
-//    studentsSorter = new TableRowSorter(studentsTable.getModel());
-//    studentsTable.setRowSorter(studentsSorter);
-//    
-//    projectsSorter = new TableRowSorter(projectsTable.getModel());
-//    projectsTable.setRowSorter(projectsSorter);
-//    
-//    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
-//    tribunalsTable.setRowSorter(tribunalsSorter);
-//    
-//    groupsSorter = new TableRowSorter(groupsTable.getModel());
-//    groupsTable.setRowSorter(tribunalsSorter);
+    studentsSorter = new TableRowSorter(studentsTable.getModel());
+    studentsTable.setRowSorter(studentsSorter);
+    
+    projectsSorter = new TableRowSorter(projectsTable.getModel());
+    projectsTable.setRowSorter(projectsSorter);
+    
+    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
+    tribunalsTable.setRowSorter(tribunalsSorter);
+    
+    groupsSorter = new TableRowSorter(groupsTable.getModel());
+    groupsTable.setRowSorter(tribunalsSorter);
   }
 
   /**
@@ -88,12 +92,12 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     jTabbedPane2 = new javax.swing.JTabbedPane();
     jPanel2 = new javax.swing.JPanel();
-    jScrollPane2 = new javax.swing.JScrollPane();
-    studentsTable = new javax.swing.JTable();
     searchStudentsBy = new javax.swing.JComboBox();
     studentsField = new javax.swing.JTextField();
     jButton5 = new javax.swing.JButton();
     viewStudent = new javax.swing.JButton();
+    jScrollPane7 = new javax.swing.JScrollPane();
+    studentsTable = new javax.swing.JTable();
     jPanel4 = new javax.swing.JPanel();
     searchProjectsBy = new javax.swing.JComboBox();
     projectsField = new javax.swing.JTextField();
@@ -101,7 +105,7 @@ public class ViewTeacher extends javax.swing.JFrame {
     jButton15 = new javax.swing.JButton();
     addProject = new javax.swing.JButton();
     viewProject = new javax.swing.JButton();
-    jScrollPane4 = new javax.swing.JScrollPane();
+    jScrollPane6 = new javax.swing.JScrollPane();
     projectsTable = new javax.swing.JTable();
     jPanel5 = new javax.swing.JPanel();
     tribunalsField = new javax.swing.JTextField();
@@ -145,27 +149,6 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-    studentsTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-
-      },
-      new String [] {
-        "Numero de Registro", "Codigo", "Nombre", "Apellido"
-      }
-    ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true, true
-      };
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane2.setViewportView(studentsTable);
-    if (studentsTable.getColumnModel().getColumnCount() > 0) {
-      studentsTable.getColumnModel().getColumn(4).setHeaderValue("Fecha de Incorporacion");
-    }
-
     searchStudentsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Numero de Registro", "Codigo", "Nombre", "Apellido" }));
 
     studentsField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -183,6 +166,32 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     viewStudent.setText("Ver");
 
+    studentsTable.setBorder(null);
+    studentsTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+
+      },
+      new String [] {
+        "Número de registro", "CI", "Nombres", "Apellidos"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
+      };
+      boolean[] canEdit = new boolean [] {
+        false, false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    jScrollPane7.setViewportView(studentsTable);
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -190,15 +199,15 @@ public class ViewTeacher extends javax.swing.JFrame {
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jScrollPane7)
           .addGroup(jPanel2Layout.createSequentialGroup()
             .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 293, Short.MAX_VALUE)
             .addComponent(viewStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton5))
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
+            .addComponent(jButton5)))
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
@@ -210,8 +219,9 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton5)
           .addComponent(viewStudent))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+        .addContainerGap())
     );
 
     jTabbedPane2.addTab("Estudiantes", jPanel2);
@@ -237,36 +247,44 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     viewProject.setText("Ver");
 
+    projectsTable.setBorder(null);
     projectsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
       new String [] {
-        "Numero de Orden", "Tema", "Fecha de Inicio", "Evaluacion Tribunal"
+        "Order Number", "Tema", "Fecha de Inicio", "Fecha final", "Duración"
       }
     ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true, true
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
       };
+      boolean[] canEdit = new boolean [] {
+        false, false, false, false, true
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane4.setViewportView(projectsTable);
+    jScrollPane6.setViewportView(projectsTable);
 
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
     jPanel4.setLayout(jPanel4Layout);
     jPanel4Layout.setHorizontalGroup(
       jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel4Layout.createSequentialGroup()
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel4Layout.createSequentialGroup()
             .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
             .addComponent(addProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyProject)
@@ -274,7 +292,7 @@ public class ViewTeacher extends javax.swing.JFrame {
             .addComponent(viewProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButton15))
-          .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
+          .addComponent(jScrollPane6))
         .addContainerGap())
     );
     jPanel4Layout.setVerticalGroup(
@@ -288,8 +306,9 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton15)
           .addComponent(viewProject))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+        .addContainerGap())
     );
 
     jTabbedPane2.addTab("Proyectos", jPanel4);
@@ -313,17 +332,25 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     viewTribunal.setText("Ver");
 
+    tribunalsTable.setBorder(null);
     tribunalsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
       new String [] {
-        "Id", "Lugar de Presentacion", "Numero de Integrantes"
+        "ID", "Lugar de presentación", "Número de componentes"
       }
     ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class
       };
+      boolean[] canEdit = new boolean [] {
+        false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
         return canEdit [columnIndex];
@@ -335,20 +362,20 @@ public class ViewTeacher extends javax.swing.JFrame {
     jPanel5.setLayout(jPanel5Layout);
     jPanel5Layout.setHorizontalGroup(
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel5Layout.createSequentialGroup()
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jScrollPane5)
           .addGroup(jPanel5Layout.createSequentialGroup()
             .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
             .addComponent(modifyTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(viewTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton19))
-          .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
+            .addComponent(jButton19)))
         .addContainerGap())
     );
     jPanel5Layout.setVerticalGroup(
@@ -361,8 +388,8 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton19)
           .addComponent(viewTribunal))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Tribunal", jPanel5);
@@ -386,17 +413,25 @@ public class ViewTeacher extends javax.swing.JFrame {
 
     viewGroup.setText("Ver");
 
+    groupsTable.setBorder(null);
     groupsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
       new String [] {
-        "Id", "Nombre", "Numero de Integrantes"
+        "Id", "Nombre", "Número de componentes"
       }
     ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.String.class, java.lang.Object.class
       };
+      boolean[] canEdit = new boolean [] {
+        false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
         return canEdit [columnIndex];
@@ -408,20 +443,20 @@ public class ViewTeacher extends javax.swing.JFrame {
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel3Layout.createSequentialGroup()
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jScrollPane3)
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
             .addComponent(modifyGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(viewGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton11))
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
+            .addComponent(jButton11)))
         .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
@@ -434,8 +469,8 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton11)
           .addComponent(viewGroup))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Grupos", jPanel3);
@@ -443,11 +478,6 @@ public class ViewTeacher extends javax.swing.JFrame {
     jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información Personal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
 
     idField.setEditable(false);
-    idField.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        idFieldActionPerformed(evt);
-      }
-    });
 
     jLabel2.setText("Identificación:");
 
@@ -482,7 +512,7 @@ public class ViewTeacher extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
               .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
-            .addGap(0, 250, Short.MAX_VALUE))
+            .addGap(0, 313, Short.MAX_VALUE))
           .addComponent(namesField)
           .addComponent(lastNamesField, javax.swing.GroupLayout.Alignment.TRAILING)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
@@ -514,28 +544,27 @@ public class ViewTeacher extends javax.swing.JFrame {
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Identificacion.png"))); // NOI18N
-    jLabel6.setText(".");
+    jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Profesor.png"))); // NOI18N
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+        .addGap(18, 18, 18)
+        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-          .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(10, Short.MAX_VALUE))
+        .addGap(15, 15, 15)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addContainerGap())
+          .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
     jTabbedPane2.addTab("Mis Datos", jPanel1);
@@ -618,22 +647,17 @@ public class ViewTeacher extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jTabbedPane2)
-        .addContainerGap())
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 909, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jTabbedPane2)
+      .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
-
-    private void idFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idFieldActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_idFieldActionPerformed
 
   private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
     dispose();
@@ -657,36 +681,46 @@ public class ViewTeacher extends javax.swing.JFrame {
   }//GEN-LAST:event_jMenuItem6ActionPerformed
 
   private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    try {TableData.loadStudents(studentsTable);}catch(SQLException e){}
+    try {TableData.loadStudents(studentsTable, Student.all());}catch(SQLException e){}
   }//GEN-LAST:event_jButton5ActionPerformed
 
   private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-    try {TableData.loadProjects(projectsTable);}catch(SQLException e){}
+    try {TableData.loadProjects(projectsTable, Project.all());}catch(SQLException e){}
   }//GEN-LAST:event_jButton15ActionPerformed
 
   private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-    try {TableData.loadTribunals(tribunalsTable);}catch(SQLException e){}
+    try {TableData.loadTribunals(tribunalsTable, Tribunal.all());}catch(SQLException e){}
   }//GEN-LAST:event_jButton19ActionPerformed
 
   private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-    try {TableData.loadGroups(groupsTable);}catch(SQLException e){}
+    try {TableData.loadGroups(groupsTable, Group.all());}catch(SQLException e){}
   }//GEN-LAST:event_jButton11ActionPerformed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-//    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
-//    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
+    if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
+    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
 
   private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-//    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
-//    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
+    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
+    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_projectsFieldKeyPressed
+
+  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
+    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
+    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_tribunalsFieldKeyPressed
+
+  private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
+    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
+    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_groupsFieldKeyPressed
 
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String name = this.namesField.getText();
     String lastName = this.lastNamesField.getText();
     String address = this.addressField.getText();
-    
+
     if (!Util.hasText(address) || !Util.hasText(name) || !Util.hasText(lastName)) {
       JOptionPane.showMessageDialog(this, "Debes llenar todos los campos", "Rellena los campos", JOptionPane.ERROR_MESSAGE);
       return;
@@ -701,16 +735,6 @@ public class ViewTeacher extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, String.format("No se ha podido actualizar por: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_jButton1ActionPerformed
-
-  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-//    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
-//    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_tribunalsFieldKeyPressed
-
-  private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-//    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
-//    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_groupsFieldKeyPressed
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton addProject;
@@ -745,10 +769,10 @@ public class ViewTeacher extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
   private javax.swing.JPanel jPanel6;
-  private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JScrollPane jScrollPane3;
-  private javax.swing.JScrollPane jScrollPane4;
   private javax.swing.JScrollPane jScrollPane5;
+  private javax.swing.JScrollPane jScrollPane6;
+  private javax.swing.JScrollPane jScrollPane7;
   private javax.swing.JTabbedPane jTabbedPane2;
   private javax.swing.JTextField lastNamesField;
   private javax.swing.JButton modifyGroup;

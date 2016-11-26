@@ -100,6 +100,42 @@ public class Group {
   }
   
   /**
+   * Return all student at group
+   * @return groups
+   * @throws java.sql.SQLException
+   */
+  public LinkedList<Student> getStudents() throws SQLException {
+    LinkedList<Student> students = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM students WHERE group_id=%d ORDER BY registration_number;", this.id));
+      while (rs.next())
+        students.add(Student.getStudentFromResultSet(rs));
+    }
+
+    return students;
+  }
+  
+  /**
+   * Return all teachers at group
+   * @return groups
+   * @throws java.sql.SQLException
+   */
+  public LinkedList<Teacher> getTeachers() throws SQLException {
+    LinkedList<Teacher> teachers = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM conforms c JOIN teachers t ON c.teacher_id=t.id WHERE c.group_id=%d ORDER BY t.id;", this.id));
+      while (rs.next())
+        teachers.add(Teacher.getTeacherFromResultSet(rs));
+    }
+
+    return teachers;
+  }
+  
+  /**
    * Find a group by the order Number
    * @param id
    * @return 
@@ -191,7 +227,7 @@ public class Group {
    * @param rs
    * @return 
    */
-  private static Group getGroupFromResultSet(ResultSet rs) {
+  public static Group getGroupFromResultSet(ResultSet rs) {
     try {
       Group group = new Group(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("components_number"), rs.getInt("teacher_id"));
       group.setTitularTeacher(Teacher.find(rs.getInt("teacher_id")));

@@ -181,7 +181,7 @@ public class Tribunal {
    * @param rs
    * @return 
    */
-  private static Tribunal getTribunalFromResultSet(ResultSet rs) {
+  public static Tribunal getTribunalFromResultSet(ResultSet rs) {
     try {
       Tribunal tribunal = new Tribunal(rs.getInt("id"), rs.getString("test_place"), rs.getInt("components_number"), rs.getInt("teacher_id"));
       tribunal.setTitularTeacher(Teacher.find(rs.getInt("teacher_id")));

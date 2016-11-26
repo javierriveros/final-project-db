@@ -2,6 +2,8 @@ package views.projects;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import javax.swing.JFrame;
@@ -14,11 +16,12 @@ import models.Project;
  * @author Mejia & Riveros Corp.
  */
 public class ReporteProyectos extends javax.swing.JFrame {
-
+  private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteProyectos
    */
-  public ReporteProyectos() {
+  public ReporteProyectos(javax.swing.JFrame parent) {
+    this.parent = parent;
     initComponents();
     addAttributes();
     try {
@@ -29,6 +32,32 @@ public class ReporteProyectos extends javax.swing.JFrame {
   private void addAttributes() {
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
   }
   
   private void addData() throws SQLException {
@@ -38,9 +67,11 @@ public class ReporteProyectos extends javax.swing.JFrame {
       model.addRow(new Object[] {
         project.getOrderNumber(),
         project.getTheme().getTitle(),
-        project.getStudent().getRegistrationNumber(),
+        project.getStudent().getCi(),
         project.getStudent().getName(),
         project.getStartDate(),
+        project.getEndDate(),
+        project.getStatus(),
         project.getDuration() == null ? "En curso" : project.getDuration()
       });
     });
@@ -73,11 +104,11 @@ public class ReporteProyectos extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Cod Proyecto", "Tema", "Cod Estudiante", "Nombre Estudiante", "Fecha de Inicio", "Tiempo de Duracion"
+        "Número de orden", "Tema", "Cod Estudiante", "Nombres Estudiante", "Inicio", "Final", "Estado", "Duración"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, true, true, true, true
+        false, false, true, true, true, true, true, true
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -90,7 +121,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1103, Short.MAX_VALUE)
+      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 981, Short.MAX_VALUE)
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

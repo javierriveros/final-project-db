@@ -23,18 +23,22 @@ public class Project {
   private Theme theme;
   private Tribunal tribunal;
   private String duration;
+  private String status;
   
   /**
    * Project constructor
    * @param orderNumber
    * @param startDate
    * @param tribunalId 
+   * @param studentRegistrationNumber 
    */
-  public Project(int orderNumber, Timestamp startDate, int tribunalId, int studentRegistrationNumber) {
+  public Project(int orderNumber, Timestamp startDate, Timestamp endDate, int tribunalId, int studentRegistrationNumber, Theme theme) {
     this.orderNumber = orderNumber;
     this.startDate = startDate;
+    this.endDate = endDate;
     this.tribunalId = tribunalId;
     this.studentRegistrationNumber = studentRegistrationNumber;
+    this.theme = theme;
   }
   
   public int getOrderNumber() {
@@ -94,7 +98,7 @@ public class Project {
   }
 
   public String getDuration() {
-    return duration;
+    return duration.isEmpty() ? "En curso" : duration;
   }
 
   public int getStudentRegistrationNumber() {
@@ -112,10 +116,18 @@ public class Project {
   public void setTribunal(Tribunal tribunal) {
     this.tribunal = tribunal;
   }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
   
   @Override
   public String toString() {
-    return String.format("{order_numer: %d, start_date: %s, end_date: %s, duration: %s, tribunal_id: %d, student_rn: %d}", this.orderNumber, this.startDate, this.endDate, this.duration, this.tribunalId, this.studentRegistrationNumber);
+    return String.format("{order_numer: %d, start_date: %s, end_date: %s, duration: %s, status: %s, tribunal_id: %d, student_rn: %d}", this.orderNumber, this.startDate, this.endDate, this.duration, this.status, this.tribunalId, this.studentRegistrationNumber);
   }
   
   /**
@@ -128,7 +140,7 @@ public class Project {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("select *, age(end_date, start_date) from projects;");
+      ResultSet rs = sm.executeQuery("select *, age(end_date, start_date) from projects order by order_number;");
       while (rs.next())
         projects.add(getProjectFromResultSet(rs));
     }
@@ -174,9 +186,11 @@ public class Project {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (order_number, start_date, tribunal_id, student_registration_number) VALUES ('%d', '%s', '%d', '%d')", this.orderNumber, this.startDate, this.tribunalId, this.studentRegistrationNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (start_date, end_date, tribunal_id, student_registration_number) VALUES ('%s', '%s', '%d', '%d')", this.startDate, this.endDate == null ? "" : this.endDate, this.tribunalId, this.studentRegistrationNumber))) {
       try {
         ps.execute();
+        this.theme.setOrderNumber(Project.all().getLast().getOrderNumber());
+      this.theme.save();
         return true;
       } catch(SQLException e) {
         System.out.printf("Hubo un error por %s", e.getMessage());
@@ -193,7 +207,7 @@ public class Project {
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE projects SET start_date='%s', tribunal_id=%d WHERE order_number=%d;", this.startDate, this.tribunalId, this.orderNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE projects SET start_date='%s', end_date='%s', tribunal_id=%d WHERE order_number=%d;", this.startDate, this.endDate, this.tribunalId, this.orderNumber))) {
       try {
         ps.execute();
         return true;
@@ -230,10 +244,10 @@ public class Project {
    */
   private static Project getProjectFromResultSet(ResultSet rs) {
     try {
-      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getInt("tribunal_id"), rs.getInt("student_registration_number"));
-      p.setTheme(Theme.find(rs.getInt("order_number")));
+      Project p =  new Project(rs.getInt("order_number"), rs.getTimestamp("start_date"), rs.getTimestamp("end_date"), rs.getInt("tribunal_id"), rs.getInt("student_registration_number"), Theme.find(rs.getInt("order_number")));
       p.setStudent(Student.find(rs.getInt("student_registration_number")));
       p.setDuration(rs.getString("age"));
+      p.setStatus(rs.getString("status"));
       p.setTribunal(Tribunal.find(rs.getInt("tribunal_id")));
       return p;
     } catch(SQLException ex) {

@@ -1,25 +1,26 @@
 package views.groups;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Conforms;
 import models.Group;
-import views.users.Login;
 
 /**
  *
  * @author Mejia & Riveros Corp.
  */
 public class ReporteGrupo extends javax.swing.JFrame {
-
+  private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteGrupo
    */
-  public ReporteGrupo() {
+  public ReporteGrupo(javax.swing.JFrame parent) {
+    this.parent = parent;
     initComponents();
     addAttributes();
     try {
@@ -32,6 +33,32 @@ public class ReporteGrupo extends javax.swing.JFrame {
   private void addAttributes() {
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
   }
   
   private void addData() throws SQLException {
@@ -80,7 +107,7 @@ public class ReporteGrupo extends javax.swing.JFrame {
 
       },
       new String [] {
-        "ID", "Nombre del Grupo", "Cod Profesor", "Nombre Profesor", "Apellido profesor"
+        "ID", "Nombre", "ID Titular", "Nombre Titular", "Apellido Titular"
       }
     ) {
       boolean[] canEdit = new boolean [] {
@@ -165,7 +192,14 @@ public class ReporteGrupo extends javax.swing.JFrame {
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void viewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewGroupActionPerformed
-    
+    int pk = 0;
+    try {
+      pk = getPK(groupsTable);
+    } catch(ArrayIndexOutOfBoundsException e) {
+      JOptionPane.showMessageDialog(this, "Debes seleccionar una fila", "Warning", JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+   new ShowGroup(this, Group.find(pk)).setVisible(true);
   }//GEN-LAST:event_viewGroupActionPerformed
 
 

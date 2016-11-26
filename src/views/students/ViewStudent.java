@@ -1,10 +1,17 @@
 package views.students;
 
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
+import models.Group;
+import models.Project;
 import models.Student;
+import models.Teacher;
 import models.User;
+import models.Tribunal;
 import resources.TableData;
 import resources.Util;
 
@@ -15,12 +22,13 @@ import resources.Util;
 public class ViewStudent extends javax.swing.JFrame {
   private User user;
   private Student student;
+  private Group group;
+  private Project project;
+  private Tribunal tribunal;
+  private Teacher teacher;
   
   //Sorters
-//  private TableRowSorter teachersSorter;
-//  private TableRowSorter projectsSorter;
-//  private TableRowSorter tribunalsSorter;
-//  private TableRowSorter groupsSorter;
+  private TableRowSorter teachersSorter;
   
   /**
    * Creates new form Ventana
@@ -29,14 +37,25 @@ public class ViewStudent extends javax.swing.JFrame {
   public ViewStudent(User user) {
     this.user = user;
     this.student = Student.find(Integer.parseInt(String.valueOf(user.getRoleReference())));
+    this.group = Group.find(student.getGroupId());
+    this.project = Project.find(student.getOrderNumber());
+    this.teacher = Teacher.find(this.student.getTeacherId());
+    
     initComponents();
     addAttributes();
-    addMyData();
-    //addSorters();
     try {
       loadData();
+      addMyData();
+      loadProjectData();
+      loadGroupData();
+      loadTeacherData();
+      if (project != null) {
+        this.tribunal = project.getTribunal();
+        loadTribunalData();
+      }
+      addSorters();
     } catch(Exception e) {
-      System.out.printf("Error por: %s", e.getMessage());
+      System.out.printf("%s",e.getClass().getName());
     }
   }
 
@@ -44,10 +63,7 @@ public class ViewStudent extends javax.swing.JFrame {
     setLocationRelativeTo(null);
     setTitle(String.format("Usted se ha identificado como: %s - Estudiante", this.user.getUsername()));
     String text = "Escriba aquí para buscar";
-    Util.addPlaceholder(groupsField, text);
-    Util.addPlaceholder(projectsField, text);
     Util.addPlaceholder(teachersField, text);
-    Util.addPlaceholder(tribunalsField, text);
   }
   
   private void addMyData() {
@@ -56,25 +72,71 @@ public class ViewStudent extends javax.swing.JFrame {
     this.lastNamesField.setText(this.student.getLastName());
   }
   
+  private void loadTeacherData() {
+    if (this.project == null) return;
+    this.projectTeacherName.setText(this.teacher.getFullName());
+    this.projectTeacherAddress.setText(this.teacher.getAddress());
+  }
+  
+  private void loadProjectData() {
+    if (this.project == null) {
+      loadDefaultDataForProject();
+      return;
+    }
+    //Project data
+    this.projectTheme.setText(this.project.getTheme().getTitle());
+    this.projectStartDate.setText("Fecha de inicio: " + this.project.getStartDate().toString());
+    this.projectEndDate.setText("Fecha final: " + this.project.getEndDate() == null ? this.project.getDuration() : this.project.getEndDate().toString());
+    this.projectDuration.setText("Duración: " + this.project.getDuration());
+    this.projectState.setText(this.project.getStatus());
+  }
+  
+  private void loadDefaultDataForProject() {
+    this.projectTheme.setText("Aún no has creado un proyecto");
+    this.projectStartDate.setText("Contacta con el administrador");
+    this.projectEndDate.setText("");
+    this.projectDuration.setText("");
+    this.projectState.setText("");
+    this.projectTeacherName.setText("");
+    this.projectTeacherAddress.setText("");
+    
+    this.tribunalPresentationPlace.setText("");
+    this.tribunalComponentsNumber.setText("");
+    this.tribunalTeacherName.setText("");
+    this.tribunalTeacherAddress.setText("");
+  }
+  
+  private void loadGroupData() {
+    if (this.group == null) return;
+    //Group date
+    this.groupName.setText(this.group.getName());
+    this.groupDescription.setText(this.group.getDescription());
+    this.groupComponentsNumber.setText(String.format("%d integrantes", this.group.getComponentsNumber()));
+    this.groupTeacherName.setText(this.group.getTitularTeacher().getFullName());
+    this.groupTeacherAddress.setText(this.group.getTitularTeacher().getAddress());
+  }
+  
+  private void loadTribunalData() {
+    //Tribunal data
+    if (this.tribunal == null) return;
+    this.tribunalPresentationPlace.setText("Lugar de presentación: " + this.tribunal.getTestPlace());
+    this.tribunalComponentsNumber.setText(String.format("%d integrantes", this.tribunal.getComponentsNumber()));
+    this.tribunalTeacherName.setText(this.tribunal.getTitularTeacher().getFullName());
+    this.tribunalTeacherAddress.setText(this.tribunal.getTitularTeacher().getAddress());
+  }
+  
   private void loadData() throws SQLException {
-    TableData.loadTeachers(teachersTable);
-    TableData.loadProjects(projectsTable);
-    TableData.loadTribunals(tribunalsTable);
-    TableData.loadGroups(groupsTable);
+    TableData.loadTeachers(teachersTable, student.getTeachersWhoHelpMe());
   }
   
   private void addSorters() {
-//    teachersSorter = new TableRowSorter(teachersTable.getModel());
-//    teachersTable.setRowSorter(teachersSorter);
-//
-//    projectsSorter = new TableRowSorter(projectsTable.getModel());
-//    projectsTable.setRowSorter(projectsSorter);
-//
-//    tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
-//    tribunalsTable.setRowSorter(tribunalsSorter);
-//    
-//    groupsSorter = new TableRowSorter(groupsTable.getModel());
-//    groupsTable.setRowSorter(tribunalsSorter);
+    teachersSorter = new TableRowSorter(teachersTable.getModel());
+    teachersTable.setRowSorter(teachersSorter);
+  }
+  
+  private String getCurrentTime() {
+    GregorianCalendar calendar = new GregorianCalendar();
+    return String.format("%d-%d-%d %d:%d:%d",calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
   }
   
   /**
@@ -88,70 +150,56 @@ public class ViewStudent extends javax.swing.JFrame {
 
     jTabbedPane2 = new javax.swing.JTabbedPane();
     jPanel1 = new javax.swing.JPanel();
-    jScrollPane1 = new javax.swing.JScrollPane();
-    teachersTable = new javax.swing.JTable();
     searchTeachersBy = new javax.swing.JComboBox();
     teachersField = new javax.swing.JTextField();
     jButton1 = new javax.swing.JButton();
     viewTeacher = new javax.swing.JButton();
+    jPanel10 = new javax.swing.JPanel();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    teachersTable = new javax.swing.JTable();
+    jPanel2 = new javax.swing.JPanel();
+    projectTheme = new javax.swing.JLabel();
+    projectStartDate = new javax.swing.JLabel();
+    projectEndDate = new javax.swing.JLabel();
+    projectDuration = new javax.swing.JLabel();
+    projectState = new javax.swing.JLabel();
     jPanel4 = new javax.swing.JPanel();
-    searchProjectsBy = new javax.swing.JComboBox();
-    projectsField = new javax.swing.JTextField();
-    jButton15 = new javax.swing.JButton();
-    viewProject = new javax.swing.JButton();
-    jScrollPane4 = new javax.swing.JScrollPane();
-    projectsTable = new javax.swing.JTable();
+    tribunalPresentationPlace = new javax.swing.JLabel();
+    tribunalComponentsNumber = new javax.swing.JLabel();
     jPanel5 = new javax.swing.JPanel();
-    tribunalsField = new javax.swing.JTextField();
-    searchTribunalsBy = new javax.swing.JComboBox();
-    jButton19 = new javax.swing.JButton();
-    viewTribunal = new javax.swing.JButton();
-    jScrollPane5 = new javax.swing.JScrollPane();
-    tribunalsTable = new javax.swing.JTable();
+    projectTeacherAddress = new javax.swing.JLabel();
+    projectTeacherName = new javax.swing.JLabel();
+    jPanel9 = new javax.swing.JPanel();
+    tribunalTeacherName = new javax.swing.JLabel();
+    tribunalTeacherAddress = new javax.swing.JLabel();
+    groupPanel = new javax.swing.JPanel();
+    groupName = new javax.swing.JLabel();
+    groupDescription = new javax.swing.JLabel();
+    groupComponentsNumber = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
-    searchGroupsBy = new javax.swing.JComboBox();
-    groupsField = new javax.swing.JTextField();
-    jButton11 = new javax.swing.JButton();
-    jScrollPane3 = new javax.swing.JScrollPane();
-    groupsTable = new javax.swing.JTable();
+    groupTeacherAddress = new javax.swing.JLabel();
+    groupTeacherName = new javax.swing.JLabel();
+    jLabel2 = new javax.swing.JLabel();
     jPanel6 = new javax.swing.JPanel();
     jPanel7 = new javax.swing.JPanel();
     codeField = new javax.swing.JTextField();
     namesField = new javax.swing.JTextField();
     lastNamesField = new javax.swing.JTextField();
     jButton2 = new javax.swing.JButton();
-    jPanel8 = new javax.swing.JPanel();
-    orderNumberField = new javax.swing.JTextField();
-    startDateField = new javax.swing.JTextField();
-    themeCombo = new javax.swing.JComboBox<>();
-    statusField = new javax.swing.JTextField();
-    jButton6 = new javax.swing.JButton();
+    jLabel1 = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     jMenuItem7 = new javax.swing.JMenuItem();
+    jMenu2 = new javax.swing.JMenu();
+    jMenuItem3 = new javax.swing.JMenuItem();
+    jMenuItem4 = new javax.swing.JMenuItem();
+    jMenuItem5 = new javax.swing.JMenuItem();
+    jMenuItem6 = new javax.swing.JMenuItem();
     jMenu3 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-    teachersTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-
-      },
-      new String [] {
-        "Id", "Nombres", "Apellidos", "Direccion"
-      }
-    ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true, true
-      };
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane1.setViewportView(teachersTable);
 
     searchTeachersBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombres", "Apellidos", "Direccion" }));
 
@@ -170,6 +218,47 @@ public class ViewStudent extends javax.swing.JFrame {
 
     viewTeacher.setText("Ver");
 
+    jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Profesores colaboradores", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 12))); // NOI18N
+
+    teachersTable.setBorder(null);
+    teachersTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+
+      },
+      new String [] {
+        "CI", "Nombres", "Apellidos", "Dirección"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+      };
+      boolean[] canEdit = new boolean [] {
+        false, false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    jScrollPane1.setViewportView(teachersTable);
+
+    javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+    jPanel10.setLayout(jPanel10Layout);
+    jPanel10Layout.setHorizontalGroup(
+      jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
+    );
+    jPanel10Layout.setVerticalGroup(
+      jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel10Layout.createSequentialGroup()
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, Short.MAX_VALUE))
+    );
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -177,16 +266,16 @@ public class ViewStudent extends javax.swing.JFrame {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+          .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addComponent(searchTeachersBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(teachersField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(18, 18, 18)
             .addComponent(viewTeacher)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGap(18, 18, 18)
             .addComponent(jButton1)))
-        .addContainerGap())
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,179 +287,166 @@ public class ViewStudent extends javax.swing.JFrame {
           .addComponent(jButton1)
           .addComponent(viewTeacher))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+        .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Profesores", jPanel1);
 
-    searchProjectsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Numero de Orden", "Tema" }));
+    projectTheme.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+    projectTheme.setText("Tema del proyecto");
 
-    projectsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyPressed(java.awt.event.KeyEvent evt) {
-        projectsFieldKeyPressed(evt);
-      }
-    });
+    projectStartDate.setFont(new java.awt.Font("Roboto Light", 0, 16)); // NOI18N
+    projectStartDate.setText("Fecha de inicio");
 
-    jButton15.setText("Refresh");
-    jButton15.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton15ActionPerformed(evt);
-      }
-    });
+    projectEndDate.setFont(new java.awt.Font("Roboto Light", 0, 16)); // NOI18N
+    projectEndDate.setText("Fecha de terminación");
 
-    viewProject.setText("Ver");
+    projectDuration.setFont(new java.awt.Font("Roboto Light", 0, 16)); // NOI18N
+    projectDuration.setText("Duracion");
 
-    projectsTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
+    projectState.setFont(new java.awt.Font("Roboto Light", 0, 16)); // NOI18N
+    projectState.setText("Estado");
 
-      },
-      new String [] {
-        "Numero de Orden", "Tema", "Fecha de Inicio", "Evaluacion Tribunal"
-      }
-    ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true, true
-      };
+    jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Tribunal que lo evalua"));
 
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane4.setViewportView(projectsTable);
+    tribunalPresentationPlace.setText("Lugar de presentación");
+
+    tribunalComponentsNumber.setText("Número de integrantes");
 
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
     jPanel4.setLayout(jPanel4Layout);
     jPanel4Layout.setHorizontalGroup(
       jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(jPanel4Layout.createSequentialGroup()
-            .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(viewProject)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton15))
-          .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE))
-        .addContainerGap())
+      .addComponent(tribunalPresentationPlace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addComponent(tribunalComponentsNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
     );
     jPanel4Layout.setVerticalGroup(
       jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton15)
-          .addComponent(viewProject))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+        .addComponent(tribunalPresentationPlace)
+        .addGap(18, 18, 18)
+        .addComponent(tribunalComponentsNumber)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jTabbedPane2.addTab("Proyectos", jPanel4);
+    jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Docente que me asesora", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 14))); // NOI18N
 
-    tribunalsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyPressed(java.awt.event.KeyEvent evt) {
-        tribunalsFieldKeyPressed(evt);
-      }
-    });
+    projectTeacherAddress.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+    projectTeacherAddress.setText("Dirección del profesor");
 
-    searchTribunalsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Lugar de Presentación" }));
-
-    jButton19.setText("Refresh");
-    jButton19.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton19ActionPerformed(evt);
-      }
-    });
-
-    viewTribunal.setText("Ver");
-
-    tribunalsTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-
-      },
-      new String [] {
-        "Id", "Lugar de Presentacion", "Numero de Integrantes"
-      }
-    ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true
-      };
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane5.setViewportView(tribunalsTable);
+    projectTeacherName.setFont(new java.awt.Font("Roboto Light", 0, 24)); // NOI18N
+    projectTeacherName.setText("Nombre del profesor");
 
     javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
     jPanel5.setLayout(jPanel5Layout);
     jPanel5Layout.setHorizontalGroup(
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jScrollPane5)
-          .addGroup(jPanel5Layout.createSequentialGroup()
-            .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 312, Short.MAX_VALUE)
-            .addComponent(viewTribunal)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton19)))
+      .addComponent(projectTeacherName, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+      .addGroup(jPanel5Layout.createSequentialGroup()
+        .addComponent(projectTeacherAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanel5Layout.setVerticalGroup(
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel5Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton19)
-          .addComponent(viewTribunal))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+        .addComponent(projectTeacherName)
+        .addGap(18, 18, 18)
+        .addComponent(projectTeacherAddress)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jTabbedPane2.addTab("Tribunal", jPanel5);
+    jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Docente titular del tribunal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 14))); // NOI18N
 
-    searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombre" }));
+    tribunalTeacherName.setFont(new java.awt.Font("Roboto Light", 0, 24)); // NOI18N
+    tribunalTeacherName.setText("Nombre del docente");
 
-    groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyPressed(java.awt.event.KeyEvent evt) {
-        groupsFieldKeyPressed(evt);
-      }
-    });
+    tribunalTeacherAddress.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+    tribunalTeacherAddress.setText("Dirección del docente");
 
-    jButton11.setText("Refresh");
-    jButton11.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton11ActionPerformed(evt);
-      }
-    });
+    javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+    jPanel9.setLayout(jPanel9Layout);
+    jPanel9Layout.setHorizontalGroup(
+      jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel9Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(tribunalTeacherName, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+          .addComponent(tribunalTeacherAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+    );
+    jPanel9Layout.setVerticalGroup(
+      jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel9Layout.createSequentialGroup()
+        .addComponent(tribunalTeacherName, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(12, 12, 12)
+        .addComponent(tribunalTeacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
 
-    groupsTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
+    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGap(17, 17, 17)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(projectTheme, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(projectEndDate)
+              .addComponent(projectDuration)
+              .addComponent(projectState)
+              .addComponent(projectStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(11, Short.MAX_VALUE))
+    );
+    jPanel2Layout.setVerticalGroup(
+      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addComponent(projectTheme)
+            .addGap(18, 18, 18)
+            .addComponent(projectStartDate)
+            .addGap(18, 18, 18)
+            .addComponent(projectEndDate)
+            .addGap(18, 18, 18)
+            .addComponent(projectDuration)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(projectState)
+            .addGap(18, 18, 18)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addContainerGap(31, Short.MAX_VALUE))
+    );
 
-      },
-      new String [] {
-        "Id", "Nombre", "Numero de Integrantes"
-      }
-    ) {
-      boolean[] canEdit = new boolean [] {
-        false, false, true
-      };
+    jTabbedPane2.addTab("Mi Proyecto", jPanel2);
 
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane3.setViewportView(groupsTable);
+    groupName.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
+    groupName.setText("No estás en un grupo");
+
+    groupDescription.setFont(new java.awt.Font("Roboto Light", 0, 18)); // NOI18N
+    groupDescription.setText("Descripcion del grupo");
+
+    groupComponentsNumber.setFont(new java.awt.Font("Roboto Light", 0, 16)); // NOI18N
+    groupComponentsNumber.setText("Numero de componentes");
+
+    jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del docente titular", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 14))); // NOI18N
+
+    groupTeacherAddress.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+    groupTeacherAddress.setText("Dirección");
+
+    groupTeacherName.setFont(new java.awt.Font("Roboto Light", 0, 24)); // NOI18N
+    groupTeacherName.setText("Nombre");
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -379,29 +455,55 @@ public class ViewStudent extends javax.swing.JFrame {
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(jPanel3Layout.createSequentialGroup()
-            .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton11))
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE))
-        .addContainerGap())
+          .addComponent(groupTeacherAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(groupTeacherName))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton11))
+        .addComponent(groupTeacherName)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
-        .addContainerGap())
+        .addComponent(groupTeacherAddress)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
-    jTabbedPane2.addTab("Grupo", jPanel3);
+    jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/group_image.png"))); // NOI18N
+
+    javax.swing.GroupLayout groupPanelLayout = new javax.swing.GroupLayout(groupPanel);
+    groupPanel.setLayout(groupPanelLayout);
+    groupPanelLayout.setHorizontalGroup(
+      groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(groupPanelLayout.createSequentialGroup()
+        .addGap(15, 15, 15)
+        .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addComponent(groupDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(groupName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(groupComponentsNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addGap(59, 59, 59)
+        .addComponent(jLabel2)
+        .addContainerGap(71, Short.MAX_VALUE))
+    );
+    groupPanelLayout.setVerticalGroup(
+      groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(groupPanelLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(groupName)
+        .addGap(18, 18, 18)
+        .addComponent(groupDescription)
+        .addGap(18, 18, 18)
+        .addComponent(groupComponentsNumber)
+        .addGap(18, 18, 18)
+        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGroup(groupPanelLayout.createSequentialGroup()
+        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 66, Short.MAX_VALUE))
+    );
+
+    jTabbedPane2.addTab("Mi grupo", groupPanel);
 
     jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información Personal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
 
@@ -430,7 +532,7 @@ public class ViewStudent extends javax.swing.JFrame {
           .addComponent(lastNamesField)
           .addComponent(namesField)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGap(0, 257, Short.MAX_VALUE)
             .addComponent(jButton2)))
         .addContainerGap())
     );
@@ -448,49 +550,7 @@ public class ViewStudent extends javax.swing.JFrame {
         .addContainerGap(16, Short.MAX_VALUE))
     );
 
-    jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Proyecto de Fin de Carrera", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
-
-    orderNumberField.setEditable(false);
-    orderNumberField.setBorder(javax.swing.BorderFactory.createTitledBorder("Número de orden"));
-
-    startDateField.setBorder(javax.swing.BorderFactory.createTitledBorder("Fecha de inicio"));
-
-    themeCombo.setBorder(javax.swing.BorderFactory.createTitledBorder("Tema"));
-
-    statusField.setBorder(javax.swing.BorderFactory.createTitledBorder("Estado"));
-
-    jButton6.setText("Modificar");
-
-    javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-    jPanel8.setLayout(jPanel8Layout);
-    jPanel8Layout.setHorizontalGroup(
-      jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel8Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(startDateField, javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(orderNumberField)
-          .addComponent(themeCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(statusField)
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-            .addGap(0, 376, Short.MAX_VALUE)
-            .addComponent(jButton6)))
-        .addContainerGap())
-    );
-    jPanel8Layout.setVerticalGroup(
-      jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel8Layout.createSequentialGroup()
-        .addComponent(orderNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(themeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(startDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(jButton6)
-        .addContainerGap())
-    );
+    jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/student.png"))); // NOI18N
 
     javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
     jPanel6.setLayout(jPanel6Layout);
@@ -500,17 +560,17 @@ public class ViewStudent extends javax.swing.JFrame {
         .addContainerGap()
         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(18, 18, 18)
-        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(jLabel1)
+        .addContainerGap(20, Short.MAX_VALUE))
     );
     jPanel6Layout.setVerticalGroup(
       jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel6Layout.createSequentialGroup()
         .addGap(6, 6, 6)
         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(10, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Mis Datos", jPanel6);
@@ -528,6 +588,50 @@ public class ViewStudent extends javax.swing.JFrame {
     jMenu1.add(jMenuItem7);
 
     jMenuBar1.add(jMenu1);
+
+    jMenu2.setText("Ver");
+
+    jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_MASK));
+    jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/pencil-ruler-icon.png"))); // NOI18N
+    jMenuItem3.setText("Reporte de Proyectos");
+    jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem3ActionPerformed(evt);
+      }
+    });
+    jMenu2.add(jMenuItem3);
+
+    jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.SHIFT_MASK));
+    jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/igroup_n.png"))); // NOI18N
+    jMenuItem4.setText("Reporte de Grupos");
+    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem4ActionPerformed(evt);
+      }
+    });
+    jMenu2.add(jMenuItem4);
+
+    jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_MASK));
+    jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
+    jMenuItem5.setText("Reporte de Profesores");
+    jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem5ActionPerformed(evt);
+      }
+    });
+    jMenu2.add(jMenuItem5);
+
+    jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.SHIFT_MASK));
+    jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Graduate-male-icon.png"))); // NOI18N
+    jMenuItem6.setText("Reporte de Estudiantes");
+    jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem6ActionPerformed(evt);
+      }
+    });
+    jMenu2.add(jMenuItem6);
+
+    jMenuBar1.add(jMenu2);
 
     jMenu3.setText("Ayuda");
 
@@ -564,20 +668,8 @@ public class ViewStudent extends javax.swing.JFrame {
     new views.users.Login().setVisible(true);
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-  private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-    try {TableData.loadGroups(groupsTable);}catch(SQLException e){}
-  }//GEN-LAST:event_jButton11ActionPerformed
-
-  private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-    try {TableData.loadTribunals(tribunalsTable);}catch(SQLException e){}
-  }//GEN-LAST:event_jButton19ActionPerformed
-
-  private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-    try {TableData.loadProjects(projectsTable);}catch(SQLException e){}
-  }//GEN-LAST:event_jButton15ActionPerformed
-
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    try {TableData.loadTeachers(teachersTable);}catch(SQLException e){}
+    try {TableData.loadTeachers(teachersTable, Teacher.all());}catch(SQLException e){}
   }//GEN-LAST:event_jButton1ActionPerformed
 
   private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -593,79 +685,86 @@ public class ViewStudent extends javax.swing.JFrame {
     if (!name.equals(this.student.getName())) this.student.setName(name);
     if (!lastName.equals(this.student.getLastName())) this.student.setLastName(lastName);
     try {
-      this.student.update();
-      JOptionPane.showMessageDialog(this, "Datos guardados", "OK", JOptionPane.INFORMATION_MESSAGE);
+      if (this.student.update())
+        JOptionPane.showMessageDialog(this, "Datos guardados", "OK", JOptionPane.INFORMATION_MESSAGE);
+      else
+        JOptionPane.showMessageDialog(this, "Datos no guardados", "OK", JOptionPane.ERROR_MESSAGE);
     } catch(SQLException e) {
       JOptionPane.showMessageDialog(this, String.format("No se ha podido actualizar por: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_jButton2ActionPerformed
 
   private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
-//    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() == 0) return;
-//    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
+    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() == 0) return;
+    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
   }//GEN-LAST:event_teachersFieldKeyPressed
 
-  private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-//    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() == 0) return;
-//    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_projectsFieldKeyPressed
+  private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    new views.projects.ReporteProyectos().setVisible(true);
+  }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-//    if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() == 0) return;
-//    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_tribunalsFieldKeyPressed
+  private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    new views.groups.ReporteGrupo().setVisible(true);
+  }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-  private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-//    if(searchGroupsBy.getSelectedIndex() == 0 || groupsTable.getRowCount() <= 0) return;
-//    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_groupsFieldKeyPressed
+  private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    new views.students.ReporteEstudiantes().setVisible(true);
+  }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+  private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    new views.teachers.ReporteProfesores().setVisible(true);
+  }//GEN-LAST:event_jMenuItem6ActionPerformed
+  
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JTextField codeField;
-  private javax.swing.JTextField groupsField;
-  private javax.swing.JTable groupsTable;
+  private javax.swing.JLabel groupComponentsNumber;
+  private javax.swing.JLabel groupDescription;
+  private javax.swing.JLabel groupName;
+  private javax.swing.JPanel groupPanel;
+  private javax.swing.JLabel groupTeacherAddress;
+  private javax.swing.JLabel groupTeacherName;
   private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton11;
-  private javax.swing.JButton jButton15;
-  private javax.swing.JButton jButton19;
   private javax.swing.JButton jButton2;
-  private javax.swing.JButton jButton6;
+  private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
   private javax.swing.JMenu jMenu1;
+  private javax.swing.JMenu jMenu2;
   private javax.swing.JMenu jMenu3;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JMenuItem jMenuItem2;
+  private javax.swing.JMenuItem jMenuItem3;
+  private javax.swing.JMenuItem jMenuItem4;
+  private javax.swing.JMenuItem jMenuItem5;
+  private javax.swing.JMenuItem jMenuItem6;
   private javax.swing.JMenuItem jMenuItem7;
   private javax.swing.JPanel jPanel1;
+  private javax.swing.JPanel jPanel10;
+  private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
   private javax.swing.JPanel jPanel6;
   private javax.swing.JPanel jPanel7;
-  private javax.swing.JPanel jPanel8;
+  private javax.swing.JPanel jPanel9;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JScrollPane jScrollPane3;
-  private javax.swing.JScrollPane jScrollPane4;
-  private javax.swing.JScrollPane jScrollPane5;
   private javax.swing.JTabbedPane jTabbedPane2;
   private javax.swing.JTextField lastNamesField;
   private javax.swing.JTextField namesField;
-  private javax.swing.JTextField orderNumberField;
-  private javax.swing.JTextField projectsField;
-  private javax.swing.JTable projectsTable;
-  private javax.swing.JComboBox searchGroupsBy;
-  private javax.swing.JComboBox searchProjectsBy;
+  private javax.swing.JLabel projectDuration;
+  private javax.swing.JLabel projectEndDate;
+  private javax.swing.JLabel projectStartDate;
+  private javax.swing.JLabel projectState;
+  private javax.swing.JLabel projectTeacherAddress;
+  private javax.swing.JLabel projectTeacherName;
+  private javax.swing.JLabel projectTheme;
   private javax.swing.JComboBox searchTeachersBy;
-  private javax.swing.JComboBox searchTribunalsBy;
-  private javax.swing.JTextField startDateField;
-  private javax.swing.JTextField statusField;
   private javax.swing.JTextField teachersField;
   private javax.swing.JTable teachersTable;
-  private javax.swing.JComboBox<String> themeCombo;
-  private javax.swing.JTextField tribunalsField;
-  private javax.swing.JTable tribunalsTable;
-  private javax.swing.JButton viewProject;
+  private javax.swing.JLabel tribunalComponentsNumber;
+  private javax.swing.JLabel tribunalPresentationPlace;
+  private javax.swing.JLabel tribunalTeacherAddress;
+  private javax.swing.JLabel tribunalTeacherName;
   private javax.swing.JButton viewTeacher;
-  private javax.swing.JButton viewTribunal;
   // End of variables declaration//GEN-END:variables
 }

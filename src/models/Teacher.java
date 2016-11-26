@@ -59,6 +59,88 @@ public class Teacher {
     this.address = address;
   }
   
+  public String getFullName() {
+    return String.format("%s %s", this.name, this.lastName);
+  }
+
+  public LinkedList<Tribunal> getTribunalsWhereIAmTitular() throws SQLException {
+    LinkedList<Tribunal> tribunals = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM tribunals WHERE teacher_id=%d ORDER BY teacher_id", this.id));
+      while (rs.next())
+        tribunals.add(Tribunal.getTribunalFromResultSet(rs));
+    }
+
+    return tribunals;
+  }
+  
+  public LinkedList<Tribunal> getTribunalsWhereIAmMember() throws SQLException {
+    LinkedList<Tribunal> tribunals = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM integrates WHERE teacher_id=%d", this.id));
+      while (rs.next())
+        tribunals.add(Tribunal.getTribunalFromResultSet(rs));
+    }
+
+    return tribunals;
+  }
+  
+  public LinkedList<Group> getGroupsWhereIAmTitular() throws SQLException {
+    LinkedList<Group> groups = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM groups WHERE teacher_id=%d", this.id));
+      while (rs.next())
+        groups.add(Group.getGroupFromResultSet(rs));
+    }
+
+    return groups;
+  }
+  
+  public LinkedList<Group> getGroupsWhereIAmMember() throws SQLException {
+    LinkedList<Group> groups = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM conforms WHERE teacher_id=%d", this.id));
+      while (rs.next())
+        groups.add(Group.getGroupFromResultSet(rs));
+    }
+
+    return groups;
+  }
+  
+  public LinkedList<Student> getStudentsITeach() throws SQLException {
+    LinkedList<Student> students = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM students WHERE teacher_id=%d", this.id));
+      while (rs.next())
+        students.add(Student.getStudentFromResultSet(rs));
+    }
+
+    return students;
+  }
+  
+  public LinkedList<Student> getStudentsIHelp() throws SQLException {
+    LinkedList<Student> students = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM helps WHERE teacher_id=%d", this.id));
+      while (rs.next())
+        students.add(Student.getStudentFromResultSet(rs));
+    }
+
+    return students;
+  }
+  
   @Override
   public String toString() {
     return String.format("{id: %d, name: %s, last_name: %s, address: %s}", this.id, this.name, this.lastName, this.address);
@@ -176,13 +258,11 @@ public class Teacher {
       } catch(SQLException e) {
         System.out.printf("Hubo un error por %s", e.getMessage());
         return false;
-      } finally {
-        con.getCon().close();
       }
     }
   }
   
-  private static Teacher getTeacherFromResultSet(ResultSet rs) {
+  public static Teacher getTeacherFromResultSet(ResultSet rs) {
     try {
       return new Teacher(rs.getInt("id"), rs.getString("name"), rs.getString("last_name"), rs.getString("address"));
     } catch(SQLException ex) {

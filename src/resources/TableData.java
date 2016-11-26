@@ -20,10 +20,9 @@ import models.Tribunal;
  * @author javier
  */
 public class TableData {
-  public static void loadStudents(JTable studentsTable) throws SQLException {
+  public static void loadStudents(JTable studentsTable, LinkedList<Student> students) throws SQLException {
     DefaultTableModel studentsModel = (DefaultTableModel) studentsTable.getModel();
     Util.clearTable(studentsModel);
-    LinkedList<Student> students = Student.all();
     students.forEach(student -> {
       studentsModel.addRow(new Object[] {
         student.getRegistrationNumber(),
@@ -35,10 +34,9 @@ public class TableData {
     });
   }
   
-  public static void loadTeachers(JTable teachersTable) throws SQLException {
+  public static void loadTeachers(JTable teachersTable, LinkedList<Teacher> teachers) throws SQLException {
     DefaultTableModel teachersModel = (DefaultTableModel) teachersTable.getModel();
     Util.clearTable(teachersModel);
-    LinkedList<Teacher> teachers = Teacher.all();
     teachers.forEach(teacher -> {
       teachersModel.addRow(new Object[] {
         teacher.getId(),
@@ -49,10 +47,9 @@ public class TableData {
     });
   }
   
-  public static void loadGroups(JTable groupsTable) throws SQLException {
+  public static void loadGroups(JTable groupsTable, LinkedList<Group> groups) throws SQLException {
     DefaultTableModel groupsModel = (DefaultTableModel) groupsTable.getModel();
     Util.clearTable(groupsModel);
-    LinkedList<Group> groups = Group.all();
     groups.forEach(group -> {
       groupsModel.addRow(new Object[] {
         group.getId(),
@@ -62,29 +59,31 @@ public class TableData {
     });
   }
   
-  public static void loadProjects(JTable projectsTable) throws SQLException {
+  public static void loadProjects(JTable projectsTable, LinkedList<Project> projects) throws SQLException {
     DefaultTableModel projectsModel = (DefaultTableModel) projectsTable.getModel();
     Util.clearTable(projectsModel);
-    LinkedList<Project> projects = Project.all();
     projects.forEach(project -> {
       projectsModel.addRow(new Object[] {
         project.getOrderNumber(),
         project.getTheme().getTitle(),
         project.getStartDate(),
-        project.getTribunalId()
+        project.getEndDate(),
+        project.getDuration(),
+        project.getStatus()
       });
     });
   }
   
-  public static void loadTribunals(JTable tribunalsTable) throws SQLException {
+  public static void loadTribunals(JTable tribunalsTable, LinkedList<Tribunal> tribunals) throws SQLException {
     DefaultTableModel tribunalsModel = (DefaultTableModel) tribunalsTable.getModel();
     Util.clearTable(tribunalsModel);
-    LinkedList<Tribunal> tribunals = Tribunal.all();
     tribunals.forEach(tribunal -> {
       tribunalsModel.addRow(new Object[] {
         tribunal.getId(),
         tribunal.getTestPlace(),
-        tribunal.getComponentsNumber()
+        tribunal.getComponentsNumber(),
+        tribunal.getTitularTeacherId(),
+        tribunal.getTitularTeacher().getFullName()
       });
     });
   }

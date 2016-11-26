@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/teachers/ViewTeacher.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/students/ViewStudent.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/groups/ReporteGrupo.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/projects/ReporteProyectos.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/groups/ShowGroup.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/models/Group.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/models/Conforms.java</file>
+        </group>
     </open-files>
 </project-private>

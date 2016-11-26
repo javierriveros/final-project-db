@@ -23,12 +23,12 @@ public class Student {
   //Foreign keys
   private int orderNumber;
   private int groupId;
-  private int teacherCi;
+  private int teacherId;
 
   private Student() {}
   
-  public Student(int registrationNumber, String name, String lastName, Timestamp incorporationDate) {
-    this.setRegistrationNumber(registrationNumber);
+  public Student(int ci, String name, String lastName, Timestamp incorporationDate) {
+    this.setCi(ci);
     this.setName(name);
     this.setLastName(lastName);
     this.setIncorporationDate(incorporationDate);
@@ -86,12 +86,12 @@ public class Student {
     this.groupId = groupId;
   }
 
-  public int getTeacherCi() {
-    return teacherCi;
+  public int getTeacherId() {
+    return teacherId;
   }
 
-  public void setTeacherCi(int teacherCi) {
-    this.teacherCi = teacherCi;
+  public void setTeacherId(int teacherId) {
+    this.teacherId = teacherId;
   }
 
   public int getRegistrationNumber() {
@@ -100,7 +100,7 @@ public class Student {
   
   @Override
   public String toString() {
-    return String.format("{registration_number: %d, ci: %d, incorporation_date: %s, name: %s, last_name: %s}", this.registrationNumber, this.ci, this.incorporationDate, this.name, this.lastName);
+    return String.format("{registration_number: %d, ci: %d, incorporation_date: %s, name: %s, last_name: %s, teacher_id: %d, group_id: %d, order_number: %d}", this.registrationNumber, this.ci, this.incorporationDate, this.name, this.lastName, this.teacherId, this.groupId, this.orderNumber);
   }
   
   /**
@@ -113,12 +113,30 @@ public class Student {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM students ORDER BY ci");
+      ResultSet rs = sm.executeQuery("SELECT * FROM students ORDER BY registration_number");
       while (rs.next())
         students.add(getStudentFromResultSet(rs));
     }
 
     return students;
+  }
+  
+  /**
+   * Return all students at DB
+   * @return students
+   * @throws java.sql.SQLException
+   */
+  public LinkedList<Teacher> getTeachersWhoHelpMe() throws SQLException {
+    LinkedList<Teacher> teachers = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM helps h JOIN teachers t ON h.teacher_id=t.id WHERE h.student_registration_number=%d", this.registrationNumber));
+      while (rs.next())
+        teachers.add(Teacher.getTeacherFromResultSet(rs));
+    }
+
+    return teachers;
   }
   
   /**
@@ -158,15 +176,19 @@ public class Student {
    */
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
-    try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO students (registration_number, name, last_name, incorporation_date) VALUES ('%d', '%s','%s','%s')", this.registrationNumber, this.name, this.lastName, this.incorporationDate))) {
-      try {
-        ps.execute();
-        return true;
-      } catch(SQLException e) {
-        System.out.println("Hubo un error por " + e.getMessage());
-        return false;
-      }
+    try {
+      String sql;
+      if (this.groupId == 0)
+        sql = String.format("INSERT INTO students (ci, name, last_name, incorporation_date) VALUES ('%d', '%s','%s','%s')", this.ci, this.name, this.lastName, this.incorporationDate);
+      else
+        sql = String.format("INSERT INTO students (ci, name, last_name, incorporation_date, group_id) VALUES ('%d', '%s','%s','%s', '%d')", this.ci, this.name, this.lastName, this.incorporationDate, this.groupId);
+      
+      PreparedStatement ps = con.getCon().prepareStatement(sql);
+      ps.execute();
+      return true;
+    } catch(SQLException e) {
+      System.out.println("Hubo un error por " + e.getMessage());
+      return false;
     }
   }
   
@@ -177,15 +199,14 @@ public class Student {
    */
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
-    try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE students SET ci='%d', name='%s', last_name='%s', incorporation_date='%s' WHERE ci=%d", this.ci, this.name, this.lastName, this.incorporationDate, this.ci))) {
-      try {
-        ps.execute();
-        return true;
-      } catch(SQLException e) {
-        System.out.println("Hubo un error por " + e.getMessage());
-        return false;
-      }
+    String sql = "UPDATE students SET ci='"+this.ci+"', name='"+this.name+"', last_name='"+this.lastName+"', incorporation_date='"+this.incorporationDate+"', teacher_id="+(this.teacherId == 0 ? null : this.teacherId)+", group_id="+(this.groupId == 0 ? null : this.groupId)+", order_number="+(this.orderNumber == 0 ? null : this.orderNumber)+" WHERE registration_number="+this.registrationNumber;
+    try {
+      PreparedStatement ps = con.getCon().prepareStatement(sql);
+      ps.execute();
+      return true;
+    } catch(SQLException e) {
+      System.out.println("Hubo un error por " + e.getMessage());
+      return false;
     }
   }
   
@@ -208,10 +229,13 @@ public class Student {
     }
   }
   
-  private static Student getStudentFromResultSet(ResultSet rs) {
+  public static Student getStudentFromResultSet(ResultSet rs) {
     try {
-      Student student = new Student(rs.getInt("registration_number"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date"));
-      student.setCi(rs.getInt("ci"));
+      Student student = new Student(rs.getInt("ci"), rs.getString("name"), rs.getString("last_name"), rs.getTimestamp("incorporation_date"));
+      student.setRegistrationNumber(rs.getInt("registration_number"));
+      student.setGroupId(rs.getInt("group_id"));
+      student.setOrderNumber(rs.getInt("order_number"));
+      student.setTeacherId(rs.getInt("teacher_id"));
       return student;
     } catch(SQLException ex) {
       return null;
