@@ -1,13 +1,11 @@
 package views.teachers;
 
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import models.Group;
-import models.Project;
 import models.Student;
 import models.Teacher;
 import models.Tribunal;
@@ -15,8 +13,10 @@ import models.User;
 import resources.TableData;
 import resources.Util;
 import views.groups.NewGroup;
+import views.groups.ShowGroup;
 import views.students.ShowStudent;
 import views.tribunals.NewTribunal;
+import views.tribunals.ShowTribunal;
 
 /**
  *
@@ -264,6 +264,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     });
 
     viewTribunal.setText("Ver");
+    viewTribunal.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        viewTribunalActionPerformed(evt);
+      }
+    });
 
     tribunalsTable.setBorder(null);
     tribunalsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -356,6 +361,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     });
 
     viewGroup.setText("Ver");
+    viewGroup.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        viewGroupActionPerformed(evt);
+      }
+    });
 
     groupsTable.setBorder(null);
     groupsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -721,6 +731,28 @@ public class ViewTeacher extends javax.swing.JFrame {
     }
     new ShowStudent(this, Student.find(studentId)).setVisible(true);
   }//GEN-LAST:event_viewStudentActionPerformed
+
+  private void viewTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTribunalActionPerformed
+    int tribunalId;
+    try {
+      tribunalId = getPK(tribunalsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new ShowTribunal(this, Tribunal.find(tribunalId)).setVisible(true);
+  }//GEN-LAST:event_viewTribunalActionPerformed
+
+  private void viewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewGroupActionPerformed
+    int groupId;
+    try {
+      groupId = getPK(groupsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, "Debes seleccionar una fila");
+      return;
+    }
+    new ShowGroup(this, Group.find(groupId)).setVisible(true);
+  }//GEN-LAST:event_viewGroupActionPerformed
   
   private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
     return Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());

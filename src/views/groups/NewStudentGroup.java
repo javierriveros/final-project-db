@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import models.Group;
 import models.Integrates;
 import models.Student;
-import models.Teacher;
-import models.Tribunal;
 import resources.Util;
 
 /**
