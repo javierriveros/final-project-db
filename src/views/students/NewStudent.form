@@ -150,13 +150,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Fecha de Ingreso:"/>
+            <Property name="text" type="java.lang.String" value="Fecha de Ingreso:: AAAA-MM-DD HH:MM:SS"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="incorporatioDateField">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Fecha del Sistema"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="codeField">
           <AuxValues>

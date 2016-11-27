@@ -64,9 +64,6 @@ public class NewStudent extends javax.swing.JFrame {
       @Override
       public void windowDeactivated(WindowEvent e) {}
     });
-    Util.addPlaceholder(namesField, "Nombres");
-    Util.addPlaceholder(lastNamesField, "Apellidos");
-    Util.addPlaceholder(incorporatioDateField, "AAAA-MM-DD HH:MM:SS");
   }
   
   private void loadGroups() throws SQLException {
@@ -142,9 +139,7 @@ public class NewStudent extends javax.swing.JFrame {
       }
     });
 
-    jLabel6.setText("Fecha de Ingreso:");
-
-    incorporatioDateField.setText("Fecha del Sistema");
+    jLabel6.setText("Fecha de Ingreso:: AAAA-MM-DD HH:MM:SS");
 
     javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
     jPanel9.setLayout(jPanel9Layout);

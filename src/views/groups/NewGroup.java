@@ -62,7 +62,6 @@ public class NewGroup extends javax.swing.JFrame {
       @Override
       public void windowDeactivated(WindowEvent e) {}
     });
-    Util.addPlaceholder(nameField, "Nombre del grupo");
   }
   
   private void loadData() {
