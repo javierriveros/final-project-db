@@ -5,11 +5,9 @@
         <group>
             <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/teachers/ViewTeacher.java</file>
             <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/students/ViewStudent.java</file>
-            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/groups/ReporteGrupo.java</file>
-            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/projects/ReporteProyectos.java</file>
-            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/groups/ShowGroup.java</file>
-            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/models/Group.java</file>
-            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/models/Conforms.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/About.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/Admin.java</file>
+            <file>file:/home/javier/Dropbox/Programming/NetBeansProjects/FinalProject/src/views/groups/NewStudentGroup.java</file>
         </group>
     </open-files>
 </project-private>

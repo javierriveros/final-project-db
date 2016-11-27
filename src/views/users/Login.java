@@ -7,6 +7,7 @@ package views.users;
 
 import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import models.User;
@@ -31,6 +32,7 @@ public class Login extends javax.swing.JFrame {
     getContentPane().setBackground(Color.white);
     setLocationRelativeTo(null);
     setResizable(false);
+    setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/Skynet Logo Big.png")));
   }
 
   /**
