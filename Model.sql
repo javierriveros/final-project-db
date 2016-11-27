@@ -211,3 +211,18 @@ $delete_user_from_teacher$ LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_user_from_teacher BEFORE DELETE ON teachers
 FOR EACH ROW EXECUTE PROCEDURE delete_user_from_teacher();
+
+##Disparador para la evaluación de proyectos
+
+CREATE OR REPLACE FUNCTION evaluate_project() RETURNS TRIGGER AS $$
+BEGIN
+    IF (NEW.status NOT = OLD.status AND NEW.status = 'Evaluado') THEN
+    	NEW.evaluated_at = now()
+	END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER evaluate_project
+AFTER INSERT OR UPDATE ON projects
+FOR EACH ROW EXECUTE PROCEDURE evaluate_project();
