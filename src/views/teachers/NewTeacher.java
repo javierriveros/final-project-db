@@ -27,6 +27,9 @@ public class NewTeacher extends javax.swing.JFrame {
   private void addAttributes() {
     setLocationRelativeTo(null);
     setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+    Util.addPlaceholder(namesField, "Nombres");
+    Util.addPlaceholder(lastNamesField, "Apellidos");
+    Util.addPlaceholder(addressField, "1 Main ST");
     this.addWindowListener(new WindowListener() {
       @Override
       public void windowOpened(WindowEvent e) {

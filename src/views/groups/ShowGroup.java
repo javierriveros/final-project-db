@@ -3,11 +3,12 @@ package views.groups;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import models.Conforms;
 import models.Group;
 import resources.TableData;
+import resources.Util;
 
 /**
  *
@@ -18,6 +19,8 @@ public class ShowGroup extends javax.swing.JFrame {
   private Group group;
   /**
    * Creates new form ShowGroup
+   * @param parent
+   * @param group
    */
   public ShowGroup(javax.swing.JFrame parent, Group group) {
     this.group = group;
@@ -29,7 +32,7 @@ public class ShowGroup extends javax.swing.JFrame {
       loadStudents();
       loadTeachers();
     } catch(Exception e) {
-      JOptionPane.showMessageDialog(this, String.format("Error por: %s", e.getMessage()));
+      Util.showWarning(this, String.format("Error por: %s", e.getMessage()));
     }
   }
   
@@ -105,6 +108,10 @@ public class ShowGroup extends javax.swing.JFrame {
     jPanel1 = new javax.swing.JPanel();
     jScrollPane8 = new javax.swing.JScrollPane();
     studentsTable = new javax.swing.JTable();
+    jButton1 = new javax.swing.JButton();
+    jButton2 = new javax.swing.JButton();
+    jButton3 = new javax.swing.JButton();
+    jButton4 = new javax.swing.JButton();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
@@ -152,7 +159,7 @@ public class ShowGroup extends javax.swing.JFrame {
 
     jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/group_image.png"))); // NOI18N
 
-    jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Profesores colaboradores", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 12))); // NOI18N
+    jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Profesores miembros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 12))); // NOI18N
 
     teachersTable.setBorder(null);
     teachersTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -230,25 +237,64 @@ public class ShowGroup extends javax.swing.JFrame {
       .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
     );
 
+    jButton1.setText("Agregar profesor");
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1ActionPerformed(evt);
+      }
+    });
+
+    jButton2.setText("Recargar");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2ActionPerformed(evt);
+      }
+    });
+
+    jButton3.setText("Recargar");
+    jButton3.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton3ActionPerformed(evt);
+      }
+    });
+
+    jButton4.setText("Agregar estudiante");
+    jButton4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton4ActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout groupPanelLayout = new javax.swing.GroupLayout(groupPanel);
     groupPanel.setLayout(groupPanelLayout);
     groupPanelLayout.setHorizontalGroup(
       groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(groupPanelLayout.createSequentialGroup()
-        .addGap(15, 15, 15)
-        .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(groupPanelLayout.createSequentialGroup()
+            .addGap(15, 15, 15)
             .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(groupDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(groupName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(groupComponentsNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel2)
-            .addGap(53, 53, 53))
-          .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+              .addComponent(groupDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(groupName, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(groupComponentsNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(94, 94, 94)
+            .addComponent(jLabel2))
+          .addGroup(groupPanelLayout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(groupPanelLayout.createSequentialGroup()
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1))
+              .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+              .addGroup(groupPanelLayout.createSequentialGroup()
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)))))
+        .addContainerGap(15, Short.MAX_VALUE))
     );
     groupPanelLayout.setVerticalGroup(
       groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,11 +310,19 @@ public class ShowGroup extends javax.swing.JFrame {
             .addGap(18, 18, 18)
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addComponent(jLabel2))
+        .addGap(18, 18, 18)
+        .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jButton1)
+          .addComponent(jButton2))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jButton4)
+          .addComponent(jButton3))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap())
     );
 
     jMenu1.setText("Archivo");
@@ -321,6 +375,22 @@ public class ShowGroup extends javax.swing.JFrame {
     dispose();
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    new NewTeacherGroup(this, this.group).setVisible(true);
+  }//GEN-LAST:event_jButton1ActionPerformed
+
+  private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    new NewStudentGroup(this, this.group).setVisible(true);
+  }//GEN-LAST:event_jButton4ActionPerformed
+
+  private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    try {this.loadStudents();} catch (SQLException ex) {}
+  }//GEN-LAST:event_jButton3ActionPerformed
+
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    try {this.loadTeachers();} catch (SQLException ex) {}
+  }//GEN-LAST:event_jButton2ActionPerformed
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel groupComponentsNumber;
   private javax.swing.JLabel groupDescription;
@@ -328,6 +398,10 @@ public class ShowGroup extends javax.swing.JFrame {
   private javax.swing.JPanel groupPanel;
   private javax.swing.JLabel groupTeacherAddress;
   private javax.swing.JLabel groupTeacherName;
+  private javax.swing.JButton jButton1;
+  private javax.swing.JButton jButton2;
+  private javax.swing.JButton jButton3;
+  private javax.swing.JButton jButton4;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenuBar jMenuBar1;

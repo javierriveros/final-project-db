@@ -1,11 +1,11 @@
 package views;
 
-import java.awt.HeadlessException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import models.Group;
+import models.Helps;
 import models.Project;
 import models.Student;
 import models.Teacher;
@@ -13,10 +13,15 @@ import models.Tribunal;
 import models.User;
 import resources.TableData;
 import resources.Util;
+import views.groups.NewGroup;
 import views.groups.ShowGroup;
+import views.projects.NewProject;
+import views.students.NewHelp;
 import views.students.NewStudent;
+import views.students.ShowStudent;
 import views.teachers.NewTeacher;
 import views.tribunals.NewTribunal;
+import views.tribunals.ShowTribunal;
 
 /**
  *
@@ -42,7 +47,7 @@ public class Admin extends javax.swing.JFrame {
     try {
       loadData();
       addSorters();
-    } catch (Exception e) {
+    } catch (SQLException e) {
       System.out.println(e);
     }
   }
@@ -59,11 +64,12 @@ public class Admin extends javax.swing.JFrame {
   }
   
   private void loadData() throws SQLException {
-    TableData.loadStudents(studentsTable, Student.all());
-    TableData.loadTeachers(teachersTable, Teacher.all());
-    TableData.loadProjects(projectsTable, Project.all());
-    TableData.loadTribunals(tribunalsTable, Tribunal.all());
-    TableData.loadGroups(groupsTable, Group.all());
+    loadStudents();
+    loadTeachers();
+    loadProjects();
+    loadTribunals();
+    loadGroups();
+    loadHelps();
   }
   
   private void addSorters() {
@@ -80,27 +86,31 @@ public class Admin extends javax.swing.JFrame {
     tribunalsTable.setRowSorter(tribunalsSorter);
 
     groupsSorter = new TableRowSorter(groupsTable.getModel());
-    groupsTable.setRowSorter(tribunalsSorter);
+    groupsTable.setRowSorter(groupsSorter);
   }
   
   private void loadStudents() {
-    try {TableData.loadStudents(studentsTable, Student.all());}catch(SQLException e){}
+    try {TableData.loadStudents(studentsTable, Student.all());}catch(Exception e){}
   }
   
   private void loadTeachers() {
-    try {TableData.loadTeachers(teachersTable, Teacher.all());}catch(SQLException e){}
+    try {TableData.loadTeachers(teachersTable, Teacher.all());}catch(Exception e){}
   }
   
   private void loadProjects() {
-    try {TableData.loadProjects(projectsTable, Project.all());}catch(SQLException e){}
+    try {TableData.loadProjects(projectsTable, Project.all());} catch(Exception e) {}
   }
   
   private void loadTribunals() {
-    try {TableData.loadTribunals(tribunalsTable, Tribunal.all());}catch(SQLException e){}
+    try {TableData.loadTribunals(tribunalsTable, Tribunal.all());}catch(Exception e){}
   }
   
   private void loadGroups() {
-    try {TableData.loadGroups(groupsTable, Group.all());}catch(SQLException e){}
+    try {TableData.loadGroups(groupsTable, Group.all());}catch(Exception e){}
+  }
+  
+  private void loadHelps() {
+    try {TableData.loadHelps(helpsTable, Helps.all());}catch(Exception e){}
   }
 
   /**
@@ -127,7 +137,6 @@ public class Admin extends javax.swing.JFrame {
     searchStudentsBy = new javax.swing.JComboBox();
     studentsField = new javax.swing.JTextField();
     jButton5 = new javax.swing.JButton();
-    viewStudent = new javax.swing.JButton();
     deleteStudent = new javax.swing.JButton();
     addStudent = new javax.swing.JButton();
     modifyStudent = new javax.swing.JButton();
@@ -154,15 +163,21 @@ public class Admin extends javax.swing.JFrame {
     jScrollPane5 = new javax.swing.JScrollPane();
     tribunalsTable = new javax.swing.JTable();
     jPanel3 = new javax.swing.JPanel();
-    searchGroupsBy = new javax.swing.JComboBox();
     deleteGroup = new javax.swing.JButton();
-    groupsField = new javax.swing.JTextField();
     modifyGroup = new javax.swing.JButton();
     jButton11 = new javax.swing.JButton();
     addGroup = new javax.swing.JButton();
     viewGroup = new javax.swing.JButton();
-    jScrollPane3 = new javax.swing.JScrollPane();
+    groupsField = new javax.swing.JTextField();
+    searchGroupsBy = new javax.swing.JComboBox<>();
+    jScrollPane6 = new javax.swing.JScrollPane();
     groupsTable = new javax.swing.JTable();
+    jPanel6 = new javax.swing.JPanel();
+    Añadir5 = new javax.swing.JButton();
+    jButton24 = new javax.swing.JButton();
+    jButton22 = new javax.swing.JButton();
+    jScrollPane8 = new javax.swing.JScrollPane();
+    helpsTable = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     jMenuItem8 = new javax.swing.JMenuItem();
@@ -254,7 +269,7 @@ public class Admin extends javax.swing.JFrame {
             .addComponent(searchTeachersBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(teachersField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(addTeacher)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyTeacher)
@@ -278,9 +293,9 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(teachersField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton1)
           .addComponent(viewTeacher))
-        .addGap(18, 18, 18)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(13, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+        .addContainerGap())
     );
 
     jTabbedPane2.addTab("Profesores", jPanel1);
@@ -299,8 +314,6 @@ public class Admin extends javax.swing.JFrame {
         jButton5ActionPerformed(evt);
       }
     });
-
-    viewStudent.setText("Ver");
 
     deleteStudent.setText("Eliminar");
     deleteStudent.addActionListener(new java.awt.event.ActionListener() {
@@ -361,15 +374,13 @@ public class Admin extends javax.swing.JFrame {
             .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(addStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyStudent)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(deleteStudent)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(viewStudent)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGap(73, 73, 73)
             .addComponent(jButton5)))
         .addContainerGap())
     );
@@ -383,10 +394,9 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(deleteStudent)
           .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton5)
-          .addComponent(viewStudent)
           .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -408,6 +418,11 @@ public class Admin extends javax.swing.JFrame {
     });
 
     modifyProject.setText("Modificar");
+    modifyProject.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        modifyProjectActionPerformed(evt);
+      }
+    });
 
     jButton15.setText("Refresh");
     jButton15.addActionListener(new java.awt.event.ActionListener() {
@@ -417,6 +432,11 @@ public class Admin extends javax.swing.JFrame {
     });
 
     addProject.setText("Añadir");
+    addProject.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addProjectActionPerformed(evt);
+      }
+    });
 
     viewProject.setText("Ver");
 
@@ -458,7 +478,7 @@ public class Admin extends javax.swing.JFrame {
             .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(addProject)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyProject)
@@ -482,9 +502,9 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(jButton15)
           .addComponent(viewProject)
           .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-        .addContainerGap())
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jTabbedPane2.addTab("Proyectos", jPanel4);
@@ -526,6 +546,11 @@ public class Admin extends javax.swing.JFrame {
     });
 
     viewTribunal.setText("Ver");
+    viewTribunal.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        viewTribunalActionPerformed(evt);
+      }
+    });
 
     tribunalsTable.setBorder(null);
     tribunalsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -565,7 +590,7 @@ public class Admin extends javax.swing.JFrame {
             .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(addTribunal)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyTribunal)
@@ -589,14 +614,12 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton19)
           .addComponent(viewTribunal))
-        .addGap(18, 18, 18)
-        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         .addContainerGap())
     );
 
     jTabbedPane2.addTab("Tribunal", jPanel5);
-
-    searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombre" }));
 
     deleteGroup.setText("Eliminar");
     deleteGroup.addActionListener(new java.awt.event.ActionListener() {
@@ -605,13 +628,12 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
-    groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyPressed(java.awt.event.KeyEvent evt) {
-        groupsFieldKeyPressed(evt);
+    modifyGroup.setText("Modificar");
+    modifyGroup.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        modifyGroupActionPerformed(evt);
       }
     });
-
-    modifyGroup.setText("Modificar");
 
     jButton11.setText("Refresh");
     jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -621,6 +643,11 @@ public class Admin extends javax.swing.JFrame {
     });
 
     addGroup.setText("Añadir");
+    addGroup.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addGroupActionPerformed(evt);
+      }
+    });
 
     viewGroup.setText("Ver");
     viewGroup.addActionListener(new java.awt.event.ActionListener() {
@@ -629,20 +656,29 @@ public class Admin extends javax.swing.JFrame {
       }
     });
 
+    groupsField.setForeground(new java.awt.Color(204, 204, 204));
+    groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyTyped(java.awt.event.KeyEvent evt) {
+        groupsFieldKeyTyped(evt);
+      }
+    });
+
+    searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buscar por", "ID", "Nombre" }));
+
     groupsTable.setBorder(null);
     groupsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
       new String [] {
-        "Id", "Nombre", "Número de componentes"
+        "ID", "Nombre", "Número de componentes", "ID Titular", "Nombres titular"
       }
     ) {
       Class[] types = new Class [] {
-        java.lang.Object.class, java.lang.String.class, java.lang.Object.class
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
       };
       boolean[] canEdit = new boolean [] {
-        false, false, false
+        false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
@@ -653,7 +689,7 @@ public class Admin extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane3.setViewportView(groupsTable);
+    jScrollPane6.setViewportView(groupsTable);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -662,12 +698,11 @@ public class Admin extends javax.swing.JFrame {
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane3)
           .addGroup(jPanel3Layout.createSequentialGroup()
-            .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+            .addComponent(groupsField, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+            .addGap(18, 18, 18)
             .addComponent(addGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(modifyGroup)
@@ -676,7 +711,8 @@ public class Admin extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(viewGroup)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton11)))
+            .addComponent(jButton11))
+          .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING))
         .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
@@ -687,16 +723,86 @@ public class Admin extends javax.swing.JFrame {
           .addComponent(addGroup)
           .addComponent(modifyGroup)
           .addComponent(deleteGroup)
-          .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton11)
-          .addComponent(viewGroup))
-        .addGap(18, 18, 18)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+          .addComponent(viewGroup)
+          .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         .addContainerGap())
     );
 
     jTabbedPane2.addTab("Grupos", jPanel3);
+
+    Añadir5.setText("Añadir");
+    Añadir5.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        Añadir5ActionPerformed(evt);
+      }
+    });
+
+    jButton24.setText("Eliminar");
+    jButton24.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton24ActionPerformed(evt);
+      }
+    });
+
+    jButton22.setText("Refresh");
+    jButton22.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton22ActionPerformed(evt);
+      }
+    });
+
+    helpsTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+
+      },
+      new String [] {
+        "Identificación Profesor", "Código Estudiante"
+      }
+    ) {
+      boolean[] canEdit = new boolean [] {
+        false, false
+      };
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    jScrollPane8.setViewportView(helpsTable);
+
+    javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+    jPanel6.setLayout(jPanel6Layout);
+    jPanel6Layout.setHorizontalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+            .addComponent(Añadir5)
+            .addGap(18, 18, 18)
+            .addComponent(jButton24)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton22))
+          .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 860, Short.MAX_VALUE))
+        .addContainerGap())
+    );
+    jPanel6Layout.setVerticalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(Añadir5)
+          .addComponent(jButton24)
+          .addComponent(jButton22))
+        .addGap(18, 18, 18)
+        .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+        .addContainerGap())
+    );
+
+    jTabbedPane2.addTab("Ayudas", jPanel6);
 
     jMenu1.setText("Archivo");
 
@@ -802,183 +908,59 @@ public class Admin extends javax.swing.JFrame {
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-    new views.projects.ReporteProyectos().setVisible(true);
+    new views.projects.ReporteProyectos(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-    new views.groups.ReporteGrupo().setVisible(true);
+    new views.groups.ReporteGrupo(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem4ActionPerformed
 
   private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-    new views.teachers.ReporteProfesores().setVisible(true);
+    new views.teachers.ReporteProfesores(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem5ActionPerformed
 
   private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-    new views.students.ReporteEstudiantes().setVisible(true);
+    new views.students.ReporteEstudiantes(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem6ActionPerformed
 
   private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
     new views.Historial().setVisible(true);
   }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    loadTeachers();
-  }//GEN-LAST:event_jButton1ActionPerformed
+  private void groupsFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyTyped
+    if(searchGroupsBy.getSelectedIndex() <= 0) return;
+    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_groupsFieldKeyTyped
 
-  private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    loadStudents();
-  }//GEN-LAST:event_jButton5ActionPerformed
+  private void viewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewGroupActionPerformed
+    int groupId;
+    try {
+      groupId = getPK(groupsTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    new ShowGroup(this, Group.find(groupId)).setVisible(true);
+  }//GEN-LAST:event_viewGroupActionPerformed
 
-  private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-    loadProjects();
-  }//GEN-LAST:event_jButton15ActionPerformed
-
-  private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-    loadTribunals();
-  }//GEN-LAST:event_jButton19ActionPerformed
+  private void addGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGroupActionPerformed
+    new NewGroup(this, 0).setVisible(true);
+  }//GEN-LAST:event_addGroupActionPerformed
 
   private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
     loadGroups();
   }//GEN-LAST:event_jButton11ActionPerformed
 
-  private void showWarning() {
-    JOptionPane.showMessageDialog(this, "Debes seleccionar una fila", "Selecciona una fila", JOptionPane.WARNING_MESSAGE);
-  }
-  
-  private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
-    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
-    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_teachersFieldKeyPressed
-
-  private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
-    if(studentsTable.getRowCount() <= 0 || searchStudentsBy.getSelectedIndex() == 0) return;
-    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_studentsFieldKeyPressed
-
-  private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(projectsTable.getRowCount() <= 0 || searchProjectsBy.getSelectedIndex() == 0) return;
-    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_projectsFieldKeyPressed
-
-  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
-    if(tribunalsTable.getRowCount() <= 0 || searchTribunalsBy.getSelectedIndex() == 0) return;
-    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_tribunalsFieldKeyPressed
-
-  private void groupsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupsFieldKeyPressed
-    if(groupsTable.getRowCount() <= 0 || searchGroupsBy.getSelectedIndex() == 0) return;
-    groupsSorter.setRowFilter(RowFilter.regexFilter(groupsField.getText(), searchGroupsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_groupsFieldKeyPressed
-
-  private void addTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTribunalActionPerformed
-    new NewTribunal(this, 0).setVisible(true);
-  }//GEN-LAST:event_addTribunalActionPerformed
-
-  private void modifyTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyTribunalActionPerformed
-    int tribunalId;
+  private void modifyGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyGroupActionPerformed
+    int groupId;
     try {
-      tribunalId = getPK(tribunalsTable);
+      groupId = getPK(groupsTable);
     } catch(Exception e) {
       showWarning();
       return;
     }
-    new NewTribunal(this, tribunalId).setVisible(true);
-  }//GEN-LAST:event_modifyTribunalActionPerformed
-
-  private void deleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProjectActionPerformed
-    int projectId;
-    try {
-      projectId = getPK(projectsTable);
-    } catch(Exception e) {
-      showWarning();
-      return;
-    }
-    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION) return;
-    try {
-      if (Project.find(projectId).destroy()) {
-        JOptionPane.showMessageDialog(this, "Se eliminó");
-        loadProjects();
-      }
-    } catch(Exception e) {
-      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
-    }
-  }//GEN-LAST:event_deleteProjectActionPerformed
-
-  private void deleteTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTribunalActionPerformed
-    int tribunalId;
-    try {
-      tribunalId = getPK(tribunalsTable);
-    } catch(Exception e) {
-      showWarning();
-      return;
-    }
-    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION) return;
-    try {
-      if (Tribunal.find(tribunalId).destroy()) {
-        JOptionPane.showMessageDialog(this, "Se eliminó");
-        loadTribunals();
-      }
-    } catch(Exception e) {
-      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
-    }
-  }//GEN-LAST:event_deleteTribunalActionPerformed
-
-  private void addTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTeacherActionPerformed
-    new NewTeacher(this, 0).setVisible(true);
-  }//GEN-LAST:event_addTeacherActionPerformed
-
-  private void modifyTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyTeacherActionPerformed
-    int teacherId;
-    try {
-      teacherId = getPK(teachersTable);
-    } catch(Exception e) {
-      showWarning();
-      return;
-    }
-    new NewTeacher(this, teacherId).setVisible(true);
-  }//GEN-LAST:event_modifyTeacherActionPerformed
-
-  private void deleteTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTeacherActionPerformed
-    int teacherId;
-    try {
-      teacherId = getPK(teachersTable);
-    } catch(Exception e) {
-      showWarning();
-      return;
-    }
-    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION) return;
-    try {
-      if (Teacher.find(teacherId).destroy()) {
-        JOptionPane.showMessageDialog(this, "Se eliminó");
-        loadTeachers();
-      }
-    } catch(Exception e) {
-      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
-    }
-  }//GEN-LAST:event_deleteTeacherActionPerformed
-
-  private void deleteStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteStudentActionPerformed
-    int studentId;
-    try {
-      studentId = getPK(studentsTable);
-    } catch(Exception e) {
-      showWarning();
-      return;
-    }
-    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION) return;
-    try {
-      if (Student.find(studentId).destroy()) {
-        JOptionPane.showMessageDialog(this, "Se eliminó");
-        loadStudents();
-      }
-    } catch(Exception e) {
-      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
-    }
-  }//GEN-LAST:event_deleteStudentActionPerformed
+    new NewGroup(this, groupId).setVisible(true);
+  }//GEN-LAST:event_modifyGroupActionPerformed
 
   private void deleteGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGroupActionPerformed
     int groupId;
@@ -1000,9 +982,89 @@ public class Admin extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_deleteGroupActionPerformed
 
-  private void addStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStudentActionPerformed
-    new NewStudent(this, 0).setVisible(true);
-  }//GEN-LAST:event_addStudentActionPerformed
+  private void viewTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTribunalActionPerformed
+    int tribunalId;
+    try {
+      tribunalId = getPK(tribunalsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new ShowTribunal(this, Tribunal.find(tribunalId)).setVisible(true);
+  }//GEN-LAST:event_viewTribunalActionPerformed
+
+  private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
+    loadTribunals();
+  }//GEN-LAST:event_jButton19ActionPerformed
+
+  private void addTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTribunalActionPerformed
+    new NewTribunal(this, 0).setVisible(true);
+  }//GEN-LAST:event_addTribunalActionPerformed
+
+  private void modifyTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyTribunalActionPerformed
+    int tribunalId;
+    try {
+      tribunalId = getPK(tribunalsTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    new NewTribunal(this, tribunalId).setVisible(true);
+  }//GEN-LAST:event_modifyTribunalActionPerformed
+
+  private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
+    if(tribunalsTable.getRowCount() <= 0 || searchTribunalsBy.getSelectedIndex() == 0) return;
+    tribunalsSorter.setRowFilter(RowFilter.regexFilter(tribunalsField.getText(), searchTribunalsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_tribunalsFieldKeyPressed
+
+  private void deleteTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTribunalActionPerformed
+    int tribunalId;
+    try {
+      tribunalId = getPK(tribunalsTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+    try {
+      if (Tribunal.find(tribunalId).destroy()) {
+        JOptionPane.showMessageDialog(this, "Se eliminó");
+        loadTribunals();
+      }
+    } catch(Exception e) {
+      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+    }
+  }//GEN-LAST:event_deleteTribunalActionPerformed
+
+  private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+    loadProjects();
+  }//GEN-LAST:event_jButton15ActionPerformed
+
+  private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
+    if(projectsTable.getRowCount() <= 0 || searchProjectsBy.getSelectedIndex() == 0) return;
+    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_projectsFieldKeyPressed
+
+  private void deleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProjectActionPerformed
+    int projectId;
+    try {
+      projectId = getPK(projectsTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+    try {
+      if (Project.find(projectId).destroy()) {
+        JOptionPane.showMessageDialog(this, "Se eliminó");
+        loadProjects();
+      }
+    } catch(Exception e) {
+      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+    }
+  }//GEN-LAST:event_deleteProjectActionPerformed
 
   private void modifyStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyStudentActionPerformed
     int studentId;
@@ -1015,22 +1077,138 @@ public class Admin extends javax.swing.JFrame {
     new NewStudent(this, studentId).setVisible(true);
   }//GEN-LAST:event_modifyStudentActionPerformed
 
-  private void viewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewGroupActionPerformed
-    int groupId;
+  private void addStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStudentActionPerformed
+    new NewStudent(this, 0).setVisible(true);
+  }//GEN-LAST:event_addStudentActionPerformed
+
+  private void deleteStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteStudentActionPerformed
+    int studentId;
     try {
-      groupId = getPK(groupsTable);
+      studentId = getPK(studentsTable);
     } catch(Exception e) {
       showWarning();
       return;
     }
-    new ShowGroup(this, Group.find(groupId)).setVisible(true);
-  }//GEN-LAST:event_viewGroupActionPerformed
+    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+    try {
+      if (Student.find(studentId).destroy()) {
+        JOptionPane.showMessageDialog(this, "Se eliminó");
+        loadStudents();
+      }
+    } catch(Exception e) {
+      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+    }
+  }//GEN-LAST:event_deleteStudentActionPerformed
 
+  private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    loadStudents();
+  }//GEN-LAST:event_jButton5ActionPerformed
+
+  private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
+    if(studentsTable.getRowCount() <= 0 || searchStudentsBy.getSelectedIndex() == 0) return;
+    studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_studentsFieldKeyPressed
+
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    loadTeachers();
+  }//GEN-LAST:event_jButton1ActionPerformed
+
+  private void teachersFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teachersFieldKeyPressed
+    if(searchTeachersBy.getSelectedIndex() == 0 || teachersTable.getRowCount() <= 0) return;
+    teachersSorter.setRowFilter(RowFilter.regexFilter(teachersField.getText(), searchTeachersBy.getSelectedIndex()-1));
+  }//GEN-LAST:event_teachersFieldKeyPressed
+
+  private void deleteTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTeacherActionPerformed
+    int teacherId;
+    try {
+      teacherId = getPK(teachersTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+    try {
+      if (Teacher.find(teacherId).destroy()) {
+        JOptionPane.showMessageDialog(this, "Se eliminó");
+        loadTeachers();
+      }
+    } catch(Exception e) {
+      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+    }
+  }//GEN-LAST:event_deleteTeacherActionPerformed
+
+  private void modifyTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyTeacherActionPerformed
+    int teacherId;
+    try {
+      teacherId = getPK(teachersTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    new NewTeacher(this, teacherId).setVisible(true);
+  }//GEN-LAST:event_modifyTeacherActionPerformed
+
+  private void addTeacherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTeacherActionPerformed
+    new NewTeacher(this, 0).setVisible(true);
+  }//GEN-LAST:event_addTeacherActionPerformed
+
+  private void Añadir5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Añadir5ActionPerformed
+    new NewHelp(this).setVisible(true);
+  }//GEN-LAST:event_Añadir5ActionPerformed
+
+  private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
+    int studentId;
+    int teacherId;
+    try {
+      teacherId = getPK(helpsTable);
+      studentId = Integer.parseInt(helpsTable.getValueAt(helpsTable.getSelectedRow(), 1).toString());
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    int result = JOptionPane.showConfirmDialog(this, "Estas seguro", "Are you sure?", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+    try {
+      if (Helps.find(studentId, teacherId).destroy()) {
+        JOptionPane.showMessageDialog(this, "Se eliminó");
+        loadHelps();
+      }
+    } catch(Exception e) {
+      JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+    }
+  }//GEN-LAST:event_jButton24ActionPerformed
+
+  private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
+    loadHelps();
+  }//GEN-LAST:event_jButton22ActionPerformed
+
+  private void modifyProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyProjectActionPerformed
+    int projectId;
+    try {
+      projectId = getPK(projectsTable);
+    } catch(Exception e) {
+      showWarning();
+      return;
+    }
+    new NewProject(this, projectId).setVisible(true);
+  }//GEN-LAST:event_modifyProjectActionPerformed
+
+  private void addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectActionPerformed
+    new NewProject(this, 0).setVisible(true);
+  }//GEN-LAST:event_addProjectActionPerformed
+
+  private void showWarning() {
+    JOptionPane.showMessageDialog(this, "Debes seleccionar una fila", "Selecciona una fila", JOptionPane.WARNING_MESSAGE);
+  }
+  
   private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
     return Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
   }
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton Añadir5;
   private javax.swing.JButton addGroup;
   private javax.swing.JButton addProject;
   private javax.swing.JButton addStudent;
@@ -1043,10 +1221,13 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JButton deleteTribunal;
   private javax.swing.JTextField groupsField;
   private javax.swing.JTable groupsTable;
+  private javax.swing.JTable helpsTable;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton11;
   private javax.swing.JButton jButton15;
   private javax.swing.JButton jButton19;
+  private javax.swing.JButton jButton22;
+  private javax.swing.JButton jButton24;
   private javax.swing.JButton jButton5;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenu jMenu2;
@@ -1065,11 +1246,13 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel3;
   private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
+  private javax.swing.JPanel jPanel6;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JScrollPane jScrollPane3;
   private javax.swing.JScrollPane jScrollPane4;
   private javax.swing.JScrollPane jScrollPane5;
+  private javax.swing.JScrollPane jScrollPane6;
   private javax.swing.JScrollPane jScrollPane7;
+  private javax.swing.JScrollPane jScrollPane8;
   private javax.swing.JTabbedPane jTabbedPane2;
   private javax.swing.JButton modifyGroup;
   private javax.swing.JButton modifyProject;
@@ -1078,7 +1261,7 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JButton modifyTribunal;
   private javax.swing.JTextField projectsField;
   private javax.swing.JTable projectsTable;
-  private javax.swing.JComboBox searchGroupsBy;
+  private javax.swing.JComboBox<String> searchGroupsBy;
   private javax.swing.JComboBox searchProjectsBy;
   private javax.swing.JComboBox searchStudentsBy;
   private javax.swing.JComboBox searchTeachersBy;
@@ -1091,7 +1274,6 @@ public class Admin extends javax.swing.JFrame {
   private javax.swing.JTable tribunalsTable;
   private javax.swing.JButton viewGroup;
   private javax.swing.JButton viewProject;
-  private javax.swing.JButton viewStudent;
   private javax.swing.JButton viewTeacher;
   private javax.swing.JButton viewTribunal;
   // End of variables declaration//GEN-END:variables

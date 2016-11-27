@@ -1,18 +1,82 @@
 package views.groups;
 
-import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import models.Group;
+import models.Teacher;
+import resources.Util;
 
 /**
  *
  * @author Jhonathan Mejia Leon
  */
 public class NewGroup extends javax.swing.JFrame {
+  private javax.swing.JFrame parent;
+  private Group group;
   /**
    * 
    * Creates new form ReporteEstudiantes
+   * @param parent
+   * @param groupId
    */
-  public NewGroup() {
+  public NewGroup(javax.swing.JFrame parent, int groupId) {
+    this.parent = parent;
+    this.group = Group.find(groupId);
     initComponents();
+    addAttributes();
+    loadData();
+    try {
+      loadTeachers();
+    } catch(SQLException e) {
+      System.out.printf("Error por: %s", e.getMessage());
+    }
+  }
+  
+  private void addAttributes() {
+    setLocationRelativeTo(this.parent);
+    setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
+    Util.addPlaceholder(nameField, "Nombre del grupo");
+  }
+  
+  private void loadData() {
+    if (this.group == null) return;
+    this.nameField.setText(this.group.getName());
+    this.componentsNumberField.setText(String.valueOf(this.group.getComponentsNumber()));
+    this.titularTeacherLabel.setText("Profesor titular: " + this.group.getTitularTeacher().getFullName());
+    this.descriptionField.setText(this.group.getDescription());
+  }
+ 
+  private void loadTeachers() throws SQLException {
+    Teacher.all().forEach(teacher -> {
+      this.teachersCombo.addItem(String.format("%d- %s", teacher.getId(), teacher.getFullName()));
+    });
   }
 
   /**
@@ -25,57 +89,86 @@ public class NewGroup extends javax.swing.JFrame {
   private void initComponents() {
 
     jPanel9 = new javax.swing.JPanel();
-    jTextField4 = new javax.swing.JTextField();
-    jTextField6 = new javax.swing.JTextField();
+    nameField = new javax.swing.JTextField();
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
     jButton2 = new javax.swing.JButton();
+    componentsNumberField = new javax.swing.JFormattedTextField(new Integer(1));
+    teachersCombo = new javax.swing.JComboBox<>();
+    titularTeacherLabel = new javax.swing.JLabel();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    descriptionField = new javax.swing.JTextArea();
+    titularTeacherLabel1 = new javax.swing.JLabel();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
     jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Información-Nuevo Grupo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
 
-    jTextField4.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField4ActionPerformed(evt);
-      }
-    });
-
-    jLabel2.setText("Id. Grupo");
+    jLabel2.setText("Número de componentes");
 
     jLabel3.setText("Nombre:");
 
-    jButton2.setText("Añadir");
+    jButton2.setText("Guardar");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2ActionPerformed(evt);
+      }
+    });
+
+    teachersCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un profesor" }));
+
+    titularTeacherLabel.setText("Profesor titular");
+
+    descriptionField.setColumns(20);
+    descriptionField.setRows(5);
+    jScrollPane1.setViewportView(descriptionField);
+
+    titularTeacherLabel1.setText("Descripción");
 
     javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
     jPanel9.setLayout(jPanel9Layout);
     jPanel9Layout.setHorizontalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
-        .addGap(28, 28, 28)
-        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jButton2)
-          .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-            .addComponent(jLabel3)
-            .addComponent(jLabel2)
-            .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-            .addComponent(jTextField4)))
-        .addContainerGap(20, Short.MAX_VALUE))
+        .addComponent(jLabel3)
+        .addGap(0, 0, Short.MAX_VALUE))
+      .addGroup(jPanel9Layout.createSequentialGroup()
+        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton2))
+          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+          .addComponent(teachersCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(nameField)
+          .addComponent(componentsNumberField)
+          .addGroup(jPanel9Layout.createSequentialGroup()
+            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(titularTeacherLabel)
+              .addComponent(titularTeacherLabel1)
+              .addComponent(jLabel2))
+            .addGap(0, 0, Short.MAX_VALUE)))
+        .addContainerGap())
     );
     jPanel9Layout.setVerticalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
-        .addGap(24, 24, 24)
         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(componentsNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jLabel3)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(titularTeacherLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(teachersCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jButton2)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(titularTeacherLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton2))
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -88,37 +181,69 @@ public class NewGroup extends javax.swing.JFrame {
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        try {
-            javax.swing.UIManager.setLookAndFeel(SyntheticaPlainLookAndFeel.class.getName());
-        } catch (Exception e) {
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NewGroup().setVisible(true);
-            }
-        });
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    if (this.teachersCombo.getSelectedIndex() == 0 && this.group == null) {
+      Util.showWarning(this, "Selecciona un profesor válido");
+      return;
     }
+    String name = this.nameField.getText();
+    String description = this.descriptionField.getText();
+    int componentsNumberS = Integer.parseInt(this.componentsNumberField.getValue().toString());
+    int teacherId = 0;
+    
+    if (this.teachersCombo.getSelectedIndex() != 0)
+      teacherId = Util.getPKFromCombo(this.teachersCombo);
+    
+    if (this.group != null)
+      teacherId = this.group.getTitularTeacherId();
+    
+    if (!Util.hasText(name) 
+      || !Util.hasText(description) 
+      || !Util.hasText(String.valueOf(teacherId)) 
+      || componentsNumberS == 0) {
+      Util.showWarning(this, "Los datos no son válidos");
+      return;
+    }
+    if (this.group == null) {
+      this.group = new Group(0, name, description, componentsNumberS, teacherId);
+      try {
+        this.group.save();
+      } catch(SQLException e) {
+        Util.showWarning(this, String.format("No se pudo guardar por: %s", e.getMessage()));
+      }
+    } else {
+      if (!this.group.getName().equals(name)) this.group.setName(name);
+      if (!this.group.getDescription().equals(description)) this.group.setDescription(description);
+      if (this.group.getComponentsNumber() != componentsNumberS) this.group.setComponentsNumber(componentsNumberS);
+      if (teacherId != 0 && this.group.getTitularTeacherId() != teacherId) this.group.setTitularTeacherId(teacherId);
+      
+      try {
+        this.group.update();
+      } catch(SQLException e) {
+        Util.showWarning(this, String.format("No se pudo actualizar por: %s", e.getMessage()));
+      }
+    }
+    dispose();
+    parent.setEnabled(true);
+  }//GEN-LAST:event_jButton2ActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JFormattedTextField componentsNumberField;
+  private javax.swing.JTextArea descriptionField;
   private javax.swing.JButton jButton2;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel9;
-  private javax.swing.JTextField jTextField4;
-  private javax.swing.JTextField jTextField6;
+  private javax.swing.JScrollPane jScrollPane1;
+  private javax.swing.JTextField nameField;
+  private javax.swing.JComboBox<String> teachersCombo;
+  private javax.swing.JLabel titularTeacherLabel;
+  private javax.swing.JLabel titularTeacherLabel1;
   // End of variables declaration//GEN-END:variables
 }

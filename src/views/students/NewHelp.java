@@ -1,29 +1,78 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views.students;
 
-import de.javasoft.plaf.synthetica.SyntheticaPlainLookAndFeel;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import models.Helps;
+import models.Student;
+import models.Teacher;
+import resources.Util;
 
 /**
  *
  * @author Jhonathan Mejia Leon
  */
 public class NewHelp extends javax.swing.JFrame {
-
+  private javax.swing.JFrame parent;
+  private Helps helps;
+  
   /**
    * Creates new form NewHelp
    */
-  public NewHelp() {
+  public NewHelp(javax.swing.JFrame parent) {
+    this.parent = parent;
     initComponents();
     addAttributes();
+    addAttributes();
+    try {
+      loadTeachers();
+      loadStudents();
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+    }
+  }
+  
+  private void loadTeachers() throws SQLException {
+    Teacher.all().forEach(teacher -> {
+      this.ComboProfesores.addItem(String.format("%d- %s", teacher.getId(), teacher.getFullName()));
+    }); 
+  }
+  
+  private void loadStudents() throws SQLException {
+    Student.all().forEach(student -> {
+      this.ComboEstudiantes.addItem(String.format("%d- %s", student.getRegistrationNumber(), student.getName()));
+    });
   }
   
   private void addAttributes() {
     setLocationRelativeTo(null);
     setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
   }
 
   /**
@@ -40,7 +89,7 @@ public class NewHelp extends javax.swing.JFrame {
     jLabel3 = new javax.swing.JLabel();
     ComboEstudiantes = new javax.swing.JComboBox();
     jButton2 = new javax.swing.JButton();
-    jComboBox1 = new javax.swing.JComboBox();
+    ComboProfesores = new javax.swing.JComboBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,45 +101,58 @@ public class NewHelp extends javax.swing.JFrame {
 
     ComboEstudiantes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione un estudiante" }));
 
-    jButton2.setText("Añadir");
+    jButton2.setText("Guardar");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2ActionPerformed(evt);
+      }
+    });
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione un Profesor", "Item 1", "Item 2", "Item 3", "Item 4" }));
+    ComboProfesores.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione un Profesor" }));
 
     javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
     jPanel9.setLayout(jPanel9Layout);
     jPanel9Layout.setHorizontalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
-        .addGap(28, 28, 28)
-        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-          .addComponent(jButton2)
-          .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(ComboEstudiantes, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap(20, Short.MAX_VALUE))
+        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(ComboProfesores, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(ComboEstudiantes, javax.swing.GroupLayout.Alignment.TRAILING, 0, 326, Short.MAX_VALUE)
+          .addGroup(jPanel9Layout.createSequentialGroup()
+            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2))
+              .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)))
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jButton2)))
+        .addContainerGap())
     );
     jPanel9Layout.setVerticalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
-        .addGap(24, 24, 24)
+        .addContainerGap()
         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(11, 11, 11)
+        .addComponent(ComboProfesores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
         .addComponent(jLabel3)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(ComboEstudiantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGap(18, 18, 18)
         .addComponent(jButton2)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(17, Short.MAX_VALUE))
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,25 +162,31 @@ public class NewHelp extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-         try {
-            javax.swing.UIManager.setLookAndFeel(SyntheticaPlainLookAndFeel.class.getName());
-        } catch (Exception e) {
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NewHelp().setVisible(true);
-            }
-        });
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    if (this.ComboEstudiantes.getSelectedIndex() == 0 || this.ComboProfesores.getSelectedIndex() == 0) {
+      Util.showWarning(this, "Debes seleccionar datos validos");
     }
+    int studentId = Util.getPKFromCombo(ComboEstudiantes);
+    int teacherId = Util.getPKFromCombo(ComboProfesores);
+    this.helps = new Helps(studentId, teacherId);
+    try {
+      if (this.helps.save()) {
+        Util.showWarning(this, "Datos guardados");
+      } else {
+        Util.showWarning(this, "Datos no guardados");
+      }
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+    }
+    dispose();
+    this.parent.setEnabled(true);
+  }//GEN-LAST:event_jButton2ActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JComboBox ComboEstudiantes;
+  private javax.swing.JComboBox ComboProfesores;
   private javax.swing.JButton jButton2;
-  private javax.swing.JComboBox jComboBox1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel9;

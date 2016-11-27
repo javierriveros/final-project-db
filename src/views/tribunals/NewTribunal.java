@@ -3,7 +3,6 @@ package views.tribunals;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import models.Teacher;
 import models.Tribunal;
 import resources.Util;

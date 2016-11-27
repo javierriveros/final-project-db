@@ -68,7 +68,7 @@ public class Teacher {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM tribunals WHERE teacher_id=%d ORDER BY teacher_id", this.id));
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM tribunals WHERE teacher_id=%d;", this.id));
       while (rs.next())
         tribunals.add(Tribunal.getTribunalFromResultSet(rs));
     }
@@ -81,7 +81,7 @@ public class Teacher {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM integrates WHERE teacher_id=%d", this.id));
+      ResultSet rs = sm.executeQuery(String.format("select t.id,t.test_place,t.components_number,t.teacher_id from integrates i join tribunals t on t.id=i.tribunal_id where i.teacher_id=%d", this.id));
       while (rs.next())
         tribunals.add(Tribunal.getTribunalFromResultSet(rs));
     }
@@ -94,7 +94,7 @@ public class Teacher {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM groups WHERE teacher_id=%d", this.id));
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM groups WHERE teacher_id=%d;", this.id));
       while (rs.next())
         groups.add(Group.getGroupFromResultSet(rs));
     }
@@ -107,7 +107,7 @@ public class Teacher {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM conforms WHERE teacher_id=%d", this.id));
+      ResultSet rs = sm.executeQuery(String.format("SELECT g.id,g.name,g.components_number,g.description,g.teacher_id FROM conforms c join groups g on c.group_id=g.id WHERE c.teacher_id=%d", this.id));
       while (rs.next())
         groups.add(Group.getGroupFromResultSet(rs));
     }
@@ -133,7 +133,7 @@ public class Teacher {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM helps WHERE teacher_id=%d", this.id));
+      ResultSet rs = sm.executeQuery(String.format("SELECT * FROM helps h join students s on h.student_registration_number=s.registration_number WHERE h.teacher_id=%d", this.id));
       while (rs.next())
         students.add(Student.getStudentFromResultSet(rs));
     }
@@ -195,7 +195,7 @@ public class Teacher {
     try {
       Connection con = Connection.getInstance();
       try (Statement sm = con.getCon().createStatement()) {
-        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM teachers WHERE %s='%s'", value, field));
+        ResultSet rs = sm.executeQuery(String.format("SELECT * FROM teachers WHERE %s='%s'", field, value));
         while (rs.next())
           teacher = getTeacherFromResultSet(rs);
       }

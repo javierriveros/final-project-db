@@ -2,7 +2,12 @@ package views.teachers;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import models.Project;
+import models.Teacher;
 
 /**
  *
@@ -12,11 +17,32 @@ public class ReporteProfesores extends javax.swing.JFrame {
   private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteProfesores
+   * @param parent
    */
   public ReporteProfesores(javax.swing.JFrame parent) {
     this.parent = parent;
     initComponents();
     addAttributes();
+    try {
+      loadData();
+    } catch(Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
+  private void loadData() throws SQLException {
+    LinkedList<Project> projects = Project.all();
+    DefaultTableModel model = (DefaultTableModel) teachersTable.getModel();
+    projects.forEach(project -> {
+      Teacher teacher = Teacher.find(project.getStudent().getTeacherId());
+      model.addRow(new Object[] {
+        teacher.getId(),
+        teacher.getName(),
+        teacher.getLastName(),
+        project.getOrderNumber(),
+        project.getTheme().getTitle()
+      });
+    });
   }
   
   private void addAttributes() {
@@ -61,7 +87,7 @@ public class ReporteProfesores extends javax.swing.JFrame {
 
     jPanel3 = new javax.swing.JPanel();
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
+    teachersTable = new javax.swing.JTable();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
@@ -72,7 +98,7 @@ public class ReporteProfesores extends javax.swing.JFrame {
 
     jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Profesores", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
 
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
+    teachersTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
@@ -88,7 +114,7 @@ public class ReporteProfesores extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane1.setViewportView(jTable1);
+    jScrollPane1.setViewportView(teachersTable);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -146,6 +172,7 @@ public class ReporteProfesores extends javax.swing.JFrame {
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     dispose();
+    this.parent.setEnabled(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -156,6 +183,6 @@ public class ReporteProfesores extends javax.swing.JFrame {
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JTable jTable1;
+  private javax.swing.JTable teachersTable;
   // End of variables declaration//GEN-END:variables
 }

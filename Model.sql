@@ -184,3 +184,30 @@ $create_user_from_teacher$ LANGUAGE plpgsql;
 CREATE TRIGGER create_user_from_teacher AFTER INSERT ON teachers
 FOR EACH ROW EXECUTE PROCEDURE create_user_from_teacher();
 
+##Delete
+CREATE OR REPLACE FUNCTION delete_user_from_student() RETURNS TRIGGER AS
+$delete_user_from_student$
+DECLARE
+BEGIN
+  DELETE FROM users WHERE role_reference=OLD.registration_number AND role='student';
+  RETURN OLD;
+END;
+$delete_user_from_student$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_user_from_student BEFORE DELETE ON students
+FOR EACH ROW EXECUTE PROCEDURE delete_user_from_student();
+
+
+##Crear un usuario al insertar un profesor
+
+CREATE OR REPLACE FUNCTION delete_user_from_teacher() RETURNS TRIGGER AS
+$delete_user_from_teacher$
+DECLARE
+BEGIN
+  DELETE FROM users WHERE role_reference=OLD.id AND role='teacher';
+  RETURN OLD;
+END;
+$delete_user_from_teacher$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_user_from_teacher BEFORE DELETE ON teachers
+FOR EACH ROW EXECUTE PROCEDURE delete_user_from_teacher();

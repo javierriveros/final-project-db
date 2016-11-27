@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Conforms;
 import models.Group;
+import models.Teacher;
+import resources.TableData;
 
 /**
  *
@@ -62,17 +64,7 @@ public class ReporteGrupo extends javax.swing.JFrame {
   }
   
   private void addData() throws SQLException {
-    DefaultTableModel model = (DefaultTableModel) this.groupsTable.getModel();
-    LinkedList<Conforms> conforms = Conforms.all();
-    conforms.forEach(conform -> {
-      model.addRow(new Object[] {
-        conform.getGroupId(),
-        conform.getGroup().getName(),
-        conform.getTeacherId(),
-        conform.getTeacher().getName(),
-        conform.getTeacher().getLastName()
-      });
-    });
+    TableData.loadGroups(groupsTable, Group.all());
   }
   
   private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException {
@@ -189,6 +181,7 @@ public class ReporteGrupo extends javax.swing.JFrame {
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     dispose();
+    this.parent.setEnabled(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void viewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewGroupActionPerformed

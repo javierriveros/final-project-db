@@ -120,15 +120,17 @@
             <Component class="javax.swing.JTable" name="projectsTable">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="8" rowCount="0">
+                  <Table columnCount="10" rowCount="0">
                     <Column editable="false" title="N&#xfa;mero de orden" type="java.lang.Object"/>
                     <Column editable="false" title="Tema" type="java.lang.Object"/>
-                    <Column editable="true" title="Cod Estudiante" type="java.lang.Object"/>
-                    <Column editable="true" title="Nombres Estudiante" type="java.lang.Object"/>
-                    <Column editable="true" title="Inicio" type="java.lang.Object"/>
-                    <Column editable="true" title="Final" type="java.lang.Object"/>
-                    <Column editable="true" title="Estado" type="java.lang.Object"/>
-                    <Column editable="true" title="Duraci&#xf3;n" type="java.lang.Object"/>
+                    <Column editable="false" title="ID Tribunal" type="java.lang.Object"/>
+                    <Column editable="false" title="Lugar Tribunal" type="java.lang.Object"/>
+                    <Column editable="false" title="Cod Estudiante" type="java.lang.Object"/>
+                    <Column editable="false" title="Nombres Estudiante" type="java.lang.Object"/>
+                    <Column editable="false" title="Inicio" type="java.lang.Object"/>
+                    <Column editable="false" title="Final" type="java.lang.Object"/>
+                    <Column editable="false" title="Estado" type="java.lang.Object"/>
+                    <Column editable="false" title="Duraci&#xf3;n" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

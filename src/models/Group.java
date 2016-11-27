@@ -91,7 +91,7 @@ public class Group {
     Connection con = Connection.getInstance();
     
     try (Statement sm = con.getCon().createStatement()) {
-      ResultSet rs = sm.executeQuery("SELECT * FROM groups;");
+      ResultSet rs = sm.executeQuery("SELECT * FROM groups ORDER BY id");
       while (rs.next())
         groups.add(getGroupFromResultSet(rs));
     }
@@ -173,7 +173,7 @@ public class Group {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, description, components_number, teacher_id) VALUES ('%s', '%s', '%d', '%d,)", this.name, this.description, this.componentsNumber, this.titularTeacherId))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO groups (name, description, components_number, teacher_id) VALUES ('%s', '%s', '%d', '%d')", this.name, this.description, this.componentsNumber, this.titularTeacherId))) {
       try {
         ps.execute();
         return true;

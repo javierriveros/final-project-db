@@ -78,6 +78,19 @@ public class Integrates {
     return integrates;
   }
   
+  public static LinkedList<Teacher> getTeachers(int tribunalId) throws SQLException {
+    LinkedList<Teacher> teachers = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery("select * from integrates i join teachers t on t.id=i.teacher_id where i.tribunal_id=" + tribunalId);
+      while (rs.next())
+        teachers.add(Teacher.getTeacherFromResultSet(rs));
+    }
+
+    return teachers;
+  }
+  
   public static Integrates find(int tribunalId, int teacherId) {
     Integrates integrates = null;
     try {

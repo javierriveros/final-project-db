@@ -1,22 +1,80 @@
 package views.tribunals;
 
+import java.awt.Color;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import models.Integrates;
+import models.Teacher;
+import models.Tribunal;
+import resources.Util;
+
 /**
  *
  * @author Jhonathan Mejia Leon
  */
 public class NewTeacherTribunal extends javax.swing.JFrame {
-
+  private javax.swing.JFrame parent;
+  private Integrates integrates;
+  
   /**
    * Creates new form NewTeacherTribunal
+   * @param parent
    */
-  public NewTeacherTribunal() {
+  public NewTeacherTribunal(javax.swing.JFrame parent) {
+    this.parent = parent;
     initComponents();
     addAttributes();
+    try {
+      loadTeachers();
+      loadTribunals();
+    } catch(SQLException e) {
+      System.out.printf("Error por: %s", e.getMessage());
+    }
   }
   
   private void addAttributes() {
-    setLocationRelativeTo(null);
+    setLocationRelativeTo(parent);
     setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+    getContentPane().setBackground(Color.white);
+    this.addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        parent.setEnabled(false);
+      }
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+        parent.setEnabled(true);
+      }
+
+      @Override
+      public void windowClosed(WindowEvent e) {}
+
+      @Override
+      public void windowIconified(WindowEvent e) {}
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {}
+
+      @Override
+      public void windowActivated(WindowEvent e) {}
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {}
+    });
+  }
+  
+  private void loadTeachers() throws SQLException {
+    Teacher.all().forEach(teacher -> {
+      this.teachersCombo.addItem(String.format("%d- %s", teacher.getId(), teacher.getFullName()));
+    });
+  }
+  
+  private void loadTribunals() throws SQLException {
+    Tribunal.all().forEach(tribunal -> {
+      this.tribunalsCombo.addItem(String.format("%d- %s", tribunal.getId(), tribunal.getTestPlace()));
+    });
   }
 
   /**
@@ -32,8 +90,8 @@ public class NewTeacherTribunal extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
     jButton2 = new javax.swing.JButton();
-    jComboBox2 = new javax.swing.JComboBox();
-    jComboBox3 = new javax.swing.JComboBox();
+    tribunalsCombo = new javax.swing.JComboBox();
+    teachersCombo = new javax.swing.JComboBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,69 +102,89 @@ public class NewTeacherTribunal extends javax.swing.JFrame {
     jLabel3.setText("Profesor");
 
     jButton2.setText("Añadir");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2ActionPerformed(evt);
+      }
+    });
 
-    jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    tribunalsCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecciona un tribunal" }));
 
-    jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    teachersCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecciona un profesor" }));
 
     javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
     jPanel9.setLayout(jPanel9Layout);
     jPanel9Layout.setHorizontalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
+        .addContainerGap()
         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel9Layout.createSequentialGroup()
-            .addGap(28, 28, 28)
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jButton2))
+          .addGroup(jPanel9Layout.createSequentialGroup()
             .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel3)
-                  .addComponent(jLabel2))
-                .addGap(0, 48, Short.MAX_VALUE))
-              .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton2)))
+              .addComponent(jLabel3)
+              .addComponent(jLabel2))
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addComponent(teachersCombo, 0, 287, Short.MAX_VALUE)
+          .addComponent(tribunalsCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     jPanel9Layout.setVerticalGroup(
       jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel9Layout.createSequentialGroup()
-        .addGap(24, 24, 24)
         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(tribunalsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jLabel3)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(teachersCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jButton2)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(jButton2))
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    if (this.teachersCombo.getSelectedIndex() == 0 
+      || this.tribunalsCombo.getSelectedIndex() == 0) {
+      Util.showWarning(this, "Debes seleccionar datos válidos");
+      return;
+    }
+    int teacherId = Util.getPKFromCombo(teachersCombo);
+    int tribunalId = Util.getPKFromCombo(tribunalsCombo);
+    this.integrates = new Integrates(teacherId, tribunalId);
+    try {
+      if (this.integrates.save()) Util.showWarning(this, "Datos guardados");
+      else Util.showWarning(this, "Datos no guardados");
+    } catch(SQLException e) {
+      Util.showWarning(this, String.format("Error por %s", e.getMessage()));
+    }
+    dispose();
+    this.parent.setEnabled(true);
+  }//GEN-LAST:event_jButton2ActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButton2;
-  private javax.swing.JComboBox jComboBox2;
-  private javax.swing.JComboBox jComboBox3;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel9;
+  private javax.swing.JComboBox teachersCombo;
+  private javax.swing.JComboBox tribunalsCombo;
   // End of variables declaration//GEN-END:variables
 }

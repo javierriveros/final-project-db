@@ -19,6 +19,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
   private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteProyectos
+   * @param parent
    */
   public ReporteProyectos(javax.swing.JFrame parent) {
     this.parent = parent;
@@ -67,6 +68,8 @@ public class ReporteProyectos extends javax.swing.JFrame {
       model.addRow(new Object[] {
         project.getOrderNumber(),
         project.getTheme().getTitle(),
+        project.getTribunal().getId(),
+        project.getTribunal().getTestPlace(),
         project.getStudent().getCi(),
         project.getStudent().getName(),
         project.getStartDate(),
@@ -104,11 +107,11 @@ public class ReporteProyectos extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Número de orden", "Tema", "Cod Estudiante", "Nombres Estudiante", "Inicio", "Final", "Estado", "Duración"
+        "Número de orden", "Tema", "ID Tribunal", "Lugar Tribunal", "Cod Estudiante", "Nombres Estudiante", "Inicio", "Final", "Estado", "Duración"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, true, true, true, true, true, true
+        false, false, false, false, false, false, false, false, false, false
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -172,6 +175,7 @@ public class ReporteProyectos extends javax.swing.JFrame {
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     dispose();
+    this.parent.setEnabled(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
 

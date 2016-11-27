@@ -110,7 +110,7 @@ public class Helps {
   public boolean destroy() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM helps WHERE student_registration_number='%d' AND teacher_id", this.studentRegistrationNumber, this.teacherId))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("DELETE FROM helps WHERE student_registration_number='%d' AND teacher_id=%d", this.studentRegistrationNumber, this.teacherId))) {
       try {
         ps.execute();
         return true;

@@ -1,6 +1,8 @@
 package views.teachers;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
@@ -12,6 +14,9 @@ import models.Tribunal;
 import models.User;
 import resources.TableData;
 import resources.Util;
+import views.groups.NewGroup;
+import views.students.ShowStudent;
+import views.tribunals.NewTribunal;
 
 /**
  *
@@ -40,7 +45,9 @@ public class ViewTeacher extends javax.swing.JFrame {
     addSorters();
     try {
       loadData();
-    } catch(SQLException e) {}
+    } catch(NullPointerException | SQLException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private void configWindow() {
@@ -49,7 +56,6 @@ public class ViewTeacher extends javax.swing.JFrame {
     String text = "Escriba aquí para buscar";
     Util.addPlaceholder(studentsField, text);
     Util.addPlaceholder(groupsField, text);
-    Util.addPlaceholder(projectsField, text);
     Util.addPlaceholder(tribunalsField, text);
   }
   
@@ -60,25 +66,33 @@ public class ViewTeacher extends javax.swing.JFrame {
     this.addressField.setText(this.teacher.getAddress());
   }
   
-  private void loadData() throws SQLException {
-    TableData.loadStudents(studentsTable, Student.all());
-    TableData.loadProjects(projectsTable, Project.all());
-    TableData.loadTribunals(tribunalsTable, Tribunal.all());
-    TableData.loadGroups(groupsTable, Group.all());
+  private void loadData() throws SQLException, NullPointerException {
+    loadStudents();
+    loadTribunals();
+    loadGroups();
+  }
+  
+  private void loadStudents() throws SQLException {
+    TableData.loadStudents(studentsTable, this.teacher.getStudentsIHelp());
+  }
+  
+  private void loadTribunals() throws SQLException {
+    TableData.loadTribunals(tribunalsTable, this.teacher.getTribunalsWhereIAmMember());
+  }
+  
+  private void loadGroups() throws SQLException {
+    TableData.loadGroups(groupsTable, this.teacher.getGroupsWhereIAmMember());
   }
   
   private void addSorters() {
     studentsSorter = new TableRowSorter(studentsTable.getModel());
     studentsTable.setRowSorter(studentsSorter);
     
-    projectsSorter = new TableRowSorter(projectsTable.getModel());
-    projectsTable.setRowSorter(projectsSorter);
-    
     tribunalsSorter = new TableRowSorter(tribunalsTable.getModel());
     tribunalsTable.setRowSorter(tribunalsSorter);
     
     groupsSorter = new TableRowSorter(groupsTable.getModel());
-    groupsTable.setRowSorter(tribunalsSorter);
+    groupsTable.setRowSorter(groupsSorter);
   }
 
   /**
@@ -98,15 +112,6 @@ public class ViewTeacher extends javax.swing.JFrame {
     viewStudent = new javax.swing.JButton();
     jScrollPane7 = new javax.swing.JScrollPane();
     studentsTable = new javax.swing.JTable();
-    jPanel4 = new javax.swing.JPanel();
-    searchProjectsBy = new javax.swing.JComboBox();
-    projectsField = new javax.swing.JTextField();
-    modifyProject = new javax.swing.JButton();
-    jButton15 = new javax.swing.JButton();
-    addProject = new javax.swing.JButton();
-    viewProject = new javax.swing.JButton();
-    jScrollPane6 = new javax.swing.JScrollPane();
-    projectsTable = new javax.swing.JTable();
     jPanel5 = new javax.swing.JPanel();
     tribunalsField = new javax.swing.JTextField();
     modifyTribunal = new javax.swing.JButton();
@@ -121,7 +126,7 @@ public class ViewTeacher extends javax.swing.JFrame {
     modifyGroup = new javax.swing.JButton();
     jButton11 = new javax.swing.JButton();
     viewGroup = new javax.swing.JButton();
-    jScrollPane3 = new javax.swing.JScrollPane();
+    jScrollPane6 = new javax.swing.JScrollPane();
     groupsTable = new javax.swing.JTable();
     jPanel1 = new javax.swing.JPanel();
     jPanel6 = new javax.swing.JPanel();
@@ -165,6 +170,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     });
 
     viewStudent.setText("Ver");
+    viewStudent.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        viewStudentActionPerformed(evt);
+      }
+    });
 
     studentsTable.setBorder(null);
     studentsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -198,17 +208,19 @@ public class ViewTeacher extends javax.swing.JFrame {
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane7)
-          .addGroup(jPanel2Layout.createSequentialGroup()
-            .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 293, Short.MAX_VALUE)
-            .addComponent(viewStudent)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton5)))
+        .addComponent(searchStudentsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE)
+        .addComponent(viewStudent)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton5)
         .addContainerGap())
+      .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel2Layout.createSequentialGroup()
+          .addGap(11, 11, 11)
+          .addComponent(jScrollPane7)
+          .addGap(11, 11, 11)))
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,99 +231,15 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(studentsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton5)
           .addComponent(viewStudent))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-        .addContainerGap())
+        .addContainerGap(368, Short.MAX_VALUE))
+      .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel2Layout.createSequentialGroup()
+          .addGap(43, 43, 43)
+          .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+          .addContainerGap()))
     );
 
     jTabbedPane2.addTab("Estudiantes", jPanel2);
-
-    searchProjectsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Numero de Orden", "Tema" }));
-
-    projectsField.addKeyListener(new java.awt.event.KeyAdapter() {
-      public void keyPressed(java.awt.event.KeyEvent evt) {
-        projectsFieldKeyPressed(evt);
-      }
-    });
-
-    modifyProject.setText("Modificar");
-
-    jButton15.setText("Refresh");
-    jButton15.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton15ActionPerformed(evt);
-      }
-    });
-
-    addProject.setText("Añadir");
-
-    viewProject.setText("Ver");
-
-    projectsTable.setBorder(null);
-    projectsTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-
-      },
-      new String [] {
-        "Order Number", "Tema", "Fecha de Inicio", "Fecha final", "Duración"
-      }
-    ) {
-      Class[] types = new Class [] {
-        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-      };
-      boolean[] canEdit = new boolean [] {
-        false, false, false, false, true
-      };
-
-      public Class getColumnClass(int columnIndex) {
-        return types [columnIndex];
-      }
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    jScrollPane6.setViewportView(projectsTable);
-
-    javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-    jPanel4.setLayout(jPanel4Layout);
-    jPanel4Layout.setHorizontalGroup(
-      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(jPanel4Layout.createSequentialGroup()
-            .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
-            .addComponent(addProject)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(modifyProject)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(viewProject)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton15))
-          .addComponent(jScrollPane6))
-        .addContainerGap())
-    );
-    jPanel4Layout.setVerticalGroup(
-      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(addProject)
-          .addComponent(modifyProject)
-          .addComponent(searchProjectsBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(projectsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton15)
-          .addComponent(viewProject))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-
-    jTabbedPane2.addTab("Proyectos", jPanel4);
 
     tribunalsField.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -320,6 +248,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     });
 
     modifyTribunal.setText("Modificar");
+    modifyTribunal.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        modifyTribunalActionPerformed(evt);
+      }
+    });
 
     searchTribunalsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Lugar de Presentación" }));
 
@@ -338,14 +271,14 @@ public class ViewTeacher extends javax.swing.JFrame {
 
       },
       new String [] {
-        "ID", "Lugar de presentación", "Número de componentes"
+        "ID", "Lugar de presentación", "Número de componentes", "ID Titular", "Nombres titular"
       }
     ) {
       Class[] types = new Class [] {
-        java.lang.Object.class, java.lang.String.class, java.lang.String.class
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
       };
       boolean[] canEdit = new boolean [] {
-        false, false, false
+        false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
@@ -364,19 +297,21 @@ public class ViewTeacher extends javax.swing.JFrame {
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jScrollPane5)
-          .addGroup(jPanel5Layout.createSequentialGroup()
-            .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
-            .addComponent(modifyTribunal)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(viewTribunal)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton19)))
+        .addComponent(searchTribunalsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
+        .addComponent(modifyTribunal)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(viewTribunal)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton19)
         .addContainerGap())
+      .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel5Layout.createSequentialGroup()
+          .addGap(11, 11, 11)
+          .addComponent(jScrollPane5)
+          .addGap(11, 11, 11)))
     );
     jPanel5Layout.setVerticalGroup(
       jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,13 +323,17 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(tribunalsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton19)
           .addComponent(viewTribunal))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
+        .addContainerGap(368, Short.MAX_VALUE))
+      .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel5Layout.createSequentialGroup()
+          .addGap(43, 43, 43)
+          .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+          .addContainerGap()))
     );
 
     jTabbedPane2.addTab("Tribunal", jPanel5);
 
-    searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "Id", "Nombre" }));
+    searchGroupsBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Buscar por:", "ID", "Nombre" }));
 
     groupsField.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -403,6 +342,11 @@ public class ViewTeacher extends javax.swing.JFrame {
     });
 
     modifyGroup.setText("Modificar");
+    modifyGroup.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        modifyGroupActionPerformed(evt);
+      }
+    });
 
     jButton11.setText("Refresh");
     jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -419,14 +363,14 @@ public class ViewTeacher extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Id", "Nombre", "Número de componentes"
+        "ID", "Nombre", "Número de componentes", "ID Titular", "Nombres titular"
       }
     ) {
       Class[] types = new Class [] {
-        java.lang.Object.class, java.lang.String.class, java.lang.Object.class
+        java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
       };
       boolean[] canEdit = new boolean [] {
-        false, false, false
+        false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
@@ -437,7 +381,7 @@ public class ViewTeacher extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane3.setViewportView(groupsTable);
+    jScrollPane6.setViewportView(groupsTable);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -445,19 +389,21 @@ public class ViewTeacher extends javax.swing.JFrame {
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jScrollPane3)
-          .addGroup(jPanel3Layout.createSequentialGroup()
-            .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
-            .addComponent(modifyGroup)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(viewGroup)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jButton11)))
+        .addComponent(searchGroupsBy, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
+        .addComponent(modifyGroup)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(viewGroup)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton11)
         .addContainerGap())
+      .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel3Layout.createSequentialGroup()
+          .addGap(11, 11, 11)
+          .addComponent(jScrollPane6)
+          .addGap(11, 11, 11)))
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,8 +415,12 @@ public class ViewTeacher extends javax.swing.JFrame {
           .addComponent(groupsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton11)
           .addComponent(viewGroup))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
+        .addContainerGap(368, Short.MAX_VALUE))
+      .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel3Layout.createSequentialGroup()
+          .addGap(43, 43, 43)
+          .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+          .addContainerGap()))
     );
 
     jTabbedPane2.addTab("Grupos", jPanel3);
@@ -553,7 +503,7 @@ public class ViewTeacher extends javax.swing.JFrame {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(18, 18, 18)
-        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
@@ -647,13 +597,13 @@ public class ViewTeacher extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 909, javax.swing.GroupLayout.PREFERRED_SIZE))
+      .addComponent(jTabbedPane2)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        .addGap(0, 6, Short.MAX_VALUE)
+        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     pack();
@@ -665,46 +615,49 @@ public class ViewTeacher extends javax.swing.JFrame {
   }//GEN-LAST:event_jMenuItem7ActionPerformed
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-    new views.projects.ReporteProyectos().setVisible(true);
+    new views.projects.ReporteProyectos(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-    new views.groups.ReporteGrupo().setVisible(true);
+    new views.groups.ReporteGrupo(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem4ActionPerformed
 
   private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-    new views.students.ReporteEstudiantes().setVisible(true);
+    new views.students.ReporteEstudiantes(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem5ActionPerformed
 
   private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-    new views.teachers.ReporteProfesores().setVisible(true);
+    new views.teachers.ReporteProfesores(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem6ActionPerformed
 
   private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    try {TableData.loadStudents(studentsTable, Student.all());}catch(SQLException e){}
+    try {
+      loadStudents();
+    } catch (SQLException ex) {
+      System.out.println(ex.getMessage());
+    }
   }//GEN-LAST:event_jButton5ActionPerformed
 
-  private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-    try {TableData.loadProjects(projectsTable, Project.all());}catch(SQLException e){}
-  }//GEN-LAST:event_jButton15ActionPerformed
-
   private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-    try {TableData.loadTribunals(tribunalsTable, Tribunal.all());}catch(SQLException e){}
+    try {
+      loadTribunals();
+    } catch (SQLException ex) {
+      System.out.println(ex.getMessage());
+    }
   }//GEN-LAST:event_jButton19ActionPerformed
 
   private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-    try {TableData.loadGroups(groupsTable, Group.all());}catch(SQLException e){}
+    try {
+      loadGroups();
+    } catch (SQLException ex) {
+      System.out.println(ex.getMessage());
+    }
   }//GEN-LAST:event_jButton11ActionPerformed
 
   private void studentsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentsFieldKeyPressed
     if(searchStudentsBy.getSelectedIndex() == 0 || studentsTable.getRowCount() <= 0) return;
     studentsSorter.setRowFilter(RowFilter.regexFilter(studentsField.getText(), searchStudentsBy.getSelectedIndex()-1));
   }//GEN-LAST:event_studentsFieldKeyPressed
-
-  private void projectsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectsFieldKeyPressed
-    if(searchProjectsBy.getSelectedIndex() == 0 || projectsTable.getRowCount() <= 0) return;
-    projectsSorter.setRowFilter(RowFilter.regexFilter(projectsField.getText(), searchProjectsBy.getSelectedIndex()-1));
-  }//GEN-LAST:event_projectsFieldKeyPressed
 
   private void tribunalsFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tribunalsFieldKeyPressed
     if(searchTribunalsBy.getSelectedIndex() == 0 || tribunalsTable.getRowCount() <= 0) return;
@@ -735,16 +688,51 @@ public class ViewTeacher extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, String.format("No se ha podido actualizar por: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_jButton1ActionPerformed
+
+  private void modifyTribunalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyTribunalActionPerformed
+    int tribunalId;
+    try {
+      tribunalId = getPK(tribunalsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new NewTribunal(this, tribunalId).setVisible(true);
+  }//GEN-LAST:event_modifyTribunalActionPerformed
+
+  private void modifyGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyGroupActionPerformed
+    int groupId;
+    try {
+      groupId = getPK(groupsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new NewGroup(this, groupId).setVisible(true);
+  }//GEN-LAST:event_modifyGroupActionPerformed
+
+  private void viewStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewStudentActionPerformed
+    int studentId;
+    try {
+      studentId = getPK(studentsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new ShowStudent(this, Student.find(studentId)).setVisible(true);
+  }//GEN-LAST:event_viewStudentActionPerformed
+  
+  private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
+    return Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
+  }
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton addProject;
   private javax.swing.JTextField addressField;
   private javax.swing.JTextField groupsField;
   private javax.swing.JTable groupsTable;
   private javax.swing.JTextField idField;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton11;
-  private javax.swing.JButton jButton15;
   private javax.swing.JButton jButton19;
   private javax.swing.JButton jButton5;
   private javax.swing.JLabel jLabel2;
@@ -766,23 +754,17 @@ public class ViewTeacher extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
-  private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
   private javax.swing.JPanel jPanel6;
-  private javax.swing.JScrollPane jScrollPane3;
   private javax.swing.JScrollPane jScrollPane5;
   private javax.swing.JScrollPane jScrollPane6;
   private javax.swing.JScrollPane jScrollPane7;
   private javax.swing.JTabbedPane jTabbedPane2;
   private javax.swing.JTextField lastNamesField;
   private javax.swing.JButton modifyGroup;
-  private javax.swing.JButton modifyProject;
   private javax.swing.JButton modifyTribunal;
   private javax.swing.JTextField namesField;
-  private javax.swing.JTextField projectsField;
-  private javax.swing.JTable projectsTable;
   private javax.swing.JComboBox searchGroupsBy;
-  private javax.swing.JComboBox searchProjectsBy;
   private javax.swing.JComboBox searchStudentsBy;
   private javax.swing.JComboBox searchTribunalsBy;
   private javax.swing.JTextField studentsField;
@@ -790,7 +772,6 @@ public class ViewTeacher extends javax.swing.JFrame {
   private javax.swing.JTextField tribunalsField;
   private javax.swing.JTable tribunalsTable;
   private javax.swing.JButton viewGroup;
-  private javax.swing.JButton viewProject;
   private javax.swing.JButton viewStudent;
   private javax.swing.JButton viewTribunal;
   // End of variables declaration//GEN-END:variables

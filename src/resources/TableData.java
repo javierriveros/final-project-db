@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import models.Group;
+import models.Helps;
 import models.Project;
 import models.Student;
 import models.Teacher;
@@ -54,7 +55,9 @@ public class TableData {
       groupsModel.addRow(new Object[] {
         group.getId(),
         group.getName(),
-        group.getComponentsNumber()
+        group.getComponentsNumber(),
+        group.getTitularTeacher().getId(),
+        group.getTitularTeacher().getFullName()
       });
     });
   }
@@ -82,8 +85,19 @@ public class TableData {
         tribunal.getId(),
         tribunal.getTestPlace(),
         tribunal.getComponentsNumber(),
-        tribunal.getTitularTeacherId(),
+        tribunal.getTitularTeacher().getId(),
         tribunal.getTitularTeacher().getFullName()
+      });
+    });
+  }
+  
+  public static void loadHelps(JTable helpsTable, LinkedList<Helps> helps) throws SQLException {
+    DefaultTableModel helpsModel = (DefaultTableModel) helpsTable.getModel();
+    Util.clearTable(helpsModel);
+    helps.forEach(help -> {
+      helpsModel.addRow(new Object[] {
+        help.getTeacherId(),
+        help.getStudentRegistrationNumber()
       });
     });
   }

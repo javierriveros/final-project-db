@@ -403,7 +403,7 @@ public class ViewStudent extends javax.swing.JFrame {
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(11, Short.MAX_VALUE))
+        .addContainerGap(19, Short.MAX_VALUE))
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,7 +484,7 @@ public class ViewStudent extends javax.swing.JFrame {
           .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addGap(59, 59, 59)
         .addComponent(jLabel2)
-        .addContainerGap(71, Short.MAX_VALUE))
+        .addContainerGap(79, Short.MAX_VALUE))
     );
     groupPanelLayout.setVerticalGroup(
       groupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -559,9 +559,9 @@ public class ViewStudent extends javax.swing.JFrame {
       .addGroup(jPanel6Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(jLabel1)
-        .addContainerGap(20, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jPanel6Layout.setVerticalGroup(
       jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -653,7 +653,7 @@ public class ViewStudent extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jTabbedPane2)
+      .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -700,19 +700,19 @@ public class ViewStudent extends javax.swing.JFrame {
   }//GEN-LAST:event_teachersFieldKeyPressed
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-    new views.projects.ReporteProyectos().setVisible(true);
+    new views.projects.ReporteProyectos(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
   private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-    new views.groups.ReporteGrupo().setVisible(true);
+    new views.groups.ReporteGrupo(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem4ActionPerformed
 
   private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-    new views.students.ReporteEstudiantes().setVisible(true);
+    new views.students.ReporteEstudiantes(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem5ActionPerformed
 
   private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-    new views.teachers.ReporteProfesores().setVisible(true);
+    new views.teachers.ReporteProfesores(this).setVisible(true);
   }//GEN-LAST:event_jMenuItem6ActionPerformed
   
   // Variables declaration - do not modify//GEN-BEGIN:variables

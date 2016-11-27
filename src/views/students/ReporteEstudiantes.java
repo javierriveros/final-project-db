@@ -2,7 +2,14 @@ package views.students;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import models.Project;
+import models.Student;
+import models.Teacher;
+import resources.Util;
 
 /**
  *
@@ -12,13 +19,34 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
   private javax.swing.JFrame parent;
   /**
    * Creates new form ReporteEstudiantes
+   * @param parent
    */
   public ReporteEstudiantes(javax.swing.JFrame parent) {
     this.parent = parent;
     initComponents();
     addAttributes();
+    try {
+      loadData();
+    } catch(SQLException e) {
+      System.out.println(e.getMessage());
+    }
   }
   
+  private void loadData() throws SQLException {
+    LinkedList<Student> students = Student.all();
+    DefaultTableModel model = (DefaultTableModel) studentsTable.getModel();
+    students.forEach(student -> {
+      Teacher teacher = Teacher.find(student.getTeacherId());
+      
+      model.addRow(new Object[] {
+        student.getRegistrationNumber(),
+        student.getCi(),
+        student.getName(),
+        teacher == null ? "No asignado" : teacher.getId(),
+        teacher == null ? "No asignado" : teacher.getFullName(),
+      });
+    });
+  }
   
   private void addAttributes() {
     setLocationRelativeTo(null);
@@ -62,7 +90,8 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
 
     jPanel3 = new javax.swing.JPanel();
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
+    studentsTable = new javax.swing.JTable();
+    jButton1 = new javax.swing.JButton();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
     jMenuItem1 = new javax.swing.JMenuItem();
@@ -73,7 +102,7 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
 
     jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Estudiantes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), new java.awt.Color(0, 102, 255))); // NOI18N
 
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
+    studentsTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
 
       },
@@ -89,17 +118,31 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
-    jScrollPane1.setViewportView(jTable1);
+    jScrollPane1.setViewportView(studentsTable);
+
+    jButton1.setText("Ver reporte individual");
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1ActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        .addComponent(jButton1)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     jMenu1.setText("Archivo");
@@ -144,9 +187,26 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
 
   private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
     dispose();
+    this.parent.setEnabled(true);
   }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    int studentId;
+    try {
+      studentId = getPK(studentsTable);
+    } catch(Exception e) {
+      Util.showWarning(this, e.getMessage());
+      return;
+    }
+    new ShowStudent(this, Student.find(studentId)).setVisible(true);
+  }//GEN-LAST:event_jButton1ActionPerformed
+
+  private int getPK(javax.swing.JTable table) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
+    return Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
+  }
+  
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton jButton1;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JMenuBar jMenuBar1;
   private javax.swing.JMenuItem jMenuItem1;
@@ -154,6 +214,6 @@ public class ReporteEstudiantes extends javax.swing.JFrame {
   private javax.swing.JMenuItem jMenuItem3;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JTable jTable1;
+  private javax.swing.JTable studentsTable;
   // End of variables declaration//GEN-END:variables
 }

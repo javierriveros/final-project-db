@@ -122,6 +122,42 @@ public class Student {
   }
   
   /**
+   * Return all students at DB without project
+   * @return students
+   * @throws java.sql.SQLException
+   */
+  public static LinkedList<Student> allWithoutProject() throws SQLException {
+    LinkedList<Student> students = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery("select * from students where registration_number not in(select registration_number from students where order_number  in(select order_number from projects));");
+      while (rs.next())
+        students.add(getStudentFromResultSet(rs));
+    }
+
+    return students;
+  }
+  
+  /**
+   * Return all students at DB without group
+   * @return students
+   * @throws java.sql.SQLException
+   */
+  public static LinkedList<Student> allWithoutGroup() throws SQLException {
+    LinkedList<Student> students = new LinkedList<>();
+    Connection con = Connection.getInstance();
+    
+    try (Statement sm = con.getCon().createStatement()) {
+      ResultSet rs = sm.executeQuery("select * from students where registration_number not in(select registration_number from students where group_id  in(select id from groups));");
+      while (rs.next())
+        students.add(getStudentFromResultSet(rs));
+    }
+
+    return students;
+  }
+  
+  /**
    * Return all students at DB
    * @return students
    * @throws java.sql.SQLException

@@ -98,7 +98,12 @@ public class Project {
   }
 
   public String getDuration() {
-    return duration.isEmpty() ? "En curso" : duration;
+    if (duration == null) {
+      return "En curso";
+    } else if(duration.isEmpty()) {
+      return "En curso";
+    }
+    return duration;
   }
 
   public int getStudentRegistrationNumber() {
@@ -186,7 +191,7 @@ public class Project {
   public boolean save() throws SQLException {
     Connection con = Connection.getInstance();
     try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (start_date, end_date, tribunal_id, student_registration_number) VALUES ('%s', '%s', '%d', '%d')", this.startDate, this.endDate == null ? "" : this.endDate, this.tribunalId, this.studentRegistrationNumber))) {
+      PreparedStatement ps = con.getCon().prepareStatement(String.format("INSERT INTO projects (start_date, tribunal_id, student_registration_number) VALUES ('%s', '%d', '%d')", this.startDate, this.tribunalId, this.studentRegistrationNumber))) {
       try {
         ps.execute();
         this.theme.setOrderNumber(Project.all().getLast().getOrderNumber());
@@ -206,15 +211,14 @@ public class Project {
    */
   public boolean update() throws SQLException {
     Connection con = Connection.getInstance();
-    try (
-      PreparedStatement ps = con.getCon().prepareStatement(String.format("UPDATE projects SET start_date='%s', end_date='%s', tribunal_id=%d WHERE order_number=%d;", this.startDate, this.endDate, this.tribunalId, this.orderNumber))) {
-      try {
-        ps.execute();
-        return true;
-      } catch(SQLException e) {
-        System.out.printf("Hubo un error por %s", e.getMessage());
-        return false;
-      }
+    try {
+      String sql = "UPDATE projects SET start_date='"+this.startDate+"', end_date='"+this.endDate+"', status='"+this.status+"',tribunal_id="+this.tribunalId+" WHERE order_number="+this.orderNumber+"";
+      PreparedStatement ps = con.getCon().prepareStatement(sql);
+      ps.execute();
+      return true;
+    } catch(SQLException e) {
+      System.out.printf("Hubo un error por %s", e.getMessage());
+      return false;
     }
   }
   
